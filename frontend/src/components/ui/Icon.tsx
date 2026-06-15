@@ -38,39 +38,109 @@ type IconName =
     | 'play-circle'
     | 'message-circle'
     | 'plus-circle'
-    | 'file-text';
+    | 'file-text'
+    | 'layers'
+    | 'loader'
+    | 'list-todo'
+    | 'trending-down'
+    | 'copy'
+    | 'tag'
+    | 'trash-2'
+    | 'chevron-down'
+    | 'pencil'
+    | 'trash-2'
+    | 'coffee'
+    | 'target'
+    | 'keyboard'
+    | 'user'
+    | 'play'
+    | 'pause'
+    | 'square'
+    | 'save'
+    | 'plus'
+    | 'clock'
+    | 'calendar'
+    | 'layers'
+    | 'trending-up'
+    | 'chevron-left'
+    | 'chevron-right'
+    | 'calendar-check'
+    | 'check'
+    | 'loader'
+    | 'filter'
+    | 'download'
+    | 'file-spreadsheet'
+    | 'alert-circle'
+    | 'award'
+    | 'eye'
+    | 'activity'
+    | 'user-plus'
+    | 'edit-3'
+    | 'hash'
+    | 'smile-plus'
+    | 'smile'
+    | 'reply'
+    | 'bold'
+    | 'italic'
+    | 'link'
+    | 'code'
+    | 'at-sign'
+    | 'pin'
+    | 'figma'
+    | 'code-2'
+    | 'download'
+    | 'send'
+    | 'image'
+    | 'mail'
+    | 'lock'
+    | 'shield'
+    | 'chrome'
+    | 'github'
+    | 'info'
+    | 'palette'
+    | 'plug'
+    | 'credit-card'
+    | 'monitor'
+    | 'smartphone'
+    | 'shield-alert'
+    | 'shield-check'
+    | 'align-justify'
+    | 'menu'
+    | 'layout-list'
+    | 'rotate-ccw'
+    | 'x';
 
 const iconMap: Record<IconName, React.ElementType> = {
     zap: Fi.FiZap,
-    'building-2': Fi.FiHome,
-    'chevrons-up-down': Fi.FiChevronsUpDown,
-    'layout-dashboard': Fi.FiGrid,
-    'check-square': Fi.FiCheckSquare,
     timer: Fi.FiClock,
     calendar: Fi.FiCalendar,
-    'bar-chart-2': Fi.FiBarChart2,
     users: Fi.FiUsers,
     folder: Fi.FiFolder,
     bell: Fi.FiBell,
     settings: Fi.FiSettings,
-    'log-out': Fi.FiLogOut,
     search: Fi.FiSearch,
     plus: Fi.FiPlus,
     clock: Fi.FiClock,
-    'trending-up': Fi.FiTrendingUp,
     square: Fi.FiSquare,
     save: Fi.FiSave,
-    'arrow-right': Fi.FiArrowRight,
-    'sliders-horizontal': Fi.FiSliders,
-    'arrow-up-down': Fi.FiArrowUpDown,
-    'layout-grid': Fi.FiGrid,
     list: Fi.FiList,
-    'more-horizontal': Fi.FiMoreHorizontal,
-    'message-square': Fi.FiMessageSquare,
     paperclip: Fi.FiPaperclip,
     play: Fi.FiPlay,
     pause: Fi.FiPause,
     minus: Fi.FiMinus,
+    'building-2': Fi.FiHome,
+    'chevrons-up-down': Fi.FiChevronDown,
+    'layout-dashboard': Fi.FiGrid,
+    'check-square': Fi.FiCheckSquare,
+    'bar-chart-2': Fi.FiBarChart2,
+    'log-out': Fi.FiLogOut,
+    'trending-up': Fi.FiTrendingUp,
+    'arrow-right': Fi.FiArrowRight,
+    'sliders-horizontal': Fi.FiSliders,
+    'arrow-up-down': Fi.FiArrowUp,
+    'layout-grid': Fi.FiGrid,
+    'more-horizontal': Fi.FiMoreHorizontal,
+    'message-square': Fi.FiMessageSquare,
     'arrow-up': Fi.FiArrowUp,
     'arrow-down': Fi.FiArrowDown,
     'check-circle-2': Fi.FiCheckCircle,
@@ -78,6 +148,64 @@ const iconMap: Record<IconName, React.ElementType> = {
     'message-circle': Fi.FiMessageCircle,
     'plus-circle': Fi.FiPlusCircle,
     'file-text': Fi.FiFileText,
+    'layers': Fi.FiLayers,
+    'loader': Fi.FiLoader,
+    'list-todo': Fi.FiList,
+    'trending-down': Fi.FiTrendingDown,
+    'copy': Fi.FiCopy,
+    'tag': Fi.FiTag,
+    'trash-2': Fi.FiTrash2,
+    'chevron-down': Fi.FiChevronDown,
+    'x': Fi.FiX,
+    'pencil': Fi.FiEdit,
+    'coffee': Fi.FiCoffee,
+    'target': Fi.FiTarget,
+    'keyboard': Fi.FiType,
+    'user': Fi.FiUser,
+    'chevron-left': Fi.FiChevronLeft,
+    'chevron-right': Fi.FiChevronRight,
+    'calendar-check': Fi.FiCalendar,
+    'check': Fi.FiCheck,
+    'filter': Fi.FiFilter,
+    'download': Fi.FiDownload,
+    'file-spreadsheet': Fi.FiFileText,
+    'alert-circle': Fi.FiAlertCircle,
+    'award': Fi.FiAward,
+    'eye': Fi.FiEye,
+    'activity': Fi.FiActivity,
+    'user-plus': Fi.FiUserPlus,
+    'edit-3': Fi.FiEdit3,
+    'hash': Fi.FiHash,
+    'smile': Fi.FiSmile,
+    'smile-plus': Fi.FiSmile,
+    'reply': Fi.FiCornerUpLeft,
+    'bold': Fi.FiBold,
+    'italic': Fi.FiItalic,
+    'link': Fi.FiLink,
+    'code': Fi.FiCode,
+    'at-sign': Fi.FiAtSign,
+    'pin': Fi.FiMapPin,
+    'figma': Fi.FiFigma,
+    'code-2': Fi.FiCode,
+    'send': Fi.FiSend,
+    'image': Fi.FiImage,
+    'mail': Fi.FiMail,
+    'lock': Fi.FiLock,
+    'shield': Fi.FiShield,
+    'chrome': Fi.FiChrome,
+    'github': Fi.FiGithub,
+    'info': Fi.FiInfo,
+    'palette': Fi.FiDroplet,
+    'plug': Fi.FiZap,
+    'shield-alert': Fi.FiAlertTriangle,
+    'shield-check': Fi.FiCheckCircle,
+    'monitor': Fi.FiMonitor,
+    'smartphone': Fi.FiSmartphone,
+    'credit-card': Fi.FiCreditCard,
+    'align-justify': Fi.FiAlignJustify,
+    'menu': Fi.FiMenu,
+    'layout-list': Fi.FiLayout,
+    'rotate-ccw': Fi.FiRotateCcw,
 };
 
 interface IconProps {
