@@ -153,123 +153,119 @@ const Dashboard: React.FC = () => {
     };
 
     return (
-        <div className="flex bg-background font-body min-h-screen">
-            <Sidebar />
-            <div className="flex flex-col flex-1 min-w-0">
-                <Topbar onOpenSettings={() => setShowSettings(true)} />
-                <div className="flex flex-1 min-w-0 overflow-hidden">
-                    <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6 overflow-y-auto">
-                        <div className="grid grid-cols-4 gap-4">
-                            <StatCard icon="clock" iconBg="bg-teal-bg" iconColor="text-primary" value={stats.todayHours} label="Today's Hours" sublabel="Goal: 8h" trend="+18%" />
-                            <StatCard icon="check-square" iconBg="bg-success-bg" iconColor="text-success" value={stats.tasksDone} label="Tasks Done" sublabel={`${tasks.filter((t) => t.status !== 'Done').length} remaining`} trend="+2 tasks" />
-                            <StatCard icon="zap" iconBg="bg-warning-bg" iconColor="text-warning" value={stats.streak} label="Streak" sublabel="Personal best!" trend="+3 days" />
-                            <StatCard icon="bar-chart-2" iconBg="bg-purple-bg" iconColor="text-purple" value={stats.productivity} label="Productivity" sublabel="vs 78% last week" trend="+14%" />
-                        </div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex items-center justify-between rounded-xl border border-primary bg-surface p-4 shadow-[0_0_0_1px_#00c9a720,0_8px_32px_#00c9a15]"
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-teal-bg">
-                                    <Icon name="timer" size={20} />
-                                    <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary border-2 border-background"></span>
-                                </div>
-                                <div>
-                                    <div className="text-xs text-foreground-muted">Currently tracking</div>
-                                    <div className="text-base font-semibold text-foreground">
-                                        {tasks.find((t) => t.id === activeTaskId)?.title || 'No active task'}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-6">
-                                <div className="font-mono text-3xl font-bold text-primary">{formatTime(timerSeconds)}</div>
-                                <div className="flex items-center gap-2">
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handlePause}
-                                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-warning-bg text-warning text-sm font-semibold"
-                                    >
-                                        <Icon name="pause" size={14} /> Pause
-                                    </motion.button>
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleStop}
-                                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-danger-bg text-danger text-sm font-semibold"
-                                    >
-                                        <Icon name="square" size={14} /> Stop
-                                    </motion.button>
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleSave}
-                                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-teal-bg text-primary text-sm font-semibold"
-                                    >
-                                        <Icon name="save" size={14} /> Save Log
-                                    </motion.button>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <div className="flex flex-col gap-4">
-                            <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-bold text-foreground font-headings">Today's Tasks</h2>
-                                <button className="flex items-center gap-1 text-sm text-primary font-semibold hover:underline">
-                                    View all <Icon name="arrow-right" size={14} />
-                                </button>
-                            </div>
-
-                            <div className="flex items-center justify-between gap-4">
-                                <div className="flex items-center gap-1 bg-surface rounded-lg p-1 border border-border">
-                                    {(['All Tasks', 'In Progress', 'To Do', 'Done'] as const).map((filter) => (
-                                        <FilterButton
-                                            key={filter}
-                                            label={filter}
-                                            count={filter === 'All Tasks' ? tasks.length : tasks.filter((t) => t.status === filter).length}
-                                            active={taskFilter === filter}
-                                            onClick={() => setTaskFilter(filter)}
-                                        />
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
-                                        <Icon name="sliders-horizontal" size={13} /> Filter
-                                    </button>
-                                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
-                                        <Icon name="arrow-up-down" size={13} /> Sort
-                                    </button>
-                                    <div className="flex items-center rounded-lg border border-border bg-surface overflow-hidden">
-                                        <button className="px-2.5 py-1.5 text-foreground-muted border-r border-border hover:text-primary transition">
-                                            <Icon name="layout-grid" size={14} />
-                                        </button>
-                                        <button className="px-2.5 py-1.5 text-primary">
-                                            <Icon name="list" size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <AnimatePresence>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {filteredTasks.map((task) => (
-                                        <TaskCard
-                                            key={task.id}
-                                            {...task}
-                                            isActive={activeTaskId === task.id}
-                                            onPlay={() => handlePlayTask(task.id)}
-                                            onPause={handlePauseTask}
-                                        />
-                                    ))}
-                                </div>
-                            </AnimatePresence>
-                        </div>
+        <div>
+            <div className="flex flex-1 min-w-0 overflow-hidden">
+                <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6 overflow-y-auto">
+                    <div className="grid grid-cols-4 gap-4">
+                        <StatCard icon="clock" iconBg="bg-teal-bg" iconColor="text-primary" value={stats.todayHours} label="Today's Hours" sublabel="Goal: 8h" trend="+18%" />
+                        <StatCard icon="check-square" iconBg="bg-success-bg" iconColor="text-success" value={stats.tasksDone} label="Tasks Done" sublabel={`${tasks.filter((t) => t.status !== 'Done').length} remaining`} trend="+2 tasks" />
+                        <StatCard icon="zap" iconBg="bg-warning-bg" iconColor="text-warning" value={stats.streak} label="Streak" sublabel="Personal best!" trend="+3 days" />
+                        <StatCard icon="bar-chart-2" iconBg="bg-purple-bg" iconColor="text-purple" value={stats.productivity} label="Productivity" sublabel="vs 78% last week" trend="+14%" />
                     </div>
 
-                    <RightSidebar quickNote={quickNote} setQuickNote={setQuickNote} />
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center justify-between rounded-xl border border-primary bg-surface p-4 shadow-[0_0_0_1px_#00c9a720,0_8px_32px_#00c9a15]"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-teal-bg">
+                                <Icon name="timer" size={20} />
+                                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary border-2 border-background"></span>
+                            </div>
+                            <div>
+                                <div className="text-xs text-foreground-muted">Currently tracking</div>
+                                <div className="text-base font-semibold text-foreground">
+                                    {tasks.find((t) => t.id === activeTaskId)?.title || 'No active task'}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-6">
+                            <div className="font-mono text-3xl font-bold text-primary">{formatTime(timerSeconds)}</div>
+                            <div className="flex items-center gap-2">
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={handlePause}
+                                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-warning-bg text-warning text-sm font-semibold"
+                                >
+                                    <Icon name="pause" size={14} /> Pause
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={handleStop}
+                                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-danger-bg text-danger text-sm font-semibold"
+                                >
+                                    <Icon name="square" size={14} /> Stop
+                                </motion.button>
+                                <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={handleSave}
+                                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-teal-bg text-primary text-sm font-semibold"
+                                >
+                                    <Icon name="save" size={14} /> Save Log
+                                </motion.button>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-lg font-bold text-foreground font-headings">Today's Tasks</h2>
+                            <button className="flex items-center gap-1 text-sm text-primary font-semibold hover:underline">
+                                View all <Icon name="arrow-right" size={14} />
+                            </button>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-1 bg-surface rounded-lg p-1 border border-border">
+                                {(['All Tasks', 'In Progress', 'To Do', 'Done'] as const).map((filter) => (
+                                    <FilterButton
+                                        key={filter}
+                                        label={filter}
+                                        count={filter === 'All Tasks' ? tasks.length : tasks.filter((t) => t.status === filter).length}
+                                        active={taskFilter === filter}
+                                        onClick={() => setTaskFilter(filter)}
+                                    />
+                                ))}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
+                                    <Icon name="sliders-horizontal" size={13} /> Filter
+                                </button>
+                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
+                                    <Icon name="arrow-up-down" size={13} /> Sort
+                                </button>
+                                <div className="flex items-center rounded-lg border border-border bg-surface overflow-hidden">
+                                    <button className="px-2.5 py-1.5 text-foreground-muted border-r border-border hover:text-primary transition">
+                                        <Icon name="layout-grid" size={14} />
+                                    </button>
+                                    <button className="px-2.5 py-1.5 text-primary">
+                                        <Icon name="list" size={14} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <AnimatePresence>
+                            <div className="grid grid-cols-2 gap-4">
+                                {filteredTasks.map((task) => (
+                                    <TaskCard
+                                        key={task.id}
+                                        {...task}
+                                        isActive={activeTaskId === task.id}
+                                        onPlay={() => handlePlayTask(task.id)}
+                                        onPause={handlePauseTask}
+                                    />
+                                ))}
+                            </div>
+                        </AnimatePresence>
+                    </div>
                 </div>
+
+                <RightSidebar quickNote={quickNote} setQuickNote={setQuickNote} />
             </div>
 
             <AnimatePresence>{showSettings && <SettingsPanel />}</AnimatePresence>
