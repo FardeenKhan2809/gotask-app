@@ -9,11 +9,121 @@ type LayoutDensity = 'compact' | 'default' | 'spacious';
 type CornerRadius = 'sharp' | 'subtle' | 'rounded' | 'pill';
 type SidebarStyle = 'full-labels' | 'icon-only' | 'floating-rail';
 
-const themePresets: Record<ThemePreset, { background: string; surface: string; background2: string; border: string }> = {
-    dark: { background: '#0f1117', surface: '#1a2030', background2: '#161b25', border: '#2a3347' },
-    midnight: { background: '#000000', surface: '#0d0d0d', background2: '#050505', border: '#1a1a1a' },
-    light: { background: '#ffffff', surface: '#f4f5f7', background2: '#eef2f5', border: '#e5e7eb' },
-    dim: { background: '#1c1e26', surface: '#23262f', background2: '#181a21', border: '#2e3240' },
+const themePresets: Record<ThemePreset, {
+    background: string;
+    background2: string;
+    background3: string;
+    surface: string;
+    surface2: string;
+    foreground: string;
+    foregroundMuted: string;
+    border: string;
+    muted: string;
+    mutedForeground: string;
+    success: string;
+    successBg: string;
+    warning: string;
+    warningBg: string;
+    danger: string;
+    dangerBg: string;
+    info: string;
+    infoBg: string;
+    purple: string;
+    purpleBg: string;
+    tealBg: string;
+}> = {
+    dark: {
+        background: '#0f1117',
+        background2: '#161b25',
+        background3: '#1e2535',
+        surface: '#1a2030',
+        surface2: '#222b3d',
+        foreground: '#f0f4ff',
+        foregroundMuted: '#8892a4',
+        border: '#2a3347',
+        muted: '#2a3347',
+        mutedForeground: '#8892a4',
+        success: '#10b981',
+        successBg: '#10b98120',
+        warning: '#f59e0b',
+        warningBg: '#f59e0b20',
+        danger: '#ef4444',
+        dangerBg: '#ef444420',
+        info: '#3b82f6',
+        infoBg: '#3b82f620',
+        purple: '#8b5cf6',
+        purpleBg: '#8b5cf620',
+        tealBg: '#00c9a715',
+    },
+    midnight: {
+        background: '#000000',
+        background2: '#050505',
+        background3: '#0a0a0a',
+        surface: '#0d0d0d',
+        surface2: '#151515',
+        foreground: '#e8e8e8',
+        foregroundMuted: '#808080',
+        border: '#1a1a1a',
+        muted: '#1a1a1a',
+        mutedForeground: '#808080',
+        success: '#10b981',
+        successBg: '#10b98120',
+        warning: '#f59e0b',
+        warningBg: '#f59e0b20',
+        danger: '#ef4444',
+        dangerBg: '#ef444420',
+        info: '#3b82f6',
+        infoBg: '#3b82f620',
+        purple: '#8b5cf6',
+        purpleBg: '#8b5cf620',
+        tealBg: '#00c9a715',
+    },
+    light: {
+        background: '#ffffff',
+        background2: '#f4f6f9',
+        background3: '#eef0f3',
+        surface: '#ffffff',
+        surface2: '#fafbfc',
+        foreground: '#1e1e2f',
+        foregroundMuted: '#6b7280',
+        border: '#d1d5db',
+        muted: '#e5e7eb',
+        mutedForeground: '#6b7280',
+        success: '#10b981',
+        successBg: '#10b98120',
+        warning: '#f59e0b',
+        warningBg: '#f59e0b20',
+        danger: '#ef4444',
+        dangerBg: '#ef444420',
+        info: '#3b82f6',
+        infoBg: '#3b82f620',
+        purple: '#8b5cf6',
+        purpleBg: '#8b5cf620',
+        tealBg: '#00c9a715',
+    },
+    dim: {
+        background: '#1c1e26',
+        background2: '#181a21',
+        background3: '#14161c',
+        surface: '#23262f',
+        surface2: '#2b2e38',
+        foreground: '#e2e4ea',
+        foregroundMuted: '#8a8d99',
+        border: '#2e3240',
+        muted: '#2e3240',
+        mutedForeground: '#8a8d99',
+        success: '#10b981',
+        successBg: '#10b98120',
+        warning: '#f59e0b',
+        warningBg: '#f59e0b20',
+        danger: '#ef4444',
+        dangerBg: '#ef444420',
+        info: '#3b82f6',
+        infoBg: '#3b82f620',
+        purple: '#8b5cf6',
+        purpleBg: '#8b5cf620',
+        tealBg: '#00c9a715',
+    },
 };
 
 const accentPresets: Record<AccentPreset, { primary: string; gradient: string }> = {
@@ -117,12 +227,31 @@ const AppearanceTab: React.FC = () => {
             ? settings.customAccentColor
             : accentPresets[settings.accentPreset as AccentPreset].primary;
         const colors = themePresets[settings.themePreset as ThemePreset];
+
         updateTheme({
+            // Base colors
             primary: accentColor,
             background: colors.background,
             background2: colors.background2,
+            background3: colors.background3,
             surface: colors.surface,
+            surface2: colors.surface2,
+            foreground: colors.foreground,
+            foregroundMuted: colors.foregroundMuted,
             border: colors.border,
+            muted: colors.muted,
+            mutedForeground: colors.mutedForeground,
+            success: colors.success,
+            successBg: colors.successBg,
+            warning: colors.warning,
+            warningBg: colors.warningBg,
+            danger: colors.danger,
+            dangerBg: colors.dangerBg,
+            info: colors.info,
+            infoBg: colors.infoBg,
+            purple: colors.purple,
+            purpleBg: colors.purpleBg,
+            tealBg: colors.tealBg,
             borderRadius: cornerRadiusValues[settings.cornerRadius as CornerRadius],
             fontBody: `${fontFamilies[settings.fontFamily as FontFamily]}, sans-serif`,
             fontHeadings: `${fontFamilies[settings.fontFamily as FontFamily]}, sans-serif`,
