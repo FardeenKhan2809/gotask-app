@@ -108,6 +108,33 @@ type IconName =
     | 'menu'
     | 'layout-list'
     | 'rotate-ccw'
+    | 'check-check'
+    | 'settings-2'
+    | 'external-link'
+    | 'x'
+    | 'user-plus'
+    | 'alert-circle'
+    | 'mail'
+    | 'monitor'
+    | 'smartphone'
+    | 'moon'
+    | 'camera'
+    | 'briefcase'
+    | 'map-pin'
+    | 'target'
+    | 'flame'
+    | 'underline'
+    | 'list-ordered'
+    | 'upload-cloud'
+    | 'trending-down'
+    | 'settings-2'
+    | 'filter'
+    | 'more-horizontal'
+    | 'plus-circle'
+    | 'paperclip'
+    | 'play-circle'
+    | 'shield-check'
+    | 'square'
     | 'x';
 
 const iconMap: Record<IconName, React.ElementType> = {
@@ -128,6 +155,29 @@ const iconMap: Record<IconName, React.ElementType> = {
     play: Fi.FiPlay,
     pause: Fi.FiPause,
     minus: Fi.FiMinus,
+    'trending-down': Fi.FiTrendingDown,
+    'settings-2': Fi.FiSettings,
+    'filter': Fi.FiFilter,
+    'more-horizontal': Fi.FiMoreHorizontal,
+    'plus-circle': Fi.FiPlusCircle,
+    'play-circle': Fi.FiPlayCircle,
+    'underline': Fi.FiUnderline,
+    'list-ordered': Fi.FiList,
+    'upload-cloud': Fi.FiUploadCloud,
+    'camera': Fi.FiCamera,
+    'briefcase': Fi.FiBriefcase,
+    'map-pin': Fi.FiMapPin,
+    'target': Fi.FiTarget,
+    'flame': Fi.FiZap,
+    'check-check': Fi.FiCheckSquare,
+    'external-link': Fi.FiExternalLink,
+    'x': Fi.FiX,
+    'user-plus': Fi.FiUserPlus,
+    'alert-circle': Fi.FiAlertCircle,
+    'mail': Fi.FiMail,
+    'monitor': Fi.FiMonitor,
+    'smartphone': Fi.FiSmartphone,
+    'moon': Fi.FiMoon,
     'building-2': Fi.FiHome,
     'chevrons-up-down': Fi.FiChevronDown,
     'layout-dashboard': Fi.FiGrid,
@@ -139,41 +189,32 @@ const iconMap: Record<IconName, React.ElementType> = {
     'sliders-horizontal': Fi.FiSliders,
     'arrow-up-down': Fi.FiArrowUp,
     'layout-grid': Fi.FiGrid,
-    'more-horizontal': Fi.FiMoreHorizontal,
     'message-square': Fi.FiMessageSquare,
     'arrow-up': Fi.FiArrowUp,
     'arrow-down': Fi.FiArrowDown,
     'check-circle-2': Fi.FiCheckCircle,
-    'play-circle': Fi.FiPlayCircle,
     'message-circle': Fi.FiMessageCircle,
-    'plus-circle': Fi.FiPlusCircle,
     'file-text': Fi.FiFileText,
     'layers': Fi.FiLayers,
     'loader': Fi.FiLoader,
     'list-todo': Fi.FiList,
-    'trending-down': Fi.FiTrendingDown,
     'copy': Fi.FiCopy,
     'tag': Fi.FiTag,
     'trash-2': Fi.FiTrash2,
     'chevron-down': Fi.FiChevronDown,
-    'x': Fi.FiX,
     'pencil': Fi.FiEdit,
     'coffee': Fi.FiCoffee,
-    'target': Fi.FiTarget,
     'keyboard': Fi.FiType,
     'user': Fi.FiUser,
     'chevron-left': Fi.FiChevronLeft,
     'chevron-right': Fi.FiChevronRight,
     'calendar-check': Fi.FiCalendar,
     'check': Fi.FiCheck,
-    'filter': Fi.FiFilter,
     'download': Fi.FiDownload,
     'file-spreadsheet': Fi.FiFileText,
-    'alert-circle': Fi.FiAlertCircle,
     'award': Fi.FiAward,
     'eye': Fi.FiEye,
     'activity': Fi.FiActivity,
-    'user-plus': Fi.FiUserPlus,
     'edit-3': Fi.FiEdit3,
     'hash': Fi.FiHash,
     'smile': Fi.FiSmile,
@@ -189,7 +230,6 @@ const iconMap: Record<IconName, React.ElementType> = {
     'code-2': Fi.FiCode,
     'send': Fi.FiSend,
     'image': Fi.FiImage,
-    'mail': Fi.FiMail,
     'lock': Fi.FiLock,
     'shield': Fi.FiShield,
     'chrome': Fi.FiChrome,
@@ -199,8 +239,6 @@ const iconMap: Record<IconName, React.ElementType> = {
     'plug': Fi.FiZap,
     'shield-alert': Fi.FiAlertTriangle,
     'shield-check': Fi.FiCheckCircle,
-    'monitor': Fi.FiMonitor,
-    'smartphone': Fi.FiSmartphone,
     'credit-card': Fi.FiCreditCard,
     'align-justify': Fi.FiAlignJustify,
     'menu': Fi.FiMenu,

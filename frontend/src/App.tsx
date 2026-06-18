@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/ui/Sidebar';
 import Topbar from './components/ui/Topbar';
+import AdminDashboard from './pages/admin/AdminDashboard';
 import Dashboard from './pages/dashboard/Dashboard';
 import MyTasks from './pages/tasks/MyTasks';
 import TimeTracker from './pages/tasks/TimeTracker';
@@ -14,6 +15,8 @@ import Chat from './pages/chat/Chat';
 import Signup from './pages/login/Signup';
 import Login from './pages/login/Login';
 import Settings from './pages/settings/Settings';
+import Notifications from './pages/notifications/Notifications';
+import TaskCreation from './pages/tasks/CreateTask';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex bg-background font-body min-h-screen">
@@ -25,15 +28,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </div>
 );
 
-const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
-  <div className="flex items-center justify-center h-full p-8">
-    <h1 className="text-2xl font-bold text-foreground">{title} – Coming Soon</h1>
-  </div>
-);
-
-const NotificationsPage = () => <PlaceholderPage title="Notifications" />;
-const SettingsPage = () => <PlaceholderPage title="Settings" />;
-
 function App() {
   return (
     <ThemeProvider>
@@ -42,6 +36,7 @@ function App() {
           {/* Auth routes – no layout (no Sidebar/Topbar) */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/admin" element={<AdminDashboard />} />
 
           {/* Protected routes – wrapped with Layout */}
           <Route path="/" element={<Layout><Dashboard /></Layout>} />
@@ -52,8 +47,9 @@ function App() {
           <Route path="/team" element={<Layout><Team /></Layout>} />
           <Route path="/projects" element={<Layout><Projects /></Layout>} />
           <Route path="/chat" element={<Layout><Chat /></Layout>} />
-          <Route path="/notifications" element={<Layout><NotificationsPage /></Layout>} />
+          <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
+          <Route path="/create-task" element={<Layout><TaskCreation /></Layout>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
