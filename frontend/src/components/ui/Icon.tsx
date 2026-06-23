@@ -135,6 +135,7 @@ type IconName =
     | 'play-circle'
     | 'shield-check'
     | 'square'
+    | 'banknote'
     | 'x';
 
 const iconMap: Record<IconName, React.ElementType> = {
@@ -155,6 +156,7 @@ const iconMap: Record<IconName, React.ElementType> = {
     play: Fi.FiPlay,
     pause: Fi.FiPause,
     minus: Fi.FiMinus,
+    'banknote': Fi.FiBanknote,
     'trending-down': Fi.FiTrendingDown,
     'settings-2': Fi.FiSettings,
     'filter': Fi.FiFilter,

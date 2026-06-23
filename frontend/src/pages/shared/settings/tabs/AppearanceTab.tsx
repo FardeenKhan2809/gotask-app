@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Icon from '../../../components/ui/Icon';
-import { useTheme } from '../../../context/ThemeContext';
+import Icon from '../../../../components/ui/Icon';
+import { useTheme } from '../../../../context/ThemeContext';
 
 type ThemePreset = 'dark' | 'midnight' | 'light' | 'dim';
 type AccentPreset = 'emerald-teal' | 'electric-indigo' | 'vivid-violet' | 'coral-flame' | 'amber-glow' | 'sky-blue' | 'rose-pink' | 'lime-zest';
