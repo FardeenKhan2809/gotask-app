@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from '../../components/ui/Sidebar';
 import Topbar from '../../components/ui/Topbar';
 import Icon from '../../components/ui/Icon';
-import SettingsPanel from '../settings/SettingsPanel';
+import SettingsPanel from '../shared/settings/SettingsPanel';
 
 interface Task {
     id: string;

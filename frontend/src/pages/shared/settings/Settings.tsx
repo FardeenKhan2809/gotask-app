@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from '../../components/ui/Icon';
+import Icon from '../../../components/ui/Icon';
 import ProfileTab from './tabs/ProfileTab';
 import AccountSecurityTab from './tabs/AccountSecurityTab';
 import NotificationsTab from './tabs/NotificationsTab';

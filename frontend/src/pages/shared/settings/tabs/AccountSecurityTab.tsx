@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from '../../../components/ui/Icon';
+import Icon from '../../../../components/ui/Icon';
 
 const AccountSecurityTab: React.FC = () => {
     const [showCurrentPwd, setShowCurrentPwd] = useState(false);

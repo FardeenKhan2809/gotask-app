@@ -1,9 +1,9 @@
 // src/pages/admin/AdminDashboard.tsx
 import React, { useState } from 'react';
-import Icon from '../../components/ui/Icon';
-import AdminSidebar from '../../components/admin/AdminSidebar';
-import AdminTopbar from '../../components/admin/AdminTopbar';
-import ActivitiesSidebar from '../../components/ui/ActivitiesSidebar';
+import Icon from '../../../components/ui/Icon';
+import AdminSidebar from '../../../components/admin/AdminSidebar';
+import AdminTopbar from '../../../components/admin/AdminTopbar';
+import ActivitiesSidebar from '../../../components/ui/ActivitiesSidebar';
 
 const AdminDashboard: React.FC = () => {
     const [showActivity, setShowActivity] = useState(false); // true by default to match HTML, but can be toggled

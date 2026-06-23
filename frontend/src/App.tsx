@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/ui/Sidebar';
 import Topbar from './components/ui/Topbar';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import Dashboard from './pages/dashboard/Dashboard';
 import MyTasks from './pages/tasks/MyTasks';
 import TimeTracker from './pages/tasks/TimeTracker';
@@ -12,11 +12,14 @@ import Reports from './pages/reports/Reports';
 import Team from './pages/team/Team';
 import Projects from './pages/projects/Projects';
 import Chat from './pages/chat/Chat';
-import Signup from './pages/login/Signup';
-import Login from './pages/login/Login';
-import Settings from './pages/settings/Settings';
+import Signup from './pages/shared/login/Signup';
+import Login from './pages/shared/login/Login';
+import Settings from './pages/shared/settings/Settings';
 import Notifications from './pages/notifications/Notifications';
 import TaskCreation from './pages/tasks/CreateTask';
+import AdminEmployeeListing from './pages/admin/employee/AdminEmployeeListingPage';
+import AdminAddEmployee from './pages/admin/employee/AddAmployee';
+import AdminApprovals from './pages/admin/employee/Approvals';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="flex bg-background font-body min-h-screen">
@@ -50,6 +53,9 @@ function App() {
           <Route path="/notifications" element={<Layout><Notifications /></Layout>} />
           <Route path="/settings" element={<Layout><Settings /></Layout>} />
           <Route path="/create-task" element={<Layout><TaskCreation /></Layout>} />
+          <Route path="/employee" element={<Layout><AdminEmployeeListing /></Layout>} />
+          <Route path="/add-employee" element={<Layout><AdminAddEmployee /></Layout>} />
+          <Route path="/approvals" element={<Layout><AdminApprovals /></Layout>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
