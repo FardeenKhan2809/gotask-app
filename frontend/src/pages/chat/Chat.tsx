@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
 
 interface Message {
     id: string;
@@ -148,7 +147,6 @@ const Chat: React.FC = () => {
 
     return (
         <div className="flex flex-1 min-w-0">
-            {/* Left Sidebar – Channels & DMs */}
             <div className="flex flex-col border-r border-border bg-background-2 w-[240px] flex-shrink-0">
                 <div className="flex items-center justify-between px-4 py-4 border-b border-border">
                     <span className="text-base font-bold text-foreground">Messages</span>
@@ -211,7 +209,6 @@ const Chat: React.FC = () => {
                 </div>
             </div>
 
-            {/* Main Chat Area */}
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-background-2">
                     <div className="flex items-center gap-3">
@@ -239,7 +236,6 @@ const Chat: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Messages */}
                 <div className="flex flex-col flex-1 min-h-0">
                     <div className="flex items-center gap-3 px-6 py-4">
                         <div className="flex-1 h-px bg-border" />
@@ -265,12 +261,16 @@ const Chat: React.FC = () => {
                                         {msg.reactions?.map(react => (
                                             <button
                                                 key={react.emoji}
+                                                onClick={() => addReaction(msg.id, react.emoji)}
                                                 className="flex items-center gap-1 text-xs rounded-full border border-border bg-surface px-2 py-0.5 font-medium text-foreground-muted"
                                             >
                                                 {react.emoji} {react.count}
                                             </button>
                                         ))}
-                                        <button className="w-6 h-6 flex items-center justify-center rounded-full border border-border bg-surface text-foreground-muted opacity-0 group-hover:opacity-100 transition">
+                                        <button
+                                            onClick={() => addReaction(msg.id, '👍')}
+                                            className="w-6 h-6 flex items-center justify-center rounded-full border border-border bg-surface text-foreground-muted opacity-0 group-hover:opacity-100 transition"
+                                        >
                                             <Icon name="smile-plus" size={11} />
                                         </button>
                                     </div>
@@ -299,7 +299,6 @@ const Chat: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Message Input */}
                     <div className="px-6 pb-5">
                         <div className="rounded-2xl border border-border bg-surface overflow-hidden">
                             <div className="flex items-center gap-1 px-4 py-2 border-b border-border">
@@ -335,9 +334,7 @@ const Chat: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right Sidebar – Pinned, Members, Files */}
             <div className="flex flex-col gap-5 border-l border-border px-5 py-5 bg-background-2 w-[260px] flex-shrink-0 overflow-y-auto">
-                {/* Pinned Tasks */}
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                         <Icon name="pin" size={14} />
@@ -357,7 +354,6 @@ const Chat: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Members */}
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                         <Icon name="users" size={14} />
@@ -375,7 +371,6 @@ const Chat: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Shared Files */}
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                         <Icon name="paperclip" size={14} />

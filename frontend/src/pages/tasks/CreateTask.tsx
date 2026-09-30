@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
-import Icon from '../../components/ui/Icon';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 type Category = 'Development' | 'Design' | 'Meeting' | 'Research' | 'Testing';
 type Priority = 'High' | 'Medium' | 'Low';
 type Status = 'To Do' | 'In Progress' | 'Done';
 
 const TaskCreation: React.FC = () => {
-    // Form state
+    const navigate = useNavigate();
+    const { success, warning, info } = useToast();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState<Category>('Development');
@@ -27,12 +32,12 @@ const TaskCreation: React.FC = () => {
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const [showProjectDropdown, setShowProjectDropdown] = useState(false);
+    const [attachedFiles, setAttachedFiles] = useState<string[]>([]);
 
     const categories: Category[] = ['Development', 'Design', 'Meeting', 'Research', 'Testing'];
     const statuses: Status[] = ['To Do', 'In Progress', 'Done'];
     const projects = ['Product Redesign', 'Payment Gateway Integration', 'Mobile App v2', 'Analytics Dashboard'];
 
-    // Tag handlers
     const addTag = () => {
         if (newTag.trim() && !tags.includes(newTag.trim())) {
             setTags([...tags, newTag.trim()]);
@@ -45,22 +50,54 @@ const TaskCreation: React.FC = () => {
     };
 
     const handleCreateTask = () => {
-        alert('Task created! (demo)');
+        if (!title.trim()) {
+            warning('Title Required', 'Please provide a title for the task.');
+            return;
+        }
+        const newTask = {
+            id: `task-${Date.now()}`,
+            title: title.trim(),
+            description,
+            category,
+            priority,
+            status,
+            dueDate: endDate,
+            project,
+            tags,
+            assignee,
+            hoursLogged: `${manualHours}h ${manualMinutes}m`,
+        };
+        const existing = JSON.parse(localStorage.getItem('custom_tasks') || '[]');
+        localStorage.setItem('custom_tasks', JSON.stringify([newTask, ...existing]));
+        success('Task Created', `"${title.trim()}" has been successfully added.`);
+        navigate('/my-tasks');
     };
 
     const handleSaveDraft = () => {
-        alert('Draft saved (demo)');
+        if (!title.trim()) {
+            warning('Draft Needs Title', 'Please enter a title before saving draft.');
+            return;
+        }
+        localStorage.setItem('task_draft', JSON.stringify({ title, description, category, priority, status }));
+        info('Draft Saved', 'Draft was saved locally.');
     };
 
     const handleDuplicate = () => {
-        alert('Task duplicated (demo)');
+        setTitle(prev => prev ? `${prev} (Copy)` : 'New Task Copy');
+        info('Task Duplicated', 'Duplicated task form created.');
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const fileName = e.target.files[0].name;
+            setAttachedFiles(prev => [...prev, fileName]);
+            success('Attachment Added', `Attached ${fileName}`);
+        }
     };
 
     return (
         <div className="flex flex-1 px-8 py-7 gap-8 min-w-0">
-            {/* Main Form */}
             <div className="flex flex-col gap-6 flex-1 min-w-0">
-                {/* Task Title */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">
                         Task Title <span className="text-danger">*</span>
@@ -77,14 +114,12 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Description */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">Description</label>
                     <div className="flex flex-col rounded-xl border border-border bg-surface p-4 gap-3">
-                        {/* Rich text toolbar (visual only) */}
                         <div className="flex items-center gap-1 pb-3 border-b border-border flex-wrap">
                             {['bold', 'italic', 'underline', 'list', 'list-ordered', 'link', 'image', 'code'].map((icon) => (
-                                <button key={icon} className="w-7 h-7 flex items-center justify-center rounded text-foreground-muted hover:bg-surface-2 transition">
+                                <button key={icon} type="button" className="w-7 h-7 flex items-center justify-center rounded text-foreground-muted hover:bg-surface-2 transition">
                                     <Icon name={icon as any} size={14} />
                                 </button>
                             ))}
@@ -98,9 +133,7 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Category, Priority, Status */}
                 <div className="grid grid-cols-3 gap-4">
-                    {/* Category */}
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-foreground">Category</label>
                         <div
@@ -125,13 +158,13 @@ const TaskCreation: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Priority */}
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-foreground">Priority</label>
                         <div className="flex gap-2">
                             {(['High', 'Medium', 'Low'] as Priority[]).map((p) => (
                                 <button
                                     key={p}
+                                    type="button"
                                     onClick={() => setPriority(p)}
                                     className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg border py-2.5 text-xs font-bold transition ${priority === p
                                             ? p === 'High'
@@ -149,7 +182,6 @@ const TaskCreation: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Status */}
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-foreground">Status</label>
                         <div
@@ -169,7 +201,7 @@ const TaskCreation: React.FC = () => {
                                             className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-teal-bg hover:text-primary cursor-pointer"
                                             onClick={() => { setStatus(s); setShowStatusDropdown(false); }}
                                         >
-                                            <span className={`w-2 h-2 rounded-full ${s === 'In Progress' ? 'bg-primary' : s === 'To Do' ? 'bg-foreground-muted' : 'bg-success'}`} />
+                                            <span className={`w-2 h-2 rounded-full ${s === 'In Progress' ? 'bg-primary' : status === 'To Do' ? 'bg-foreground-muted' : 'bg-success'}`} />
                                             {s}
                                         </div>
                                     ))}
@@ -179,7 +211,6 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Start & End Date/Time */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-semibold text-foreground">Start Date &amp; Time</label>
@@ -223,7 +254,6 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Manual Duration */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">Manual Duration (optional)</label>
                     <div className="flex items-center gap-4">
@@ -254,7 +284,6 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Tags */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">Tags</label>
                     <div className="rounded-xl border border-border bg-surface p-4 flex flex-col gap-3">
@@ -265,7 +294,7 @@ const TaskCreation: React.FC = () => {
                                     className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-bg text-primary"
                                 >
                                     {tag}
-                                    <button onClick={() => removeTag(tag)} className="hover:text-danger transition">
+                                    <button type="button" onClick={() => removeTag(tag)} className="hover:text-danger transition">
                                         <Icon name="x" size={10} />
                                     </button>
                                 </span>
@@ -286,6 +315,7 @@ const TaskCreation: React.FC = () => {
                             {['UI', 'Backend', 'API', 'Sprint', 'Urgent', 'Review', 'Frontend', 'Infra'].map((suggestion) => (
                                 <button
                                     key={suggestion}
+                                    type="button"
                                     onClick={() => { if (!tags.includes(suggestion)) setTags([...tags, suggestion]); }}
                                     className="text-xs px-2 py-0.5 rounded-full border border-border text-foreground-muted hover:bg-surface-2 transition"
                                 >
@@ -296,18 +326,16 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Notes */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">Notes / Context</label>
                     <textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Internal notes, blockers, references..."
-                        className="rounded-xl border border-border bg-surface px-4 py-3 min-h-20 text-sm text-foreground-muted outline-none resize-none"
+                        className="rounded-xl border border-border bg-surface px-4 py-3 min-h-20 text-sm text-foreground outline-none resize-none"
                     />
                 </div>
 
-                {/* Attachments */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-semibold text-foreground">Attachments</label>
                     <div className="rounded-xl border border-dashed border-border bg-surface p-6 flex flex-col items-center gap-3">
@@ -316,22 +344,44 @@ const TaskCreation: React.FC = () => {
                         </div>
                         <div className="text-sm text-foreground-muted text-center">
                             Drag &amp; drop files here, or{' '}
-                            <button className="text-primary font-semibold hover:underline">browse</button>
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="text-primary font-semibold hover:underline"
+                            >
+                                browse
+                            </button>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                onChange={handleFileChange}
+                                className="hidden"
+                            />
                         </div>
                         <span className="text-xs text-foreground-muted">PNG, JPG, PDF, ZIP up to 25MB</span>
+                        {attachedFiles.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {attachedFiles.map((f, i) => (
+                                    <span key={i} className="text-xs bg-muted text-foreground px-2 py-1 rounded">
+                                        {f}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex items-center justify-between rounded-xl border border-border bg-surface-2 px-6 py-4">
                     <div className="flex items-center gap-3">
                         <button
+                            type="button"
                             onClick={handleSaveDraft}
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition"
                         >
                             <Icon name="save" size={15} /> Save Draft
                         </button>
                         <button
+                            type="button"
                             onClick={handleDuplicate}
                             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition"
                         >
@@ -339,12 +389,17 @@ const TaskCreation: React.FC = () => {
                         </button>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button className="px-5 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition">
+                        <button
+                            type="button"
+                            onClick={() => navigate('/my-tasks')}
+                            className="px-5 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                        >
                             Cancel
                         </button>
                         <button
+                            type="button"
                             onClick={handleCreateTask}
-                            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition"
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition shadow-sm"
                         >
                             <Icon name="plus" size={15} /> Create Task
                         </button>
@@ -352,9 +407,7 @@ const TaskCreation: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right Sidebar */}
             <div className="flex flex-col gap-5 w-[280px] flex-shrink-0">
-                {/* Assignee */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Assignee</h3>
                     <div className="flex items-center gap-3 rounded-lg bg-background-2 border border-border px-3 py-2.5">
@@ -366,12 +419,15 @@ const TaskCreation: React.FC = () => {
                         <span className="text-sm text-foreground">{assignee}</span>
                         <span className="ml-auto text-xs text-primary font-semibold">You</span>
                     </div>
-                    <button className="flex items-center gap-2 text-sm text-foreground-muted hover:text-primary transition">
+                    <button
+                        type="button"
+                        onClick={() => setAssignee(assignee === 'Aryan Mehta' ? 'Priya Sharma' : 'Aryan Mehta')}
+                        className="flex items-center gap-2 text-sm text-foreground-muted hover:text-primary transition"
+                    >
                         <Icon name="user-plus" size={14} /> Assign to someone else
                     </button>
                 </div>
 
-                {/* Project */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-3">
                     <h3 className="text-sm font-bold text-foreground">Project</h3>
                     <div
@@ -399,11 +455,11 @@ const TaskCreation: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Time Tracking */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Time Tracking</h3>
                     <div className="flex flex-col gap-2">
                         <button
+                            type="button"
                             onClick={() => setTimeTrackingMode('live')}
                             className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 ${timeTrackingMode === 'live' ? 'border-primary bg-teal-bg' : 'border-border bg-background-2'}`}
                         >
@@ -417,6 +473,7 @@ const TaskCreation: React.FC = () => {
                             {timeTrackingMode === 'live' && <Icon name="check-circle-2" size={16} className="text-primary ml-auto" />}
                         </button>
                         <button
+                            type="button"
                             onClick={() => setTimeTrackingMode('manual')}
                             className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 ${timeTrackingMode === 'manual' ? 'border-primary bg-teal-bg' : 'border-border bg-background-2'}`}
                         >

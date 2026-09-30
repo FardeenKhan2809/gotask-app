@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import StatCard from '@/components/ui/StatCard';
+import { useToast } from '@/context/ToastContext';
 
 type DateRange = 'this-week' | 'this-month' | 'last-month' | 'custom';
 
@@ -27,11 +28,38 @@ const Reports: React.FC = () => {
         { id: 5, name: 'Carlos Vega', avatar: 'https://storage.googleapis.com/banani-avatars/avatar/male/25-35/Hispanic/4', hours: 32.0, tasks: 11, score: 79 },
     ];
 
-    const handleExportPDF = () => alert('Export PDF clicked');
-    const handleExportExcel = () => alert('Export Excel clicked');
+    const { success } = useToast();
+
+    const handleExportPDF = () => {
+        const reportContent = `TASK APP PRODUCTIVITY REPORT\nDate: ${new Date().toLocaleDateString()}\nRange: ${selectedRange}\n\nTop Performers:\n` +
+            topPerformers.map(p => `${p.name}: ${p.hours}h, ${p.tasks} tasks, score: ${p.score}%`).join('\n');
+        const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `productivity_report_${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        success('Report Downloaded', 'Productivity report text export created.');
+    };
+
+    const handleExportExcel = () => {
+        const rows = ['Name,Hours,Tasks,Score'];
+        topPerformers.forEach(p => rows.push(`"${p.name}","${p.hours}","${p.tasks}","${p.score}"`));
+        const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `productivity_data_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        success('CSV Export Ready', 'Exported employee metrics as CSV file.');
+    };
+
     const handleFilterEmployee = () => setFilterEmployee(!filterEmployee);
 
-    // Bar chart monthly hours
     const monthlyHours = [
         { month: 'Jan', hours: 148 },
         { month: 'Feb', hours: 162 },
@@ -42,10 +70,9 @@ const Reports: React.FC = () => {
         { month: 'Jul', hours: 183 },
     ];
     const maxMonthHours = Math.max(...monthlyHours.map(m => m.hours));
-    const barHeight = 80; // px
+    const barHeight = 80;
     const getBarHeight = (hours: number) => (hours / maxMonthHours) * barHeight;
 
-    // For the heatmap data (5 weeks x 7 days) – static from HTML
     const heatmapRows = [
         [0, 20, 40, 70, 40, 20, 0],
         [20, 70, 100, 100, 70, 40, 0],
@@ -61,7 +88,6 @@ const Reports: React.FC = () => {
         return 'bg-primary';
     };
 
-    // Category hours data
     const categories = [
         { name: 'Development', hours: 128.4, color: 'bg-primary', textColor: 'text-primary' },
         { name: 'Design', hours: 74.2, color: 'bg-purple', textColor: 'text-purple' },
@@ -76,7 +102,6 @@ const Reports: React.FC = () => {
     return (
         <div className="flex flex-col flex-1 min-w-0">
             <div className="flex flex-col gap-6 px-8 py-6">
-                {/* Date range selector + action buttons */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 bg-surface rounded-lg p-1 border border-border">
                         <button
@@ -107,7 +132,7 @@ const Reports: React.FC = () => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={handleFilterEmployee}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border bg-surface text-xs font-semibold transition ${filterEmployee ? 'border-primary text-primary' : 'border-border text-foreground-muted hover:bg-surface-2'}`}
                         >
                             <Icon name="filter" size={13} />
                             <span>Filter by Employee</span>
@@ -129,7 +154,6 @@ const Reports: React.FC = () => {
                     </div>
                 </div>
 
-                {/* KPI Cards */}
                 <div className="grid grid-cols-5 gap-4">
                     <StatCard
                         icon="clock"
@@ -178,9 +202,7 @@ const Reports: React.FC = () => {
                     />
                 </div>
 
-                {/* Charts row */}
                 <div className="grid grid-cols-3 gap-6">
-                    {/* Productivity Trend Chart */}
                     <div className="col-span-2 rounded-xl border border-border bg-surface p-6 flex flex-col gap-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -198,20 +220,19 @@ const Reports: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* SVG Chart */}
                         <div className="flex flex-col gap-3">
                             <svg viewBox="0 0 520 120" style={{ width: '100%', height: '130px' }}>
                                 <defs>
                                     <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#00c9a7" stopOpacity="0.3" />
-                                        <stop offset="100%" stopColor="#00c9a7" stopOpacity="0.0" />
+                                        <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.3" />
+                                        <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.0" />
                                     </linearGradient>
                                 </defs>
-                                <line x1="0" y1="110" x2="520" y2="110" stroke="#2a3347" strokeWidth="1" />
-                                <line x1="0" y1="85" x2="520" y2="85" stroke="#2a3347" strokeWidth="1" />
-                                <line x1="0" y1="60" x2="520" y2="60" stroke="#2a3347" strokeWidth="1" />
-                                <line x1="0" y1="35" x2="520" y2="35" stroke="#2a3347" strokeWidth="1" />
-                                <line x1="0" y1="10" x2="520" y2="10" stroke="#2a3347" strokeWidth="1" />
+                                <line x1="0" y1="110" x2="520" y2="110" stroke="var(--color-border)" strokeWidth="1" />
+                                <line x1="0" y1="85" x2="520" y2="85" stroke="var(--color-border)" strokeWidth="1" />
+                                <line x1="0" y1="60" x2="520" y2="60" stroke="var(--color-border)" strokeWidth="1" />
+                                <line x1="0" y1="35" x2="520" y2="35" stroke="var(--color-border)" strokeWidth="1" />
+                                <line x1="0" y1="10" x2="520" y2="10" stroke="var(--color-border)" strokeWidth="1" />
                                 <path
                                     d="M0.0,29.0 L86.7,36.0 L173.3,21.0 L260.0,38.0 L346.7,24.0 L433.3,65.0 L520.0,91.0 L520.0,120 L0.0,120 Z"
                                     fill="url(#areaGrad)"
@@ -219,13 +240,13 @@ const Reports: React.FC = () => {
                                 <path
                                     d="M0.0,29.0 L86.7,36.0 L173.3,21.0 L260.0,38.0 L346.7,24.0 L433.3,65.0 L520.0,91.0"
                                     fill="none"
-                                    stroke="#00c9a7"
+                                    stroke="var(--color-primary)"
                                     strokeWidth="2.5"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                 />
                                 {[0, 86.666, 173.333, 260, 346.666, 433.333, 520].map((cx, i) => (
-                                    <circle key={i} cx={cx} cy={[29, 36, 21, 38, 24, 65, 91][i]} r="4" fill="#00c9a7" stroke="#0f1117" strokeWidth="2" />
+                                    <circle key={i} cx={cx} cy={[29, 36, 21, 38, 24, 65, 91][i]} r="4" fill="var(--color-primary)" stroke="var(--color-background)" strokeWidth="2" />
                                 ))}
                             </svg>
                             <div className="flex justify-between">
@@ -235,7 +256,6 @@ const Reports: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Insights */}
                         <div className="flex items-center gap-6 pt-2 border-t border-border">
                             <div className="flex items-center gap-2">
                                 <Icon name="trending-up" size={14} />
@@ -255,7 +275,6 @@ const Reports: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Hours by Category */}
                     <div className="rounded-xl border border-border bg-surface p-6 flex flex-col gap-4">
                         <h3 className="text-base font-bold text-foreground">Hours by Category</h3>
                         <div className="flex flex-col gap-3">
@@ -277,9 +296,7 @@ const Reports: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Second row: Monthly Hours and Heatmap */}
                 <div className="grid grid-cols-2 gap-6">
-                    {/* Monthly Hours Overview */}
                     <div className="rounded-xl border border-border bg-surface p-6 flex flex-col gap-4">
                         <div className="flex items-center justify-between">
                             <h3 className="text-base font-bold text-foreground">Monthly Hours Overview</h3>
@@ -301,7 +318,6 @@ const Reports: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Activity Heatmap */}
                     <div className="rounded-xl border border-border bg-surface p-6 flex flex-col gap-4">
                         <div className="flex items-center justify-between">
                             <h3 className="text-base font-bold text-foreground">Activity Heatmap</h3>
@@ -314,13 +330,11 @@ const Reports: React.FC = () => {
                                 ))}
                             </div>
                             <div className="flex flex-col gap-2 flex-1">
-                                {/* Day labels */}
                                 <div className="flex gap-2">
                                     {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
                                         <span key={day} className="text-xs text-foreground-muted flex-1 text-center">{day}</span>
                                     ))}
                                 </div>
-                                {/* Heatmap rows */}
                                 {heatmapRows.map((row, i) => (
                                     <div key={i} className="flex gap-2">
                                         {row.map((value, j) => (
@@ -342,7 +356,6 @@ const Reports: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Top Performers Table */}
                 <div className="rounded-xl border border-border bg-surface overflow-hidden">
                     <div className="flex items-center justify-between px-6 py-4 border-b border-border">
                         <h3 className="text-base font-bold text-foreground">Top Performers</h3>
@@ -379,32 +392,5 @@ const Reports: React.FC = () => {
         </div>
     );
 };
-
-// Helper component for stat cards
-const StatCard: React.FC<{
-    icon: any;
-    iconBg: string;
-    iconColor: string;
-    value: string;
-    label: string;
-    trend: string;
-    trendUp?: boolean;
-}> = ({ icon, iconBg, iconColor, value, label, trend, trendUp = true }) => (
-    <motion.div whileHover={{ y: -4 }} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
-        <div className="flex items-center justify-between">
-            <div className={`w-9 h-9 flex items-center justify-center rounded-lg ${iconBg} ${iconColor}`}>
-                <Icon name={icon} size={16} />
-            </div>
-            <span className={`flex items-center gap-1 text-xs font-bold rounded-full px-2 py-0.5 ${trendUp ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
-                <Icon name={trendUp ? 'trending-up' : 'trending-down'} size={10} />
-                {trend}
-            </span>
-        </div>
-        <div>
-            <div className="text-2xl font-bold text-foreground font-headings">{value}</div>
-            <div className="text-xs text-foreground-muted mt-0.5">{label}</div>
-        </div>
-    </motion.div>
-);
 
 export default Reports;

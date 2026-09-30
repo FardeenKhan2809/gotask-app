@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import StatCard from '@/components/ui/StatCard';
+import { useToast } from '@/context/ToastContext';
 
 interface Task {
     id: string;
@@ -8,10 +9,11 @@ interface Task {
     category: string;
     tags: string[];
     priority: 'high' | 'medium' | 'low';
-    tracked: string; // formatted time
+    tracked: string;
     dueDate: string;
     status: 'in-progress' | 'todo' | 'done';
     isSelected?: boolean;
+    notes?: string;
 }
 
 const initialTasks: Task[] = [
@@ -130,48 +132,78 @@ const statusColors = {
 };
 
 const MyTasks: React.FC = () => {
-    // ----- State -----
+    const { success, warning, info } = useToast();
     const [tasks, setTasks] = useState<Task[]>(initialTasks);
     const [filter, setFilter] = useState<'All Tasks' | 'In Progress' | 'To Do' | 'Done'>('All Tasks');
+    const [quickFilter, setQuickFilter] = useState<'none' | 'dueToday' | 'highPriority' | 'inProgress' | 'overdue' | 'noTag'>('none');
     const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
         'in-progress': true,
         todo: true,
         done: true,
     });
     const [activeTaskId, setActiveTaskId] = useState<string | null>('1');
-    const [timerSeconds, setTimerSeconds] = useState(9237); // 2:34:17
+    const [timerSeconds, setTimerSeconds] = useState(9237);
     const [timerRunning, setTimerRunning] = useState(true);
     const [quickNote, setQuickNote] = useState('');
-    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list'); // list is default
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-    // Derived: total tasks, counts per status
+    const [isTagModalOpen, setIsTagModalOpen] = useState(false);
+    const [bulkTagInput, setBulkTagInput] = useState('');
+
+    useEffect(() => {
+        try {
+            const custom = localStorage.getItem('custom_tasks');
+            if (custom) {
+                const parsed = JSON.parse(custom);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    setTasks(prev => {
+                        const existingIds = new Set(prev.map(p => p.id));
+                        const formatted: Task[] = parsed.filter((p: any) => !existingIds.has(String(p.id))).map((p: any) => ({
+                            id: String(p.id),
+                            title: String(p.title || 'Task'),
+                            category: String(p.category || 'General'),
+                            tags: Array.isArray(p.tags) ? p.tags : [],
+                            priority: (p.priority?.toLowerCase() === 'high' ? 'high' : p.priority?.toLowerCase() === 'low' ? 'low' : 'medium') as 'high' | 'medium' | 'low',
+                            tracked: String(p.hoursLogged || '—'),
+                            dueDate: String(p.dueDate || 'Today'),
+                            status: (p.status === 'In Progress' ? 'in-progress' : p.status === 'Done' ? 'done' : 'todo') as 'in-progress' | 'todo' | 'done',
+                        }));
+                        return [...formatted, ...prev];
+                    });
+                }
+            }
+        } catch {}
+    }, []);
+
     const totalTasks = tasks.length;
     const inProgressCount = tasks.filter(t => t.status === 'in-progress').length;
     const todoCount = tasks.filter(t => t.status === 'todo').length;
     const doneCount = tasks.filter(t => t.status === 'done').length;
 
-    // Filtered tasks based on top filter
     const filteredTasks = tasks.filter(task => {
-        if (filter === 'All Tasks') return true;
-        if (filter === 'In Progress') return task.status === 'in-progress';
-        if (filter === 'To Do') return task.status === 'todo';
-        if (filter === 'Done') return task.status === 'done';
+        if (filter === 'In Progress' && task.status !== 'in-progress') return false;
+        if (filter === 'To Do' && task.status !== 'todo') return false;
+        if (filter === 'Done' && task.status !== 'done') return false;
+
+        if (quickFilter === 'dueToday' && !task.dueDate.toLowerCase().includes('today')) return false;
+        if (quickFilter === 'highPriority' && task.priority !== 'high') return false;
+        if (quickFilter === 'inProgress' && task.status !== 'in-progress') return false;
+        if (quickFilter === 'overdue' && !task.dueDate.toLowerCase().includes('yesterday') && !task.dueDate.toLowerCase().includes('jul')) return false;
+        if (quickFilter === 'noTag' && task.tags.length > 0) return false;
+
         return true;
     });
 
-    // Group filtered tasks by status
     const groupedTasks = statusOrder.reduce((acc, status) => {
         acc[status] = filteredTasks.filter(t => t.status === status);
         return acc;
     }, {} as Record<string, Task[]>);
 
-    // ----- Timer logic -----
     useEffect(() => {
-        let interval: number;
+        let interval: any;
         if (timerRunning && activeTaskId) {
             interval = setInterval(() => {
                 setTimerSeconds(prev => prev + 1);
-                // Also update the tracked time for the active task in tasks state
                 setTasks(prevTasks =>
                     prevTasks.map(task =>
                         task.id === activeTaskId
@@ -191,13 +223,6 @@ const MyTasks: React.FC = () => {
         return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
-    const formatSeconds = (secs: number): string => {
-        const h = Math.floor(secs / 3600);
-        const m = Math.floor((secs % 3600) / 60);
-        const s = secs % 60;
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    };
-
     const handlePause = () => setTimerRunning(false);
     const handleStop = () => {
         setTimerRunning(false);
@@ -209,16 +234,16 @@ const MyTasks: React.FC = () => {
                 )
             );
         }
+        info('Timer Stopped', 'Timer has been reset.');
     };
 
     const handlePlayTask = (taskId: string) => {
         setActiveTaskId(taskId);
         setTimerRunning(true);
-        // Reset timer seconds to the task's current tracked time (parse hh:mm:ss)
         const task = tasks.find(t => t.id === taskId);
         if (task && task.tracked !== '—') {
             const parts = task.tracked.split(':').map(Number);
-            const secs = parts[0] * 3600 + parts[1] * 60 + (parts[2] || 0);
+            const secs = (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
             setTimerSeconds(secs);
         } else {
             setTimerSeconds(0);
@@ -227,7 +252,6 @@ const MyTasks: React.FC = () => {
 
     const handlePauseTask = () => setTimerRunning(false);
 
-    const [selectAll, setSelectAll] = useState(false);
     const selectedTasks = tasks.filter(t => t.isSelected);
     const allSelected = tasks.length > 0 && tasks.every(t => t.isSelected);
 
@@ -236,7 +260,6 @@ const MyTasks: React.FC = () => {
         setTasks(prev =>
             prev.map(task => ({ ...task, isSelected: newSelected }))
         );
-        setSelectAll(newSelected);
     };
 
     const toggleSelectTask = (taskId: string) => {
@@ -249,34 +272,57 @@ const MyTasks: React.FC = () => {
 
     const handleBulkDuplicate = () => {
         const selected = tasks.filter(t => t.isSelected);
+        if (selected.length === 0) {
+            warning('No Selection', 'Please select tasks to duplicate.');
+            return;
+        }
         const newTasks = selected.map(task => ({
             ...task,
             id: Date.now() + Math.random().toString(),
             title: `${task.title} (copy)`,
             isSelected: false,
         }));
-        setTasks([...tasks, ...newTasks]);
+        setTasks(prev => [...prev, ...newTasks]);
+        success('Tasks Duplicated', `Duplicated ${selected.length} task(s).`);
     };
 
     const handleBulkDelete = () => {
+        const selected = tasks.filter(t => t.isSelected);
+        if (selected.length === 0) {
+            warning('No Selection', 'Please select tasks to delete.');
+            return;
+        }
         setTasks(prev => prev.filter(task => !task.isSelected));
+        success('Tasks Deleted', `Deleted ${selected.length} task(s).`);
     };
 
-    const handleBulkTag = () => {
-        const tag = prompt('Enter tag name:');
-        if (tag) {
-            setTasks(prev =>
-                prev.map(task =>
-                    task.isSelected ? { ...task, tags: [...task.tags, tag] } : task
-                )
-            );
+    const handleOpenBulkTag = () => {
+        const selected = tasks.filter(t => t.isSelected);
+        if (selected.length === 0) {
+            warning('No Selection', 'Please select tasks to tag.');
+            return;
         }
+        setIsTagModalOpen(true);
+    };
+
+    const handleConfirmBulkTag = (e: React.FormEvent) => {
+        e.preventDefault();
+        const tag = bulkTagInput.trim();
+        if (!tag) return;
+        setTasks(prev =>
+            prev.map(task =>
+                task.isSelected && !task.tags.includes(tag) ? { ...task, tags: [...task.tags, tag] } : task
+            )
+        );
+        success('Tag Added', `Added tag "${tag}" to selected tasks.`);
+        setBulkTagInput('');
+        setIsTagModalOpen(false);
     };
 
     const handleAddTask = () => {
         const newTask: Task = {
             id: Date.now().toString(),
-            title: 'New task',
+            title: 'New Untitled Task',
             category: 'General',
             tags: [],
             priority: 'medium',
@@ -285,38 +331,28 @@ const MyTasks: React.FC = () => {
             status: 'todo',
             isSelected: false,
         };
-        setTasks([newTask, ...tasks]);
+        setTasks(prev => [newTask, ...prev]);
+        setActiveTaskId(newTask.id);
+        success('Task Added', 'New task added to list.');
     };
 
-    // ----- Quick filters (client‑side) -----
-    const applyQuickFilter = (type: string) => {
-        let filtered: Task[] = [];
-        switch (type) {
-            case 'dueToday':
-                filtered = tasks.filter(t => t.dueDate === 'Today');
-                break;
-            case 'highPriority':
-                filtered = tasks.filter(t => t.priority === 'high');
-                break;
-            case 'inProgress':
-                filtered = tasks.filter(t => t.status === 'in-progress');
-                break;
-            case 'overdue':
-                filtered = tasks.filter(t => t.dueDate === 'Yesterday');
-                break;
-            case 'noTag':
-                filtered = tasks.filter(t => t.tags.length === 0);
-                break;
-            default:
-                filtered = tasks;
-        }
-        // Replace tasks with filtered? Or just set a temporary view? For simplicity, we'll set filter state.
-        if (type === 'inProgress') setFilter('In Progress');
-        else if (type === 'dueToday') setFilter('All Tasks'); // but you'd need a custom filter. For demo, we'll just set a message.
-        alert(`Quick filter "${type}" applied (demo) – implement full filtering later.`);
+    const applyQuickFilter = (type: 'dueToday' | 'highPriority' | 'inProgress' | 'overdue' | 'noTag') => {
+        setQuickFilter(prev => prev === type ? 'none' : type);
+        info('Filter Updated', quickFilter === type ? 'Quick filter cleared.' : `Applied filter: ${type}`);
     };
 
     const activeTask = tasks.find(t => t.id === activeTaskId);
+
+    const handleSaveNote = () => {
+        if (!activeTask) return;
+        if (!quickNote.trim()) {
+            warning('Empty Note', 'Please type a note first.');
+            return;
+        }
+        setTasks(prev => prev.map(t => t.id === activeTask.id ? { ...t, notes: quickNote.trim() } : t));
+        success('Note Saved', `Saved note for "${activeTask.title}".`);
+        setQuickNote('');
+    };
 
     return (
         <div className="flex flex-1 min-w-0 overflow-hidden">
@@ -328,7 +364,6 @@ const MyTasks: React.FC = () => {
                     <StatCard icon="check-circle-2" iconBg="bg-success-bg" iconColor="text-success" value={doneCount.toString()} label="Completed" sublabel="This week" trend="+3 this week" />
                 </div>
 
-                {/* Filter bar & view toggle */}
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-1 bg-surface rounded-lg p-1 border border-border">
                         {(['All Tasks', 'In Progress', 'To Do', 'Done'] as const).map((f) => (
@@ -350,12 +385,14 @@ const MyTasks: React.FC = () => {
                         ))}
                     </div>
                     <div className="flex items-center gap-2">
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
-                            <Icon name="sliders-horizontal" size={13} /> Filter
-                        </button>
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold hover:bg-surface-2 transition">
-                            <Icon name="arrow-up-down" size={13} /> Sort
-                        </button>
+                        {quickFilter !== 'none' && (
+                            <button
+                                onClick={() => setQuickFilter('none')}
+                                className="px-3 py-1.5 rounded-lg bg-teal-bg text-primary text-xs font-semibold hover:bg-teal-bg/80 transition flex items-center gap-1"
+                            >
+                                <Icon name="x" size={12} /> Clear Filter ({quickFilter})
+                            </button>
+                        )}
                         <div className="flex items-center rounded-lg border border-border bg-surface overflow-hidden">
                             <button
                                 onClick={() => setViewMode('grid')}
@@ -373,31 +410,30 @@ const MyTasks: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Bulk actions bar */}
                 <div className="flex items-center justify-between rounded-xl border border-border bg-surface-2 px-5 py-3">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={toggleSelectAll}
-                            className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5"
+                            className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 hover:bg-surface-2 transition"
                         >
                             <Icon name="check-square" size={14} />
                             <span className="text-xs font-semibold text-foreground-muted">Select All</span>
                         </button>
                         <button
                             onClick={handleBulkDuplicate}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
                         >
                             <Icon name="copy" size={13} /> Duplicate
                         </button>
                         <button
-                            onClick={handleBulkTag}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2"
+                            onClick={handleOpenBulkTag}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
                         >
                             <Icon name="tag" size={13} /> Bulk Tag
                         </button>
                         <button
                             onClick={handleBulkDelete}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-danger-bg bg-danger-bg text-xs font-semibold text-danger hover:bg-danger-bg/80"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-danger-bg bg-danger-bg text-xs font-semibold text-danger hover:bg-danger-bg/80 transition"
                         >
                             <Icon name="trash-2" size={13} /> Delete
                         </button>
@@ -406,14 +442,13 @@ const MyTasks: React.FC = () => {
                         <span className="text-xs text-foreground-muted">{selectedTasks.length} tasks selected</span>
                         <button
                             onClick={handleAddTask}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
                         >
                             <Icon name="plus" size={13} /> Add Task
                         </button>
                     </div>
                 </div>
 
-                {/* Task groups */}
                 <div className="flex flex-col gap-6">
                     {statusOrder.map(status => {
                         const tasksInGroup = groupedTasks[status];
@@ -421,7 +456,6 @@ const MyTasks: React.FC = () => {
                         if (tasksInGroup.length === 0 && filter === 'All Tasks') return null;
                         return (
                             <div key={status} className="flex flex-col gap-0 rounded-xl border border-border overflow-hidden">
-                                {/* Group header */}
                                 <div className="flex items-center gap-3 px-5 py-3 bg-background-3 border-b border-border">
                                     <span className={`w-2.5 h-2.5 rounded-full ${statusColors[status]}`}></span>
                                     <span className="text-sm font-bold text-foreground">{statusLabels[status]}</span>
@@ -437,7 +471,6 @@ const MyTasks: React.FC = () => {
                                 </div>
                                 {expandedGroups[status] && (
                                     <>
-                                        {/* Table header */}
                                         <div className="flex items-center gap-4 px-5 py-2 bg-background-2 border-b border-border">
                                             <div className="w-4 flex-shrink-0"></div>
                                             <div className="flex-1 text-xs font-semibold text-foreground-muted uppercase tracking-wide">Task</div>
@@ -448,7 +481,6 @@ const MyTasks: React.FC = () => {
                                             <div className="w-24 text-xs font-semibold text-foreground-muted uppercase tracking-wide text-center">Due</div>
                                             <div className="w-14"></div>
                                         </div>
-                                        {/* Rows */}
                                         {tasksInGroup.map(task => (
                                             <TaskRow
                                                 key={task.id}
@@ -461,7 +493,6 @@ const MyTasks: React.FC = () => {
                                                 onRowClick={() => setActiveTaskId(task.id)}
                                             />
                                         ))}
-                                        {/* Add task row */}
                                         <button
                                             onClick={handleAddTask}
                                             className="flex items-center gap-2 px-5 py-3 text-xs text-foreground-muted border-t border-border bg-surface hover:bg-surface-2 transition"
@@ -479,7 +510,7 @@ const MyTasks: React.FC = () => {
             <div className="task-side-details flex flex-col gap-5 border-l border-border px-6 py-6 flex-shrink-0 overflow-y-auto" style={{ maxWidth: '300px' }}>
                 <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-foreground">Task Detail</h3>
-                    <button className="text-foreground-muted" onClick={() => setActiveTaskId(null)}>
+                    <button className="text-foreground-muted hover:text-foreground" onClick={() => setActiveTaskId(null)}>
                         <Icon name="x" size={15} />
                     </button>
                 </div>
@@ -493,53 +524,40 @@ const MyTasks: React.FC = () => {
                             <div className="text-sm font-bold text-foreground">{activeTask.title}</div>
                             <div className="font-mono text-2xl font-bold text-primary">{formatTime(timerSeconds)}</div>
                             <div className="flex gap-2">
-                                <button onClick={handlePause} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning-bg text-warning text-xs font-bold">
+                                <button onClick={handlePause} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning-bg text-warning text-xs font-bold hover:bg-warning-bg/80 transition">
                                     <Icon name="pause" size={12} /> Pause
                                 </button>
-                                <button onClick={handleStop} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-danger-bg text-danger text-xs font-bold">
+                                <button onClick={handleStop} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-danger-bg text-danger text-xs font-bold hover:bg-danger-bg/80 transition">
                                     <Icon name="square" size={12} /> Stop
                                 </button>
                             </div>
                         </div>
-                        {/* Today's Log */}
+
                         <div className="flex flex-col gap-3">
                             <h4 className="text-xs font-bold text-foreground-muted uppercase tracking-wide">Today's Log</h4>
-                            {tasks.filter(t => t.status === 'done' && t.tracked !== '—').slice(0, 3).map(task => (
-                                <div key={task.id} className="flex items-center gap-3 rounded-lg bg-surface border border-border px-3 py-2.5">
-                                    <div className="flex-1 min-w-0">
-                                        <div className="text-xs font-semibold text-foreground truncate">{task.title}</div>
-                                        <div className="text-xs text-foreground-muted">{task.category}</div>
-                                    </div>
-                                    <span className="text-xs font-mono font-bold text-warning">{task.tracked}</span>
-                                </div>
-                            ))}
-                            <div className="flex items-center justify-between rounded-lg bg-background-2 border border-border px-3 py-2.5">
-                                <span className="text-xs font-bold text-foreground">Total Today</span>
-                                <span className="text-xs font-mono font-bold text-primary">
-                                    {formatSeconds(
-                                        tasks.reduce((total, task) => {
-                                            if (task.tracked !== '—') {
-                                                const parts = task.tracked.split(':').map(Number);
-                                                return total + (parts[0] * 3600 + parts[1] * 60 + (parts[2] || 0));
-                                            }
-                                            return total;
-                                        }, 0)
-                                    )}
-                                </span>
+                            <div className="flex items-center justify-between text-xs py-2 border-b border-border">
+                                <span className="text-foreground-muted">Total Active Time</span>
+                                <span className="font-mono font-bold text-foreground">{formatTime(timerSeconds)}</span>
                             </div>
+                            {activeTask.notes && (
+                                <div className="p-2.5 rounded-lg border border-border bg-background-2 text-xs text-foreground">
+                                    <span className="font-bold block mb-1">Notes:</span>
+                                    {activeTask.notes}
+                                </div>
+                            )}
                         </div>
-                        {/* Quick Note */}
+
                         <div className="flex flex-col gap-2">
                             <h4 className="text-xs font-bold text-foreground-muted uppercase tracking-wide">Quick Note</h4>
                             <textarea
                                 value={quickNote}
                                 onChange={e => setQuickNote(e.target.value)}
                                 placeholder="Add a note to the active task..."
-                                className="rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-foreground-muted min-h-16 resize-none focus:outline-none focus:border-primary"
+                                className="rounded-xl border border-border bg-surface px-3 py-2.5 text-xs text-foreground min-h-16 resize-none focus:outline-none focus:border-primary"
                             />
                             <button
-                                onClick={() => alert(`Note saved for ${activeTask.title}: ${quickNote}`)}
-                                className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-surface border border-border text-xs font-semibold text-foreground-muted hover:bg-surface-2"
+                                onClick={handleSaveNote}
+                                className="flex items-center justify-center gap-1.5 py-2 rounded-lg bg-surface border border-border text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
                             >
                                 <Icon name="save" size={12} /> Save Note
                             </button>
@@ -548,42 +566,62 @@ const MyTasks: React.FC = () => {
                 ) : (
                     <div className="text-center text-foreground-muted text-sm py-8">Select a task to view details</div>
                 )}
-                {/* Quick Filters */}
+
                 <div className="flex flex-col gap-3">
                     <h4 className="text-xs font-bold text-foreground-muted uppercase tracking-wide">Quick Filters</h4>
                     <div className="flex flex-wrap gap-2">
-                        <QuickFilterChip label="Due Today" onClick={() => applyQuickFilter('dueToday')} />
-                        <QuickFilterChip label="High Priority" onClick={() => applyQuickFilter('highPriority')} />
-                        <QuickFilterChip label="In Progress" onClick={() => applyQuickFilter('inProgress')} />
-                        <QuickFilterChip label="Overdue" onClick={() => applyQuickFilter('overdue')} />
-                        <QuickFilterChip label="No Tag" onClick={() => applyQuickFilter('noTag')} />
+                        <QuickFilterChip label="Due Today" active={quickFilter === 'dueToday'} onClick={() => applyQuickFilter('dueToday')} />
+                        <QuickFilterChip label="High Priority" active={quickFilter === 'highPriority'} onClick={() => applyQuickFilter('highPriority')} />
+                        <QuickFilterChip label="In Progress" active={quickFilter === 'inProgress'} onClick={() => applyQuickFilter('inProgress')} />
+                        <QuickFilterChip label="Overdue" active={quickFilter === 'overdue'} onClick={() => applyQuickFilter('overdue')} />
+                        <QuickFilterChip label="No Tag" active={quickFilter === 'noTag'} onClick={() => applyQuickFilter('noTag')} />
                     </div>
                 </div>
             </div>
+
+            {isTagModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+                    <div className="w-full max-w-sm bg-surface border border-border rounded-2xl shadow-2xl p-6 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-foreground">Add Tag to Selected Tasks</h3>
+                            <button
+                                onClick={() => setIsTagModalOpen(false)}
+                                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition"
+                            >
+                                <Icon name="x" size={16} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleConfirmBulkTag} className="flex flex-col gap-4">
+                            <input
+                                type="text"
+                                required
+                                value={bulkTagInput}
+                                onChange={e => setBulkTagInput(e.target.value)}
+                                placeholder="Enter tag name, e.g. Frontend, Urgent"
+                                className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:border-primary"
+                            />
+                            <div className="flex items-center justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsTagModalOpen(false)}
+                                    className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
+                                >
+                                    Apply Tag
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
-
-// Helper components
-const StatCard: React.FC<{ icon: any; iconBg: string; iconColor: string; value: string; label: string; sublabel: string; trend: string; trendColor?: string }> = ({
-    icon, iconBg, iconColor, value, label, sublabel, trend, trendColor = 'success'
-}) => (
-    <motion.div whileHover={{ y: -4 }} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
-        <div className="flex items-start justify-between">
-            <div className={`flex items-center justify-center rounded-lg ${iconBg} ${iconColor} w-10 h-10`}>
-                <Icon name={icon} size={18} />
-            </div>
-            <span className={`flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-${trendColor}-bg text-${trendColor}`}>
-                <Icon name="trending-up" size={11} /> {trend}
-            </span>
-        </div>
-        <div>
-            <div className="text-2xl font-bold text-foreground font-headings">{value}</div>
-            <div className="text-sm text-foreground-muted mt-0.5">{label}</div>
-            <div className="text-xs text-foreground-muted mt-1 opacity-70">{sublabel}</div>
-        </div>
-    </motion.div>
-);
 
 const FilterButton: React.FC<{ label: string; count: number; active: boolean; onClick: () => void }> = ({ label, count, active, onClick }) => (
     <button
@@ -648,16 +686,16 @@ const TaskRow: React.FC<{
                 >
                     <Icon name={isActive ? 'pause' : 'play'} size={13} />
                 </button>
-                <button className="w-6 h-6 flex items-center justify-center rounded text-foreground-muted hover:text-primary transition">
-                    <Icon name="more-horizontal" size={13} />
-                </button>
             </div>
         </div>
     );
 };
 
-const QuickFilterChip: React.FC<{ label: string; onClick: () => void }> = ({ label, onClick }) => (
-    <button onClick={onClick} className="text-xs px-2.5 py-1 rounded-full border border-border text-foreground-muted hover:border-primary hover:text-primary transition">
+const QuickFilterChip: React.FC<{ label: string; active?: boolean; onClick: () => void }> = ({ label, active, onClick }) => (
+    <button
+        onClick={onClick}
+        className={`text-xs px-2.5 py-1 rounded-full border transition font-medium ${active ? 'bg-primary border-primary text-primary-foreground' : 'border-border text-foreground-muted hover:border-primary hover:text-primary'}`}
+    >
         {label}
     </button>
 );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from '../../../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
 
 interface Achievement {
     icon: string;
@@ -11,7 +11,6 @@ interface Achievement {
 const ProfileTab: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
 
-    // Mock user data
     const user = {
         name: 'Aryan Mehta',
         role: 'Frontend Engineer',
@@ -66,7 +65,6 @@ const ProfileTab: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-6">
-            {/* Cover & Avatar */}
             <div className="relative rounded-2xl border border-border overflow-hidden">
                 <div className="h-32 w-full bg-gradient-to-r from-primary/20 via-purple/20 to-background border-b border-border">
                     <div className="absolute top-4 right-4">
@@ -100,13 +98,15 @@ const ProfileTab: React.FC = () => {
                             <span className="flex items-center gap-1"><Icon name="calendar" size={13} /> Joined {user.joined}</span>
                         </div>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-surface text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition mb-1">
-                        <Icon name="pencil" size={14} /> Edit Profile
+                    <button
+                        onClick={() => setIsEditing((prev) => !prev)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-surface text-sm font-semibold text-foreground-muted hover:bg-surface-2 transition mb-1"
+                    >
+                        <Icon name="pencil" size={14} /> {isEditing ? 'Done' : 'Edit Profile'}
                     </button>
                 </div>
             </div>
 
-            {/* Stats Cards */}
             <div className="grid grid-cols-4 gap-4">
                 {stats.map((stat, idx) => (
                     <div key={idx} className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4">
@@ -121,9 +121,7 @@ const ProfileTab: React.FC = () => {
                 ))}
             </div>
 
-            {/* About & Achievements */}
             <div className="grid grid-cols-2 gap-5">
-                {/* About */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">About</h3>
                     <p className="text-sm text-foreground-muted leading-relaxed">{user.bio}</p>
@@ -145,7 +143,6 @@ const ProfileTab: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Achievements */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Achievements</h3>
                     <div className="grid grid-cols-2 gap-3">
@@ -171,7 +168,6 @@ const ProfileTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Recent Tasks */}
             <div className="rounded-xl border border-border bg-surface overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-background-3">
                     <h3 className="text-sm font-bold text-foreground">Recent Tasks</h3>
@@ -194,10 +190,7 @@ const ProfileTab: React.FC = () => {
                 ))}
             </div>
 
-            {/* Right sidebar content (would be separate in layout, but we include here for completeness) */}
-            {/* Since this is a tab, we can include the right sidebar content inline */}
             <div className="grid grid-cols-2 gap-5">
-                {/* Weekly Hours */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">This Week</h3>
                     <div className="flex items-end justify-between gap-2 h-20">
@@ -212,7 +205,6 @@ const ProfileTab: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Time by Category */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Time by Category</h3>
                     <div className="flex flex-col gap-3">
@@ -237,7 +229,6 @@ const ProfileTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Role & Access */}
             <div className="rounded-xl border border-border bg-surface p-4 flex flex-col gap-3">
                 <h3 className="text-xs font-bold text-foreground-muted uppercase tracking-wide">Role & Access</h3>
                 <div className="flex items-center gap-3">

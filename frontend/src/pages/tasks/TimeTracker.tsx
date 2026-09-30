@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 interface Session {
     id: string;
@@ -42,7 +43,7 @@ const TimeTracker: React.FC = () => {
     });
     const [timerSeconds, setTimerSeconds] = useState(9237);
     const [timerRunning, setTimerRunning] = useState(true);
-    const [goalSeconds, setGoalSeconds] = useState(14400);
+    const [goalSeconds] = useState(14400);
 
     const [sessions, setSessions] = useState<Session[]>([
         {
@@ -121,8 +122,31 @@ const TimeTracker: React.FC = () => {
             )
         );
     };
+    const { success, warning } = useToast();
+    const [editingEntry, setEditingEntry] = useState<LogEntry | null>(null);
+    const [isNewTimerModalOpen, setIsNewTimerModalOpen] = useState(false);
+    const [newTimerTaskName, setNewTimerTaskName] = useState('');
+
     const handleSave = () => {
-        alert(`Saved ${formatTime(timerSeconds)} for "${activeTask.name}"`);
+        if (timerSeconds === 0) {
+            warning('No Time Logged', 'Timer is currently at 0:00:00.');
+            return;
+        }
+        const mins = Math.max(1, Math.round(timerSeconds / 60));
+        const newEntry: LogEntry = {
+            id: Date.now().toString(),
+            taskName: activeTask.name,
+            category: activeTask.category,
+            start: 'Now',
+            end: 'Logged',
+            durationMinutes: mins,
+            date: 'Today',
+            color: 'bg-primary',
+        };
+        setLogHistory(prev => [newEntry, ...prev]);
+        success('Session Saved', `Saved ${formatTime(timerSeconds)} for "${activeTask.name}".`);
+        setTimerSeconds(0);
+        setTimerRunning(false);
     };
 
     const quickStart = (taskName: string) => {
@@ -139,6 +163,7 @@ const TimeTracker: React.FC = () => {
             isLive: true,
         };
         setSessions(prev => [newSession, ...prev]);
+        success('Timer Started', `Tracking time for "${taskName}".`);
     };
 
     const [manualDate, setManualDate] = useState('Jul 18');
@@ -146,21 +171,24 @@ const TimeTracker: React.FC = () => {
     const [manualTaskName, setManualTaskName] = useState('');
 
     const handleManualLog = () => {
-        if (!manualTaskName) return;
+        if (!manualTaskName.trim()) {
+            warning('Task Name Required', 'Please enter a task name.');
+            return;
+        }
         const [start, end] = manualTimeRange.split(' – ');
         const durationMinutes = 90;
         const newEntry: LogEntry = {
             id: Date.now().toString(),
-            taskName: manualTaskName,
+            taskName: manualTaskName.trim(),
             category: 'Manual',
-            start,
-            end,
+            start: start || '09:00',
+            end: end || '10:30',
             durationMinutes,
             date: manualDate,
-            color: 'bg-muted',
+            color: 'bg-info',
         };
         setLogHistory(prev => [newEntry, ...prev]);
-        alert(`Logged ${manualTaskName} for ${durationMinutes} minutes`);
+        success('Manual Log Added', `Logged "${manualTaskName.trim()}" for ${durationMinutes} minutes.`);
         setManualTaskName('');
     };
 
@@ -179,11 +207,11 @@ const TimeTracker: React.FC = () => {
                 <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-7 overflow-y-auto">
                     <div className="relative rounded-2xl border border-primary overflow-hidden"
                         style={{
-                            background: 'linear-gradient(135deg, #0f1117 0%, #1a2030 60%, #00c9a710 100%)',
-                            boxShadow: '0 0 64px #00c9a720, 0 0 0 1px #00c9a730',
+                            background: 'linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 60%, var(--color-teal-bg) 100%)',
+                            boxShadow: '0 0 32px var(--color-primary-glow), 0 0 0 1px var(--color-border)',
                         }}>
-                        <div className="absolute top-0 right-0 w-64 h-64 rounded-full"
-                            style={{ background: 'radial-gradient(circle, #00c9a720 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+                        <div className="absolute top-0 right-0 w-64 h-64 rounded-full pointer-events-none"
+                            style={{ background: 'radial-gradient(circle, var(--color-teal-bg) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
                         <div className="relative flex items-center justify-between px-8 py-7 z-10">
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center gap-2">
@@ -208,8 +236,8 @@ const TimeTracker: React.FC = () => {
                             <div className="flex flex-col items-center gap-5">
                                 <div className="relative flex items-center justify-center">
                                     <svg width="120" height="120" style={{ transform: 'rotate(-90deg)' }}>
-                                        <circle cx="60" cy="60" r="52" fill="none" stroke="#2a3347" strokeWidth="6" />
-                                        <circle cx="60" cy="60" r="52" fill="none" stroke="#00c9a7" strokeWidth="6"
+                                        <circle cx="60" cy="60" r="52" fill="none" stroke="var(--color-border)" strokeWidth="6" />
+                                        <circle cx="60" cy="60" r="52" fill="none" stroke="var(--color-primary)" strokeWidth="6"
                                             strokeLinecap="round" strokeDasharray="326.7" strokeDashoffset={326.7 * (1 - percentOfGoal / 100)} />
                                     </svg>
                                     <div className="absolute flex flex-col items-center">
@@ -264,8 +292,8 @@ const TimeTracker: React.FC = () => {
                                 <div className="absolute h-full bg-warning opacity-80 rounded" style={{ left: '16.7%', width: '6.25%' }}>
                                     <div className="h-full flex items-center justify-center"><span className="text-xs font-bold text-primary-foreground text-[9px]">Mtg</span></div>
                                 </div>
-                                <div className="absolute h-full rounded" style={{ left: '25.8%', width: '36%', background: 'linear-gradient(90deg, #8b5cf6, #00c9a7)' }}>
-                                    <div className="h-full flex items-center justify-center"><span className="text-xs font-bold text-white">Design · 2h 34m</span></div>
+                                <div className="absolute h-full rounded" style={{ left: '25.8%', width: '36%', background: 'linear-gradient(90deg, var(--color-purple), var(--color-primary))' }}>
+                                    <div className="h-full flex items-center justify-center"><span className="text-xs font-bold text-primary-foreground">Design · 2h 34m</span></div>
                                 </div>
                                 <div className="absolute top-0 bottom-0 w-0.5 bg-primary" style={{ left: '61.8%' }}>
                                     <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary" />
@@ -324,8 +352,11 @@ const TimeTracker: React.FC = () => {
                                             <div className="text-xs text-foreground-muted">{entry.category} · {entry.start} → {entry.end}</div>
                                         </div>
                                         <span className="font-mono text-sm font-bold text-foreground">{formatDurationShort(entry.durationMinutes)}</span>
-                                        <button className="text-foreground-muted hover:text-primary" onClick={() => alert(`Edit ${entry.taskName}`)}><Icon name="pencil" size={13} /></button>
-                                        <button className="text-foreground-muted hover:text-danger" onClick={() => setLogHistory(prev => prev.filter(e => e.id !== entry.id))}><Icon name="trash-2" size={13} /></button>
+                                        <button className="text-foreground-muted hover:text-primary transition" onClick={() => setEditingEntry(entry)}><Icon name="pencil" size={13} /></button>
+                                        <button className="text-foreground-muted hover:text-danger transition" onClick={() => {
+                                            setLogHistory(prev => prev.filter(e => e.id !== entry.id));
+                                            success('Log Removed', `Deleted log entry "${entry.taskName}".`);
+                                        }}><Icon name="trash-2" size={13} /></button>
                                     </div>
                                 ))}
                             </div>
@@ -411,7 +442,11 @@ const TimeTracker: React.FC = () => {
                                 </button>
                             ))}
                         </div>
-                        <button className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold mt-1">
+                        <button
+                            type="button"
+                            onClick={() => setIsNewTimerModalOpen(true)}
+                            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary text-primary-foreground text-xs font-bold mt-1 hover:bg-primary/90 transition shadow-sm"
+                        >
                             <Icon name="plus" size={13} /> Start new timer
                         </button>
                     </div>
@@ -427,6 +462,119 @@ const TimeTracker: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            {isNewTimerModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+                    <div className="w-full max-w-sm bg-surface border border-border rounded-2xl shadow-2xl p-6 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-foreground">Start New Task Timer</h3>
+                            <button
+                                onClick={() => setIsNewTimerModalOpen(false)}
+                                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition"
+                            >
+                                <Icon name="x" size={16} />
+                            </button>
+                        </div>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            if (!newTimerTaskName.trim()) return;
+                            quickStart(newTimerTaskName.trim());
+                            setNewTimerTaskName('');
+                            setIsNewTimerModalOpen(false);
+                        }} className="flex flex-col gap-4">
+                            <input
+                                type="text"
+                                required
+                                value={newTimerTaskName}
+                                onChange={(e) => setNewTimerTaskName(e.target.value)}
+                                placeholder="Task description..."
+                                className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:border-primary"
+                            />
+                            <div className="flex items-center justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsNewTimerModalOpen(false)}
+                                    className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
+                                >
+                                    Start Timer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {editingEntry && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+                    <div className="w-full max-w-sm bg-surface border border-border rounded-2xl shadow-2xl p-6 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-foreground">Edit Time Log</h3>
+                            <button
+                                onClick={() => setEditingEntry(null)}
+                                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition"
+                            >
+                                <Icon name="x" size={16} />
+                            </button>
+                        </div>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            setLogHistory(prev => prev.map(entry => entry.id === editingEntry.id ? editingEntry : entry));
+                            success('Entry Updated', `Updated entry for "${editingEntry.taskName}".`);
+                            setEditingEntry(null);
+                        }} className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-semibold text-foreground">Task Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={editingEntry.taskName}
+                                    onChange={(e) => setEditingEntry({ ...editingEntry, taskName: e.target.value })}
+                                    className="px-3.5 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:border-primary"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-semibold text-foreground">Category</label>
+                                <input
+                                    type="text"
+                                    value={editingEntry.category}
+                                    onChange={(e) => setEditingEntry({ ...editingEntry, category: e.target.value })}
+                                    className="px-3.5 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:border-primary"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <label className="text-xs font-semibold text-foreground">Duration (Minutes)</label>
+                                <input
+                                    type="number"
+                                    value={editingEntry.durationMinutes}
+                                    onChange={(e) => setEditingEntry({ ...editingEntry, durationMinutes: Number(e.target.value) })}
+                                    className="px-3.5 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:border-primary"
+                                />
+                            </div>
+                            <div className="flex items-center justify-end gap-2 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingEntry(null)}
+                                    className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

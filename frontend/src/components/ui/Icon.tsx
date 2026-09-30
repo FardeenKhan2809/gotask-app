@@ -1,144 +1,10 @@
 import React from 'react';
 import * as Fi from 'react-icons/fi';
 
-type IconName =
-    | 'zap'
-    | 'building-2'
-    | 'chevrons-up-down'
-    | 'layout-dashboard'
-    | 'check-square'
-    | 'timer'
-    | 'calendar'
-    | 'bar-chart-2'
-    | 'users'
-    | 'folder'
-    | 'bell'
-    | 'settings'
-    | 'log-out'
-    | 'search'
-    | 'plus'
-    | 'clock'
-    | 'trending-up'
-    | 'square'
-    | 'save'
-    | 'arrow-right'
-    | 'sliders-horizontal'
-    | 'arrow-up-down'
-    | 'layout-grid'
-    | 'list'
-    | 'more-horizontal'
-    | 'message-square'
-    | 'paperclip'
-    | 'play'
-    | 'pause'
-    | 'minus'
-    | 'arrow-up'
-    | 'arrow-down'
-    | 'check-circle-2'
-    | 'play-circle'
-    | 'message-circle'
-    | 'plus-circle'
-    | 'file-text'
-    | 'layers'
-    | 'loader'
-    | 'list-todo'
-    | 'trending-down'
-    | 'copy'
-    | 'tag'
-    | 'trash-2'
-    | 'chevron-down'
-    | 'pencil'
-    | 'trash-2'
-    | 'coffee'
-    | 'target'
-    | 'keyboard'
-    | 'user'
-    | 'play'
-    | 'pause'
-    | 'square'
-    | 'save'
-    | 'plus'
-    | 'clock'
-    | 'calendar'
-    | 'layers'
-    | 'trending-up'
-    | 'chevron-left'
-    | 'chevron-right'
-    | 'calendar-check'
-    | 'check'
-    | 'loader'
-    | 'filter'
-    | 'download'
-    | 'file-spreadsheet'
-    | 'alert-circle'
-    | 'award'
-    | 'eye'
-    | 'activity'
-    | 'user-plus'
-    | 'edit-3'
-    | 'hash'
-    | 'smile-plus'
-    | 'smile'
-    | 'reply'
-    | 'bold'
-    | 'italic'
-    | 'link'
-    | 'code'
-    | 'at-sign'
-    | 'pin'
-    | 'figma'
-    | 'code-2'
-    | 'download'
-    | 'send'
-    | 'image'
-    | 'mail'
-    | 'lock'
-    | 'shield'
-    | 'chrome'
-    | 'github'
-    | 'info'
-    | 'palette'
-    | 'plug'
-    | 'credit-card'
-    | 'monitor'
-    | 'smartphone'
-    | 'shield-alert'
-    | 'shield-check'
-    | 'align-justify'
-    | 'menu'
-    | 'layout-list'
-    | 'rotate-ccw'
-    | 'check-check'
-    | 'settings-2'
-    | 'external-link'
-    | 'x'
-    | 'user-plus'
-    | 'alert-circle'
-    | 'mail'
-    | 'monitor'
-    | 'smartphone'
-    | 'moon'
-    | 'camera'
-    | 'briefcase'
-    | 'map-pin'
-    | 'target'
-    | 'flame'
-    | 'underline'
-    | 'list-ordered'
-    | 'upload-cloud'
-    | 'trending-down'
-    | 'settings-2'
-    | 'filter'
-    | 'more-horizontal'
-    | 'plus-circle'
-    | 'paperclip'
-    | 'play-circle'
-    | 'shield-check'
-    | 'square'
-    | 'banknote'
-    | 'x';
-
-const iconMap: Record<IconName, React.ElementType> = {
+const iconMap = {
+    'dollar-sign': Fi.FiDollarSign,
+    'arrow-up-right': Fi.FiArrowUpRight,
+    'pie-chart': Fi.FiPieChart,
     zap: Fi.FiZap,
     timer: Fi.FiClock,
     calendar: Fi.FiCalendar,
@@ -156,7 +22,11 @@ const iconMap: Record<IconName, React.ElementType> = {
     play: Fi.FiPlay,
     pause: Fi.FiPause,
     minus: Fi.FiMinus,
-    'banknote': Fi.FiBanknote,
+    'banknote': Fi.FiDollarSign,
+    'globe': Fi.FiGlobe,
+    'user-check': Fi.FiUserCheck,
+    'landmark': Fi.FiHome,
+    'x-circle': Fi.FiXCircle,
     'trending-down': Fi.FiTrendingDown,
     'settings-2': Fi.FiSettings,
     'filter': Fi.FiFilter,
@@ -248,15 +118,16 @@ const iconMap: Record<IconName, React.ElementType> = {
     'rotate-ccw': Fi.FiRotateCcw,
 };
 
+export type IconName = keyof typeof iconMap;
+
 interface IconProps {
-    name: IconName;
+    name: IconName | (string & {});
     size?: number;
     className?: string;
 }
 
 const Icon: React.FC<IconProps> = ({ name, size = 16, className = '' }) => {
-    const Comp = iconMap[name];
-    if (!Comp) return null;
+    const Comp = (iconMap as Record<string, React.ElementType>)[name] || Fi.FiCircle;
     return <Comp size={size} className={`text-current ${className}`} />;
 };
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import Icon from '../../../components/ui/Icon';
+import { useNavigate } from 'react-router-dom';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 const Signup: React.FC = () => {
     const [firstName, setFirstName] = useState('Aryan');
@@ -20,17 +22,34 @@ const Signup: React.FC = () => {
 
     const strength = passwordStrength();
 
+    const navigate = useNavigate();
+    const { success, warning } = useToast();
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert('Account created (demo)');
+        if (!email.trim() || !password.trim()) {
+            warning('Incomplete Form', 'Please fill in your email and password.');
+            return;
+        }
+        if (!agreeTerms) {
+            warning('Terms Required', 'Please accept the Terms of Service to proceed.');
+            return;
+        }
+        success('Account Created', 'Welcome to FlowWork! Taking you to your dashboard...');
+        setTimeout(() => navigate('/'), 600);
     };
 
-    const handleGoogleSignup = () => alert('Sign up with Google');
-    const handleGithubSignup = () => alert('Sign up with GitHub');
+    const handleGoogleSignup = () => {
+        success('Google Sign Up', 'Connecting with Google...');
+        setTimeout(() => navigate('/'), 600);
+    };
+    const handleGithubSignup = () => {
+        success('GitHub Sign Up', 'Connecting with GitHub...');
+        setTimeout(() => navigate('/'), 600);
+    };
 
     return (
         <div className="flex bg-background font-body min-h-screen">
-            {/* Left panel – Brand & Progress */}
             <div className="relative flex flex-col justify-between p-12 overflow-hidden w-[480px] flex-shrink-0">
                 <div className="absolute inset-0">
                     <img
@@ -38,7 +57,7 @@ const Signup: React.FC = () => {
                         className="w-full h-full object-cover"
                         alt="Background"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0f111790] via-[#0f1117e8] to-[#0f1117]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-background/70 via-background/90 to-background" />
                 </div>
 
                 <div className="relative flex items-center gap-3 z-10">
@@ -60,7 +79,6 @@ const Signup: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Progress steps */}
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-4">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center bg-success text-foreground">
@@ -88,7 +106,6 @@ const Signup: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Social proof */}
                     <div className="flex items-center gap-3 rounded-xl border border-border bg-surface/70 p-4 backdrop-blur-sm">
                         <div className="flex -space-x-2">
                             <div className="w-7 h-7 rounded-full border-2 border-background bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
@@ -112,7 +129,6 @@ const Signup: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right panel – Signup Form */}
             <div className="flex flex-col flex-1 items-center justify-center px-16 py-12 bg-background-2">
                 <div className="w-full max-w-[440px]">
                     <div className="flex flex-col gap-2 mb-8">

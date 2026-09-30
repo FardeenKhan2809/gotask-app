@@ -1,0 +1,3002 @@
+<div class="export-wrapper" style="
+    min-height: 812px;
+    position: relative;
+    font-family: var(--font-family-body);
+    background-color: var(--background);
+  ">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <html>
+
+    <head>
+        <style>
+            /*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */
+            @layer properties;
+            @layer theme, base, components, utilities;
+
+            @layer theme {
+
+                :root,
+                :root {
+                    --font-sans:
+                        ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+                        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                    --font-mono:
+                        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                        "Liberation Mono", "Courier New", monospace;
+                    --spacing: 0.25rem;
+                    --text-xs: 11px;
+                    --text-xs--line-height: calc(1 / 0.75);
+                    --text-sm: 13px;
+                    --text-sm--line-height: calc(1.25 / 0.875);
+                    --text-base: 15px;
+                    --text-base--line-height: calc(1.5 / 1);
+                    --text-lg: 17px;
+                    --text-lg--line-height: calc(1.75 / 1.125);
+                    --text-xl: 20px;
+                    --text-xl--line-height: calc(1.75 / 1.25);
+                    --text-2xl: 24px;
+                    --text-2xl--line-height: calc(2 / 1.5);
+                    --text-3xl: 30px;
+                    --text-3xl--line-height: calc(2.25 / 1.875);
+                    --font-weight-medium: 500;
+                    --font-weight-semibold: 600;
+                    --font-weight-bold: 700;
+                    --tracking-tight: -0.025em;
+                    --tracking-wide: 0.025em;
+                    --leading-tight: 1.25;
+                    --leading-snug: 1.375;
+                    --leading-relaxed: 1.625;
+                    --radius-sm: 6px;
+                    --radius-md: 10px;
+                    --radius-lg: 14px;
+                    --radius-xl: 20px;
+                    --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                    --default-font-family: var(--font-sans);
+                    --default-mono-font-family: var(--font-mono);
+                    --radius: var(--radius-sm);
+                    --color-background: #0f1117;
+                    --color-background-2: #161b25;
+                    --color-background-3: #1e2535;
+                    --color-surface: #1a2030;
+                    --color-surface-2: #222b3d;
+                    --color-foreground: #f0f4ff;
+                    --color-foreground-muted: #8892a4;
+                    --color-border: #2a3347;
+                    --color-primary: #00c9a7;
+                    --color-primary-foreground: #0f1117;
+                    --color-primary-glow: #00c9a730;
+                    --color-secondary: #6366f1;
+                    --color-muted: #2a3347;
+                    --color-muted-foreground: #8892a4;
+                    --color-success: #10b981;
+                    --color-success-bg: #10b98120;
+                    --color-warning: #f59e0b;
+                    --color-warning-bg: #f59e0b20;
+                    --color-danger: #ef4444;
+                    --color-danger-bg: #ef444420;
+                    --color-info: #3b82f6;
+                    --color-info-bg: #3b82f620;
+                    --color-purple: #8b5cf6;
+                    --color-purple-bg: #8b5cf620;
+                    --color-teal-bg: #00c9a715;
+                    --font-body: Inter;
+                    --font-headings: Inter;
+                }
+            }
+
+            @layer base {
+
+                *,
+                ::after,
+                ::before,
+                ::backdrop,
+                ::file-selector-button {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    border: 0 solid;
+                }
+
+                html,
+                :root {
+                    line-height: 1.5;
+                    -webkit-text-size-adjust: 100%;
+                    tab-size: 4;
+                    font-family: var(--default-font-family,
+                            ui-sans-serif,
+                            system-ui,
+                            sans-serif,
+                            "Apple Color Emoji",
+                            "Segoe UI Emoji",
+                            "Segoe UI Symbol",
+                            "Noto Color Emoji"
+                        );
+                    font-feature-settings: var(--default-font-feature-settings, normal);
+                    font-variation-settings: var(--default-font-variation-settings,
+                            normal);
+                    -webkit-tap-highlight-color: transparent;
+                }
+
+                hr {
+                    height: 0;
+                    color: inherit;
+                    border-top-width: 1px;
+                }
+
+                abbr:where([title]) {
+                    -webkit-text-decoration: underline dotted;
+                    text-decoration: underline dotted;
+                }
+
+                h1,
+                h2,
+                h3,
+                h4,
+                h5,
+                h6 {
+                    font-size: inherit;
+                    font-weight: inherit;
+                }
+
+                a {
+                    color: inherit;
+                    -webkit-text-decoration: inherit;
+                    text-decoration: inherit;
+                }
+
+                b,
+                strong {
+                    font-weight: bolder;
+                }
+
+                code,
+                kbd,
+                samp,
+                pre {
+                    font-family: var(--default-mono-font-family,
+                            ui-monospace,
+                            SFMono-Regular,
+                            Menlo,
+                            Monaco,
+                            Consolas,
+                            "Liberation Mono",
+                            "Courier New",
+                            monospace);
+                    font-feature-settings: var(--default-mono-font-feature-settings,
+                            normal);
+                    font-variation-settings: var(--default-mono-font-variation-settings,
+                            normal);
+                    font-size: 1em;
+                }
+
+                small {
+                    font-size: 80%;
+                }
+
+                sub,
+                sup {
+                    font-size: 75%;
+                    line-height: 0;
+                    position: relative;
+                    vertical-align: baseline;
+                }
+
+                sub {
+                    bottom: -0.25em;
+                }
+
+                sup {
+                    top: -0.5em;
+                }
+
+                table {
+                    text-indent: 0;
+                    border-color: inherit;
+                    border-collapse: collapse;
+                }
+
+                :-moz-focusring {
+                    outline: auto;
+                }
+
+                progress {
+                    vertical-align: baseline;
+                }
+
+                summary {
+                    display: list-item;
+                }
+
+                ol,
+                ul,
+                menu {
+                    list-style: none;
+                }
+
+                img,
+                svg,
+                video,
+                canvas,
+                audio,
+                iframe,
+                embed,
+                object {
+                    display: block;
+                    vertical-align: middle;
+                }
+
+                img,
+                video {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+                button,
+                input,
+                select,
+                optgroup,
+                textarea,
+                ::file-selector-button {
+                    font: inherit;
+                    font-feature-settings: inherit;
+                    font-variation-settings: inherit;
+                    letter-spacing: inherit;
+                    color: inherit;
+                    border-radius: 0;
+                    background-color: transparent;
+                    opacity: 1;
+                }
+
+                :where(select:is([multiple], [size])) optgroup {
+                    font-weight: bolder;
+                }
+
+                :where(select:is([multiple], [size])) optgroup option {
+                    padding-inline-start: 20px;
+                }
+
+                ::file-selector-button {
+                    margin-inline-end: 4px;
+                }
+
+                ::placeholder {
+                    opacity: 1;
+                }
+
+                @supports (not (-webkit-appearance: -apple-pay-button)) or (contain-intrinsic-size: 1px) {
+                    ::placeholder {
+                        color: currentcolor;
+
+                        @supports (color: color-mix(in lab, red, red)) {
+                            color: color-mix(in oklab, currentcolor 50%, transparent);
+                        }
+                    }
+                }
+
+                textarea {
+                    resize: vertical;
+                }
+
+                ::-webkit-search-decoration {
+                    -webkit-appearance: none;
+                }
+
+                ::-webkit-date-and-time-value {
+                    min-height: 1lh;
+                    text-align: inherit;
+                }
+
+                ::-webkit-datetime-edit {
+                    display: inline-flex;
+                }
+
+                ::-webkit-datetime-edit-fields-wrapper {
+                    padding: 0;
+                }
+
+                ::-webkit-datetime-edit,
+                ::-webkit-datetime-edit-year-field,
+                ::-webkit-datetime-edit-month-field,
+                ::-webkit-datetime-edit-day-field,
+                ::-webkit-datetime-edit-hour-field,
+                ::-webkit-datetime-edit-minute-field,
+                ::-webkit-datetime-edit-second-field,
+                ::-webkit-datetime-edit-millisecond-field,
+                ::-webkit-datetime-edit-meridiem-field {
+                    padding-block: 0;
+                }
+
+                ::-webkit-calendar-picker-indicator {
+                    line-height: 1;
+                }
+
+                :-moz-ui-invalid {
+                    box-shadow: none;
+                }
+
+                button,
+                input:where([type="button"], [type="reset"], [type="submit"]),
+                ::file-selector-button {
+                    appearance: button;
+                }
+
+                ::-webkit-inner-spin-button,
+                ::-webkit-outer-spin-button {
+                    height: auto;
+                }
+
+                [hidden]:where(:not([hidden="until-found"])) {
+                    display: none !important;
+                }
+            }
+
+            @layer utilities {
+                .absolute {
+                    position: absolute;
+                }
+
+                .fixed {
+                    position: fixed;
+                }
+
+                .relative {
+                    position: relative;
+                }
+
+                .inset-0 {
+                    inset: calc(var(--spacing) * 0);
+                }
+
+                .-top-1 {
+                    top: calc(var(--spacing) * -1);
+                }
+
+                .top-0 {
+                    top: calc(var(--spacing) * 0);
+                }
+
+                .top-1\.5 {
+                    top: calc(var(--spacing) * 1.5);
+                }
+
+                .top-4 {
+                    top: calc(var(--spacing) * 4);
+                }
+
+                .-right-1 {
+                    right: calc(var(--spacing) * -1);
+                }
+
+                .right-0 {
+                    right: calc(var(--spacing) * 0);
+                }
+
+                .right-1\.5 {
+                    right: calc(var(--spacing) * 1.5);
+                }
+
+                .right-12 {
+                    right: calc(var(--spacing) * 12);
+                }
+
+                .bottom-0 {
+                    bottom: calc(var(--spacing) * 0);
+                }
+
+                .left-0 {
+                    left: calc(var(--spacing) * 0);
+                }
+
+                .left-8 {
+                    left: calc(var(--spacing) * 8);
+                }
+
+                .mx-3 {
+                    margin-inline: calc(var(--spacing) * 3);
+                }
+
+                .mt-0\.5 {
+                    margin-top: calc(var(--spacing) * 0.5);
+                }
+
+                .mt-1 {
+                    margin-top: calc(var(--spacing) * 1);
+                }
+
+                .mt-2 {
+                    margin-top: calc(var(--spacing) * 2);
+                }
+
+                .mt-4 {
+                    margin-top: calc(var(--spacing) * 4);
+                }
+
+                .mr-4 {
+                    margin-right: calc(var(--spacing) * 4);
+                }
+
+                .mb-1 {
+                    margin-bottom: calc(var(--spacing) * 1);
+                }
+
+                .mb-1\.5 {
+                    margin-bottom: calc(var(--spacing) * 1.5);
+                }
+
+                .mb-2 {
+                    margin-bottom: calc(var(--spacing) * 2);
+                }
+
+                .mb-3 {
+                    margin-bottom: calc(var(--spacing) * 3);
+                }
+
+                .ml-2 {
+                    margin-left: calc(var(--spacing) * 2);
+                }
+
+                .ml-auto {
+                    margin-left: auto;
+                }
+
+                .line-clamp-2 {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                }
+
+                .flex {
+                    display: flex;
+                }
+
+                .grid {
+                    display: grid;
+                }
+
+                .inline-flex {
+                    display: inline-flex;
+                }
+
+                .h-0\.5 {
+                    height: calc(var(--spacing) * 0.5);
+                }
+
+                .h-1\.5 {
+                    height: calc(var(--spacing) * 1.5);
+                }
+
+                .h-2 {
+                    height: calc(var(--spacing) * 2);
+                }
+
+                .h-2\.5 {
+                    height: calc(var(--spacing) * 2.5);
+                }
+
+                .h-3 {
+                    height: calc(var(--spacing) * 3);
+                }
+
+                .h-4 {
+                    height: calc(var(--spacing) * 4);
+                }
+
+                .h-6 {
+                    height: calc(var(--spacing) * 6);
+                }
+
+                .h-7 {
+                    height: calc(var(--spacing) * 7);
+                }
+
+                .h-8 {
+                    height: calc(var(--spacing) * 8);
+                }
+
+                .h-9 {
+                    height: calc(var(--spacing) * 9);
+                }
+
+                .h-10 {
+                    height: calc(var(--spacing) * 10);
+                }
+
+                .h-12 {
+                    height: calc(var(--spacing) * 12);
+                }
+
+                .h-full {
+                    height: 100%;
+                }
+
+                .min-h-16 {
+                    min-height: calc(var(--spacing) * 16);
+                }
+
+                .min-h-20 {
+                    min-height: calc(var(--spacing) * 20);
+                }
+
+                .min-h-24 {
+                    min-height: calc(var(--spacing) * 24);
+                }
+
+                .min-h-28 {
+                    min-height: calc(var(--spacing) * 28);
+                }
+
+                .w-1\.5 {
+                    width: calc(var(--spacing) * 1.5);
+                }
+
+                .w-2 {
+                    width: calc(var(--spacing) * 2);
+                }
+
+                .w-2\.5 {
+                    width: calc(var(--spacing) * 2.5);
+                }
+
+                .w-3 {
+                    width: calc(var(--spacing) * 3);
+                }
+
+                .w-4 {
+                    width: calc(var(--spacing) * 4);
+                }
+
+                .w-6 {
+                    width: calc(var(--spacing) * 6);
+                }
+
+                .w-7 {
+                    width: calc(var(--spacing) * 7);
+                }
+
+                .w-8 {
+                    width: calc(var(--spacing) * 8);
+                }
+
+                .w-9 {
+                    width: calc(var(--spacing) * 9);
+                }
+
+                .w-10 {
+                    width: calc(var(--spacing) * 10);
+                }
+
+                .w-12 {
+                    width: calc(var(--spacing) * 12);
+                }
+
+                .w-14 {
+                    width: calc(var(--spacing) * 14);
+                }
+
+                .w-20 {
+                    width: calc(var(--spacing) * 20);
+                }
+
+                .w-24 {
+                    width: calc(var(--spacing) * 24);
+                }
+
+                .w-full {
+                    width: 100%;
+                }
+
+                .w-px {
+                    width: 1px;
+                }
+
+                .min-w-0 {
+                    min-width: calc(var(--spacing) * 0);
+                }
+
+                .flex-1 {
+                    flex: 1;
+                }
+
+                .flex-shrink-0 {
+                    flex-shrink: 0;
+                }
+
+                .animate-pulse {
+                    animation: var(--animate-pulse);
+                }
+
+                .grid-cols-2 {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+
+                .grid-cols-3 {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+
+                .grid-cols-4 {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+
+                .flex-col {
+                    flex-direction: column;
+                }
+
+                .flex-wrap {
+                    flex-wrap: wrap;
+                }
+
+                .items-center {
+                    align-items: center;
+                }
+
+                .items-end {
+                    align-items: flex-end;
+                }
+
+                .items-start {
+                    align-items: flex-start;
+                }
+
+                .justify-between {
+                    justify-content: space-between;
+                }
+
+                .justify-center {
+                    justify-content: center;
+                }
+
+                .justify-end {
+                    justify-content: flex-end;
+                }
+
+                .gap-0 {
+                    gap: calc(var(--spacing) * 0);
+                }
+
+                .gap-0\.5 {
+                    gap: calc(var(--spacing) * 0.5);
+                }
+
+                .gap-1 {
+                    gap: calc(var(--spacing) * 1);
+                }
+
+                .gap-1\.5 {
+                    gap: calc(var(--spacing) * 1.5);
+                }
+
+                .gap-2 {
+                    gap: calc(var(--spacing) * 2);
+                }
+
+                .gap-2\.5 {
+                    gap: calc(var(--spacing) * 2.5);
+                }
+
+                .gap-3 {
+                    gap: calc(var(--spacing) * 3);
+                }
+
+                .gap-4 {
+                    gap: calc(var(--spacing) * 4);
+                }
+
+                .gap-5 {
+                    gap: calc(var(--spacing) * 5);
+                }
+
+                .gap-6 {
+                    gap: calc(var(--spacing) * 6);
+                }
+
+                .gap-8 {
+                    gap: calc(var(--spacing) * 8);
+                }
+
+                .gap-x-4 {
+                    column-gap: calc(var(--spacing) * 4);
+                }
+
+                .gap-y-3 {
+                    row-gap: calc(var(--spacing) * 3);
+                }
+
+                .self-start {
+                    align-self: flex-start;
+                }
+
+                .truncate {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .overflow-hidden {
+                    overflow: hidden;
+                }
+
+                .rounded {
+                    border-radius: var(--radius);
+                }
+
+                .rounded-full {
+                    border-radius: calc(infinity * 1px);
+                }
+
+                .rounded-lg {
+                    border-radius: var(--radius-lg);
+                }
+
+                .rounded-md {
+                    border-radius: var(--radius-md);
+                }
+
+                .rounded-sm {
+                    border-radius: var(--radius-sm);
+                }
+
+                .rounded-xl {
+                    border-radius: var(--radius-xl);
+                }
+
+                .rounded-t-xl {
+                    border-top-left-radius: var(--radius-xl);
+                    border-top-right-radius: var(--radius-xl);
+                }
+
+                .border {
+                    border-style: var(--tw-border-style);
+                    border-width: 1px;
+                }
+
+                .border-2 {
+                    border-style: var(--tw-border-style);
+                    border-width: 2px;
+                }
+
+                .border-t {
+                    border-top-style: var(--tw-border-style);
+                    border-top-width: 1px;
+                }
+
+                .border-r {
+                    border-right-style: var(--tw-border-style);
+                    border-right-width: 1px;
+                }
+
+                .border-b {
+                    border-bottom-style: var(--tw-border-style);
+                    border-bottom-width: 1px;
+                }
+
+                .border-l {
+                    border-left-style: var(--tw-border-style);
+                    border-left-width: 1px;
+                }
+
+                .border-l-2 {
+                    border-left-style: var(--tw-border-style);
+                    border-left-width: 2px;
+                }
+
+                .border-dashed {
+                    --tw-border-style: dashed;
+                    border-style: dashed;
+                }
+
+                .border-background {
+                    border-color: var(--color-background);
+                }
+
+                .border-border {
+                    border-color: var(--color-border);
+                }
+
+                .border-danger {
+                    border-color: var(--color-danger);
+                }
+
+                .border-danger-bg {
+                    border-color: var(--color-danger-bg);
+                }
+
+                .border-foreground-muted {
+                    border-color: var(--color-foreground-muted);
+                }
+
+                .border-info {
+                    border-color: var(--color-info);
+                }
+
+                .border-primary {
+                    border-color: var(--color-primary);
+                }
+
+                .border-purple {
+                    border-color: var(--color-purple);
+                }
+
+                .border-success {
+                    border-color: var(--color-success);
+                }
+
+                .border-warning {
+                    border-color: var(--color-warning);
+                }
+
+                .bg-background {
+                    background-color: var(--color-background);
+                }
+
+                .bg-background-2 {
+                    background-color: var(--color-background-2);
+                }
+
+                .bg-background-3 {
+                    background-color: var(--color-background-3);
+                }
+
+                .bg-border {
+                    background-color: var(--color-border);
+                }
+
+                .bg-danger {
+                    background-color: var(--color-danger);
+                }
+
+                .bg-danger-bg {
+                    background-color: var(--color-danger-bg);
+                }
+
+                .bg-foreground-muted {
+                    background-color: var(--color-foreground-muted);
+                }
+
+                .bg-info {
+                    background-color: var(--color-info);
+                }
+
+                .bg-info-bg {
+                    background-color: var(--color-info-bg);
+                }
+
+                .bg-muted {
+                    background-color: var(--color-muted);
+                }
+
+                .bg-primary {
+                    background-color: var(--color-primary);
+                }
+
+                .bg-primary-foreground {
+                    background-color: var(--color-primary-foreground);
+                }
+
+                .bg-primary-glow {
+                    background-color: var(--color-primary-glow);
+                }
+
+                .bg-purple {
+                    background-color: var(--color-purple);
+                }
+
+                .bg-purple-bg {
+                    background-color: var(--color-purple-bg);
+                }
+
+                .bg-secondary {
+                    background-color: var(--color-secondary);
+                }
+
+                .bg-success {
+                    background-color: var(--color-success);
+                }
+
+                .bg-success-bg {
+                    background-color: var(--color-success-bg);
+                }
+
+                .bg-surface {
+                    background-color: var(--color-surface);
+                }
+
+                .bg-surface-2 {
+                    background-color: var(--color-surface-2);
+                }
+
+                .bg-teal-bg {
+                    background-color: var(--color-teal-bg);
+                }
+
+                .bg-warning {
+                    background-color: var(--color-warning);
+                }
+
+                .bg-warning-bg {
+                    background-color: var(--color-warning-bg);
+                }
+
+                .p-1 {
+                    padding: calc(var(--spacing) * 1);
+                }
+
+                .p-3 {
+                    padding: calc(var(--spacing) * 3);
+                }
+
+                .p-4 {
+                    padding: calc(var(--spacing) * 4);
+                }
+
+                .p-5 {
+                    padding: calc(var(--spacing) * 5);
+                }
+
+                .p-6 {
+                    padding: calc(var(--spacing) * 6);
+                }
+
+                .px-1\.5 {
+                    padding-inline: calc(var(--spacing) * 1.5);
+                }
+
+                .px-2 {
+                    padding-inline: calc(var(--spacing) * 2);
+                }
+
+                .px-2\.5 {
+                    padding-inline: calc(var(--spacing) * 2.5);
+                }
+
+                .px-3 {
+                    padding-inline: calc(var(--spacing) * 3);
+                }
+
+                .px-4 {
+                    padding-inline: calc(var(--spacing) * 4);
+                }
+
+                .px-5 {
+                    padding-inline: calc(var(--spacing) * 5);
+                }
+
+                .px-6 {
+                    padding-inline: calc(var(--spacing) * 6);
+                }
+
+                .px-8 {
+                    padding-inline: calc(var(--spacing) * 8);
+                }
+
+                .py-0\.5 {
+                    padding-block: calc(var(--spacing) * 0.5);
+                }
+
+                .py-1 {
+                    padding-block: calc(var(--spacing) * 1);
+                }
+
+                .py-1\.5 {
+                    padding-block: calc(var(--spacing) * 1.5);
+                }
+
+                .py-2 {
+                    padding-block: calc(var(--spacing) * 2);
+                }
+
+                .py-2\.5 {
+                    padding-block: calc(var(--spacing) * 2.5);
+                }
+
+                .py-3 {
+                    padding-block: calc(var(--spacing) * 3);
+                }
+
+                .py-3\.5 {
+                    padding-block: calc(var(--spacing) * 3.5);
+                }
+
+                .py-4 {
+                    padding-block: calc(var(--spacing) * 4);
+                }
+
+                .py-5 {
+                    padding-block: calc(var(--spacing) * 5);
+                }
+
+                .py-6 {
+                    padding-block: calc(var(--spacing) * 6);
+                }
+
+                .py-7 {
+                    padding-block: calc(var(--spacing) * 7);
+                }
+
+                .pt-1 {
+                    padding-top: calc(var(--spacing) * 1);
+                }
+
+                .pb-3 {
+                    padding-bottom: calc(var(--spacing) * 3);
+                }
+
+                .text-center {
+                    text-align: center;
+                }
+
+                .text-left {
+                    text-align: left;
+                }
+
+                .font-body {
+                    font-family: var(--font-body);
+                }
+
+                .font-headings {
+                    font-family: var(--font-headings);
+                }
+
+                .font-mono {
+                    font-family: var(--font-mono);
+                }
+
+                .text-2xl {
+                    font-size: var(--text-2xl);
+                    line-height: var(--tw-leading, var(--text-2xl--line-height));
+                }
+
+                .text-3xl {
+                    font-size: var(--text-3xl);
+                    line-height: var(--tw-leading, var(--text-3xl--line-height));
+                }
+
+                .text-base {
+                    font-size: var(--text-base);
+                    line-height: var(--tw-leading, var(--text-base--line-height));
+                }
+
+                .text-lg {
+                    font-size: var(--text-lg);
+                    line-height: var(--tw-leading, var(--text-lg--line-height));
+                }
+
+                .text-sm {
+                    font-size: var(--text-sm);
+                    line-height: var(--tw-leading, var(--text-sm--line-height));
+                }
+
+                .text-xl {
+                    font-size: var(--text-xl);
+                    line-height: var(--tw-leading, var(--text-xl--line-height));
+                }
+
+                .text-xs {
+                    font-size: var(--text-xs);
+                    line-height: var(--tw-leading, var(--text-xs--line-height));
+                }
+
+                .leading-relaxed {
+                    --tw-leading: var(--leading-relaxed);
+                    line-height: var(--leading-relaxed);
+                }
+
+                .leading-snug {
+                    --tw-leading: var(--leading-snug);
+                    line-height: var(--leading-snug);
+                }
+
+                .leading-tight {
+                    --tw-leading: var(--leading-tight);
+                    line-height: var(--leading-tight);
+                }
+
+                .font-bold {
+                    --tw-font-weight: var(--font-weight-bold);
+                    font-weight: var(--font-weight-bold);
+                }
+
+                .font-medium {
+                    --tw-font-weight: var(--font-weight-medium);
+                    font-weight: var(--font-weight-medium);
+                }
+
+                .font-semibold {
+                    --tw-font-weight: var(--font-weight-semibold);
+                    font-weight: var(--font-weight-semibold);
+                }
+
+                .tracking-tight {
+                    --tw-tracking: var(--tracking-tight);
+                    letter-spacing: var(--tracking-tight);
+                }
+
+                .tracking-wide {
+                    --tw-tracking: var(--tracking-wide);
+                    letter-spacing: var(--tracking-wide);
+                }
+
+                .text-danger {
+                    color: var(--color-danger);
+                }
+
+                .text-foreground {
+                    color: var(--color-foreground);
+                }
+
+                .text-foreground-muted {
+                    color: var(--color-foreground-muted);
+                }
+
+                .text-info {
+                    color: var(--color-info);
+                }
+
+                .text-muted-foreground {
+                    color: var(--color-muted-foreground);
+                }
+
+                .text-primary {
+                    color: var(--color-primary);
+                }
+
+                .text-primary-foreground {
+                    color: var(--color-primary-foreground);
+                }
+
+                .text-purple {
+                    color: var(--color-purple);
+                }
+
+                .text-success {
+                    color: var(--color-success);
+                }
+
+                .text-warning {
+                    color: var(--color-warning);
+                }
+
+                .capitalize {
+                    text-transform: capitalize;
+                }
+
+                .uppercase {
+                    text-transform: uppercase;
+                }
+
+                .italic {
+                    font-style: italic;
+                }
+
+                .line-through {
+                    text-decoration-line: line-through;
+                }
+
+                .underline {
+                    text-decoration-line: underline;
+                }
+
+                .opacity-20 {
+                    opacity: 20%;
+                }
+
+                .opacity-25 {
+                    opacity: 25%;
+                }
+
+                .opacity-50 {
+                    opacity: 50%;
+                }
+
+                .opacity-60 {
+                    opacity: 60%;
+                }
+
+                .opacity-70 {
+                    opacity: 70%;
+                }
+
+                .opacity-75 {
+                    opacity: 75%;
+                }
+
+                .opacity-80 {
+                    opacity: 80%;
+                }
+
+                .opacity-90 {
+                    opacity: 90%;
+                }
+
+                .last\:border-0 {
+                    &:last-child {
+                        border-style: var(--tw-border-style);
+                        border-width: 0px;
+                    }
+                }
+            }
+
+            @property --tw-border-style {
+                syntax: "*";
+                inherits: false;
+                initial-value: solid;
+            }
+
+            @property --tw-leading {
+                syntax: "*";
+                inherits: false;
+            }
+
+            @property --tw-font-weight {
+                syntax: "*";
+                inherits: false;
+            }
+
+            @property --tw-tracking {
+                syntax: "*";
+                inherits: false;
+            }
+
+            @keyframes pulse {
+                50% {
+                    opacity: 0.5;
+                }
+            }
+
+            @layer properties {
+                @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
+
+                    *,
+                    ::before,
+                    ::after,
+                    ::backdrop {
+                        --tw-border-style: solid;
+                        --tw-leading: initial;
+                        --tw-font-weight: initial;
+                        --tw-tracking: initial;
+                    }
+                }
+            }
+        </style>
+        <link rel="preload" as="image"
+            href="https://storage.googleapis.com/banani-avatars/avatar/male/25-35/South Asian/0" />
+    </head>
+
+    <body>
+        <div class="flex bg-background font-body" style="min-height: 900px"
+            data-component="@screens/EmployeeDashboard.jsx">
+            <div class="flex flex-col bg-background-2 border-r border-border" style="width: 220px; min-height: 100%"
+                data-component="@components/Sidebar.jsx">
+                <div class="flex items-center gap-3 px-5 py-5 border-b border-border">
+                    <div class="flex items-center justify-center rounded-lg bg-primary"
+                        style="width: 32px; height: 32px">
+                        <span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="zap" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16px" height="16px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3"
+                                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                                </path>
+                            </svg></span>
+                    </div>
+                    <span class="font-headings font-bold text-base text-foreground tracking-tight"><span
+                            data-file="/components/Sidebar.jsx" data-idx="0">FlowWork</span></span>
+                </div>
+                <div
+                    class="mx-3 mt-4 mb-2 flex items-center gap-2 rounded-lg bg-surface px-3 py-2 border border-border">
+                    <div class="rounded bg-secondary" style="
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              ">
+                        <span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 11px;
+                  height: 11px;
+                " data-icon="building-2" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="11px" height="11px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="4.363636363636363">
+                                    <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3"></path>
+                                    <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2">
+                                    </path>
+                                    <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path>
+                                </g>
+                            </svg></span>
+                    </div>
+                    <span class="text-xs text-foreground-muted font-body flex-1"><span
+                            data-file="/components/Sidebar.jsx" data-idx="1">Acme Corp</span></span><span class=""
+                        style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 12px;
+                height: 12px;
+              " data-icon="chevrons-up-down" data-component="@globalComponents/Icon.jsx"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="4" d="m7 15l5 5l5-5M7 9l5-5l5 5"></path>
+                        </svg></span>
+                </div>
+                <nav class="flex flex-col gap-1 px-3 mt-2 flex-1">
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium bg-teal-bg text-primary"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="layout-dashboard" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                                    <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                                    <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                                    <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+                                </g>
+                            </svg></span><span class="flex-1">Dashboard</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="check-square" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"></path>
+                                    <path d="m9 11l3 3L22 4"></path>
+                                </g>
+                            </svg></span><span class="flex-1">My Tasks</span><span
+                            class="text-xs rounded-full px-1.5 py-0.5 font-bold bg-muted text-muted-foreground"
+                            style="font-size: 10px">12</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="timer" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <path d="M10 2h4m-2 12l3-3"></path>
+                                    <circle cx="12" cy="14" r="8"></circle>
+                                </g>
+                            </svg></span><span class="flex-1">Time Tracker</span><span
+                            class="w-2 h-2 rounded-full bg-success"></span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="calendar" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <path d="M8 2v4m8-4v4"></path>
+                                    <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                    <path d="M3 10h18"></path>
+                                </g>
+                            </svg></span><span class="flex-1">Calendar</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="bar-chart-2" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3" d="M5 21v-6m7 6V3m7 18V9"></path>
+                            </svg></span><span class="flex-1">Reports</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="users" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <path
+                                        d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M16 3.128a4 4 0 0 1 0 7.744M22 21v-2a4 4 0 0 0-3-3.87">
+                                    </path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                </g>
+                            </svg></span><span class="flex-1">Team</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="folder" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3"
+                                    d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z">
+                                </path>
+                            </svg></span><span class="flex-1">Projects</span></a>
+                </nav>
+                <div class="flex flex-col gap-1 px-3 mb-3">
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="bell" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16px" height="16px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3"
+                                    d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326">
+                                </path>
+                            </svg></span><span class="flex-1">Notifications</span><span
+                            class="text-xs rounded-full px-1.5 py-0.5 bg-danger text-foreground font-bold"
+                            style="font-size: 10px">3</span></a><a
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg font-body text-sm font-medium text-foreground-muted"
+                        data-media-type="banani-button"><span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="settings" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3">
+                                    <path
+                                        d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0a2.34 2.34 0 0 0 3.319 1.915a2.34 2.34 0 0 1 2.33 4.033a2.34 2.34 0 0 0 0 3.831a2.34 2.34 0 0 1-2.33 4.033a2.34 2.34 0 0 0-3.319 1.915a2.34 2.34 0 0 1-4.659 0a2.34 2.34 0 0 0-3.32-1.915a2.34 2.34 0 0 1-2.33-4.033a2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915">
+                                    </path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </g>
+                            </svg></span><span class="flex-1">Settings</span></a>
+                </div>
+                <div class="flex items-center gap-3 px-4 py-4 border-t border-border">
+                    <img src="https://storage.googleapis.com/banani-avatars/avatar/male/25-35/South Asian/0"
+                        class="w-8 h-8 rounded-full" data-component="@globalComponents/UserAvatar.jsx" />
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-foreground truncate">
+                            <span data-file="/components/Sidebar.jsx" data-idx="2">Aryan Mehta</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-success"></span><span
+                                class="text-xs text-foreground-muted"><span data-file="/components/Sidebar.jsx"
+                                    data-idx="3">Online</span></span>
+                        </div>
+                    </div>
+                    <span class="" style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 14px;
+                height: 14px;
+              " data-icon="log-out" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                            width="14px" height="14px" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="3.4285714285714284"
+                                d="m16 17l5-5l-5-5m5 5H9m0 9H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        </svg></span>
+                </div>
+            </div>
+            <div class="flex flex-col flex-1 min-w-0">
+                <div class="flex items-center gap-4 px-8 py-4 border-b border-border bg-background-2"
+                    style="min-height: 64px" data-component="@components/Topbar.jsx">
+                    <div class="flex-1">
+                        <h1 class="font-headings font-bold text-xl text-foreground">
+                            <span data-file="/screens/EmployeeDashboard.jsx" data-idx="0">Good morning, Aryan 👋</span>
+                        </h1>
+                        <p class="text-xs text-foreground-muted">
+                            <span data-file="/screens/EmployeeDashboard.jsx" data-idx="1">Here's what's on your plate
+                                today</span>
+                        </p>
+                    </div>
+                    <button
+                        class="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground-muted font-body"
+                        style="width: 220px" data-media-type="banani-button">
+                        <span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 14px;
+                  height: 14px;
+                " data-icon="search" data-component="@globalComponents/Icon.jsx"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" viewBox="0 0 24 24">
+                                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3.4285714285714284">
+                                    <path d="m21 21l-4.34-4.34"></path>
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                </g>
+                            </svg></span><span class="flex-1 text-left"><span data-file="/components/Topbar.jsx"
+                                data-idx="0">Search tasks...</span></span><span
+                            class="flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground-muted"><span>⌘</span><span>K</span></span></button><button
+                        class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground font-body"
+                        data-media-type="banani-button">
+                        <span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 15px;
+                  height: 15px;
+                " data-icon="plus" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="15px" height="15px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3.2" d="M5 12h14m-7-7v14"></path>
+                            </svg></span><span data-file="/components/Topbar.jsx" data-idx="1">New
+                            Task</span></button><button
+                        class="relative flex items-center justify-center w-9 h-9 rounded-lg border border-border bg-surface text-foreground-muted"
+                        data-media-type="banani-button">
+                        <span class="" style="
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                  width: 16px;
+                  height: 16px;
+                " data-icon="bell" data-component="@globalComponents/Icon.jsx"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16px" height="16px" viewBox="0 0 24 24">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="3"
+                                    d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326">
+                                </path>
+                            </svg></span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-danger"></span>
+                    </button>
+                </div>
+                <div class="flex flex-1 min-w-0 overflow-hidden">
+                    <div class="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6">
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
+                                style="min-width: 0" data-component="@components/StatCard.jsx">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center justify-center rounded-lg bg-teal-bg text-primary"
+                                        style="width: 40px; height: 40px">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 18px;
+                          height: 18px;
+                        " data-icon="clock" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2.6666666666666665">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <path d="M12 6v6l4 2"></path>
+                                                </g>
+                                            </svg></span>
+                                    </div>
+                                    <span
+                                        class="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-success-bg text-success"><span
+                                            class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 11px;
+                          height: 11px;
+                        " data-icon="trending-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="11px" height="11px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="4.363636363636363">
+                                                    <path d="M16 7h6v6"></path>
+                                                    <path d="m22 7l-8.5 8.5l-5-5L2 17"></path>
+                                                </g>
+                                            </svg></span>+18%</span>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-foreground font-headings">
+                                        5h 44m
+                                    </div>
+                                    <div class="text-sm text-foreground-muted mt-0.5">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="2">Today's
+                                            Hours</span>
+                                    </div>
+                                    <div class="text-xs text-foreground-muted mt-1 opacity-70">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="3">Goal: 8h</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
+                                style="min-width: 0" data-component="@components/StatCard.jsx">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center justify-center rounded-lg bg-success-bg text-success"
+                                        style="width: 40px; height: 40px">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 18px;
+                          height: 18px;
+                        " data-icon="check-square" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2.6666666666666665">
+                                                    <path
+                                                        d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344">
+                                                    </path>
+                                                    <path d="m9 11l3 3L22 4"></path>
+                                                </g>
+                                            </svg></span>
+                                    </div>
+                                    <span
+                                        class="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-success-bg text-success"><span
+                                            class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 11px;
+                          height: 11px;
+                        " data-icon="trending-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="11px" height="11px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="4.363636363636363">
+                                                    <path d="M16 7h6v6"></path>
+                                                    <path d="m22 7l-8.5 8.5l-5-5L2 17"></path>
+                                                </g>
+                                            </svg></span>+2 tasks</span>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-foreground font-headings">
+                                        8 / 12
+                                    </div>
+                                    <div class="text-sm text-foreground-muted mt-0.5">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="4">Tasks Done</span>
+                                    </div>
+                                    <div class="text-xs text-foreground-muted mt-1 opacity-70">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="5">4 remaining</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
+                                style="min-width: 0" data-component="@components/StatCard.jsx">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center justify-center rounded-lg bg-warning-bg text-warning"
+                                        style="width: 40px; height: 40px">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 18px;
+                          height: 18px;
+                        " data-icon="zap" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2.6666666666666665"
+                                                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                                                </path>
+                                            </svg></span>
+                                    </div>
+                                    <span
+                                        class="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-success-bg text-success"><span
+                                            class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 11px;
+                          height: 11px;
+                        " data-icon="trending-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="11px" height="11px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="4.363636363636363">
+                                                    <path d="M16 7h6v6"></path>
+                                                    <path d="m22 7l-8.5 8.5l-5-5L2 17"></path>
+                                                </g>
+                                            </svg></span>+3 days</span>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-foreground font-headings">
+                                        14 days
+                                    </div>
+                                    <div class="text-sm text-foreground-muted mt-0.5">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="6">Streak</span>
+                                    </div>
+                                    <div class="text-xs text-foreground-muted mt-1 opacity-70">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="7">Personal
+                                            best!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
+                                style="min-width: 0" data-component="@components/StatCard.jsx">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-center justify-center rounded-lg bg-purple-bg text-purple"
+                                        style="width: 40px; height: 40px">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 18px;
+                          height: 18px;
+                        " data-icon="bar-chart-2" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2.6666666666666665"
+                                                    d="M5 21v-6m7 6V3m7 18V9"></path>
+                                            </svg></span>
+                                    </div>
+                                    <span
+                                        class="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-success-bg text-success"><span
+                                            class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 11px;
+                          height: 11px;
+                        " data-icon="trending-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="11px" height="11px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="4.363636363636363">
+                                                    <path d="M16 7h6v6"></path>
+                                                    <path d="m22 7l-8.5 8.5l-5-5L2 17"></path>
+                                                </g>
+                                            </svg></span>+14%</span>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-foreground font-headings">
+                                        92%
+                                    </div>
+                                    <div class="text-sm text-foreground-muted mt-0.5">
+                                        <span data-file="/screens/EmployeeDashboard.jsx"
+                                            data-idx="8">Productivity</span>
+                                    </div>
+                                    <div class="text-xs text-foreground-muted mt-1 opacity-70">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="9">vs 78% last
+                                            week</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between rounded-xl border border-primary bg-surface p-4"
+                            style="
+                  box-shadow:
+                    0 0 0 1px #00c9a720,
+                    0 8px 32px #00c9a715;
+                ">
+                            <div class="flex items-center gap-4">
+                                <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-teal-bg">
+                                    <span class="" style="
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-shrink: 0;
+                        width: 20px;
+                        height: 20px;
+                      " data-icon="timer" data-component="@globalComponents/Icon.jsx"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="20px" height="20px"
+                                            viewBox="0 0 24 24">
+                                            <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2.4">
+                                                <path d="M10 2h4m-2 12l3-3"></path>
+                                                <circle cx="12" cy="14" r="8"></circle>
+                                            </g>
+                                        </svg></span><span
+                                        class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary border-2 border-background"></span>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-foreground-muted">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="10">Currently
+                                            tracking</span>
+                                    </div>
+                                    <div class="text-base font-semibold text-foreground">
+                                        <span data-file="/screens/EmployeeDashboard.jsx" data-idx="11">Design new
+                                            onboarding flow</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="font-mono text-3xl font-bold text-primary">
+                                    02:34:17
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-warning-bg text-warning text-sm font-semibold"
+                                        data-media-type="banani-button">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 14px;
+                          height: 14px;
+                        " data-icon="pause" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                    <rect width="5" height="18" x="14" y="3" rx="1"></rect>
+                                                    <rect width="5" height="18" x="5" y="3" rx="1"></rect>
+                                                </g>
+                                            </svg></span><span data-file="/screens/EmployeeDashboard.jsx"
+                                            data-idx="12">Pause</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-danger-bg text-danger text-sm font-semibold"
+                                        data-media-type="banani-button">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 14px;
+                          height: 14px;
+                        " data-icon="square" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                viewBox="0 0 24 24">
+                                                <rect width="18" height="18" x="3" y="3" fill="none"
+                                                    stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="3.4285714285714284" rx="2"></rect>
+                                            </svg></span><span data-file="/screens/EmployeeDashboard.jsx"
+                                            data-idx="13">Stop</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-teal-bg text-primary text-sm font-semibold"
+                                        data-media-type="banani-button">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 14px;
+                          height: 14px;
+                        " data-icon="save" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                    <path
+                                                        d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z">
+                                                    </path>
+                                                    <path
+                                                        d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7">
+                                                    </path>
+                                                </g>
+                                            </svg></span><span data-file="/screens/EmployeeDashboard.jsx"
+                                            data-idx="14">Save Log</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-bold text-foreground font-headings">
+                                    <span data-file="/screens/EmployeeDashboard.jsx" data-idx="15">Today's Tasks</span>
+                                </h2>
+                                <a class="flex items-center gap-1 text-sm text-primary font-semibold"
+                                    data-media-type="banani-button"><span data-file="/screens/EmployeeDashboard.jsx"
+                                        data-idx="16">View all</span><span class="" style="
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-shrink: 0;
+                        width: 14px;
+                        height: 14px;
+                      " data-icon="arrow-right" data-component="@globalComponents/Icon.jsx"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                            viewBox="0 0 24 24">
+                                            <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="3.4285714285714284"
+                                                d="M5 12h14m-7-7l7 7l-7 7"></path>
+                                        </svg></span></a>
+                            </div>
+                            <div class="flex items-center justify-between gap-4"
+                                data-component="@components/TaskFilterBar.jsx">
+                                <div class="flex items-center gap-1 bg-surface rounded-lg p-1 border border-border">
+                                    <button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold bg-primary text-primary-foreground"
+                                        data-media-type="banani-button">
+                                        All Tasks<span
+                                            class="rounded-full px-1.5 bg-primary-foreground text-primary-foreground opacity-60"
+                                            style="font-size: 10px">24</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-foreground-muted"
+                                        data-media-type="banani-button">
+                                        In Progress<span class="rounded-full px-1.5 bg-muted text-foreground-muted"
+                                            style="font-size: 10px">7</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-foreground-muted"
+                                        data-media-type="banani-button">
+                                        To Do<span class="rounded-full px-1.5 bg-muted text-foreground-muted"
+                                            style="font-size: 10px">11</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-foreground-muted"
+                                        data-media-type="banani-button">
+                                        Done<span class="rounded-full px-1.5 bg-muted text-foreground-muted"
+                                            style="font-size: 10px">6</span>
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold"
+                                        data-media-type="banani-button">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="sliders-horizontal" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925"
+                                                    d="M10 5H3m9 14H3M14 3v4m2 10v4m5-9h-9m9 7h-5m5-14h-7m-6 5v4m0-2H3">
+                                                </path>
+                                            </svg></span><span data-file="/components/TaskFilterBar.jsx"
+                                            data-idx="0">Filter</span></button><button
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface text-xs text-foreground-muted font-semibold"
+                                        data-media-type="banani-button">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="arrow-up-down" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925"
+                                                    d="m21 16l-4 4l-4-4m4 4V4M3 8l4-4l4 4M7 4v16"></path>
+                                            </svg></span><span data-file="/components/TaskFilterBar.jsx"
+                                            data-idx="1">Sort</span>
+                                    </button>
+                                    <div
+                                        class="flex items-center rounded-lg border border-border bg-surface overflow-hidden">
+                                        <button class="px-2.5 py-1.5 text-foreground-muted border-r border-border"
+                                            data-media-type="banani-button">
+                                            <span class="" style="
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            flex-shrink: 0;
+                            width: 14px;
+                            height: 14px;
+                          " data-icon="layout-grid" data-component="@globalComponents/Icon.jsx"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                    viewBox="0 0 24 24">
+                                                    <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                        <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+                                                        <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                                                        <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+                                                        <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+                                                    </g>
+                                                </svg></span></button><button class="px-2.5 py-1.5 text-primary"
+                                            data-media-type="banani-button">
+                                            <span class="" style="
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            flex-shrink: 0;
+                            width: 14px;
+                            height: 14px;
+                          " data-icon="list" data-component="@globalComponents/Icon.jsx"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="3.4285714285714284"
+                                                        d="M3 5h.01M3 12h.01M3 19h.01M8 5h13M8 12h13M8 19h13"></path>
+                                                </svg></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="relative flex flex-col gap-3 rounded-xl border bg-surface p-5 border-primary"
+                                    style="box-shadow: 0 0 0 1px #00c9a740" data-component="@components/TaskCard.jsx">
+                                    <div class="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl bg-primary"></div>
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-foreground-muted">Design</span><span
+                                                class="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-danger-bg text-danger"><span
+                                                    class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 10px;
+                              height: 10px;
+                            " data-icon="arrow-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4.8"
+                                                            d="m5 12l7-7l7 7m-7 7V5"></path>
+                                                    </svg></span>High</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg border border-border text-foreground-muted"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 14px;
+                              height: 14px;
+                            " data-icon="more-horizontal" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </g>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-base text-foreground leading-snug">
+                                            Design new onboarding flow
+                                        </h3>
+                                        <p class="text-sm text-foreground-muted mt-1 leading-relaxed line-clamp-2">
+                                            Redesign the user onboarding with improved
+                                            micro-interactions and clearer steps for new users.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <span class="text-xs text-foreground-muted"><span
+                                                    data-file="/components/TaskCard.jsx"
+                                                    data-idx="0">Progress</span></span><span
+                                                class="text-xs font-semibold text-foreground">65<!-- -->%</span>
+                                        </div>
+                                        <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                                            <div class="h-full rounded-full bg-primary" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1.5 flex-wrap">
+                                        <span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">UI</span><span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">UX</span>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-1 border-t border-border">
+                                        <div class="flex items-center gap-3 text-foreground-muted">
+                                            <span class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="message-square" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z">
+                                                        </path>
+                                                    </svg></span>4</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="paperclip" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="m16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
+                                                        </path>
+                                                    </svg></span>2</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="calendar" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4">
+                                                            <path d="M8 2v4m8-4v4"></path>
+                                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                                            <path d="M3 10h18"></path>
+                                                        </g>
+                                                    </svg></span>Today</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-mono font-bold bg-teal-bg text-primary">
+                                                <span
+                                                    class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>2h
+                                                34m
+                                            </div>
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold bg-warning-bg text-warning"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="pause" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4">
+                                                            <rect width="5" height="18" x="14" y="3" rx="1"></rect>
+                                                            <rect width="5" height="18" x="5" y="3" rx="1"></rect>
+                                                        </g>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-4 right-12">
+                                        <span
+                                            class="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-teal-bg text-primary"><span
+                                                class="w-1.5 h-1.5 rounded-full bg-primary"></span>In Progress</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex flex-col gap-3 rounded-xl border bg-surface p-5 border-border"
+                                    data-component="@components/TaskCard.jsx">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-foreground-muted">Development</span><span
+                                                class="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-danger-bg text-danger"><span
+                                                    class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 10px;
+                              height: 10px;
+                            " data-icon="arrow-up" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4.8"
+                                                            d="m5 12l7-7l7 7m-7 7V5"></path>
+                                                    </svg></span>High</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg border border-border text-foreground-muted"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 14px;
+                              height: 14px;
+                            " data-icon="more-horizontal" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </g>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-base text-foreground leading-snug">
+                                            Integrate payment gateway API
+                                        </h3>
+                                        <p class="text-sm text-foreground-muted mt-1 leading-relaxed line-clamp-2">
+                                            Connect Stripe APIs to the checkout flow and add webhook
+                                            listeners for payment events.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <span class="text-xs text-foreground-muted"><span
+                                                    data-file="/components/TaskCard.jsx"
+                                                    data-idx="0">Progress</span></span><span
+                                                class="text-xs font-semibold text-foreground">40<!-- -->%</span>
+                                        </div>
+                                        <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                                            <div class="h-full rounded-full bg-primary" style="width: 40%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1.5 flex-wrap">
+                                        <span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">Backend</span><span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">API</span>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-1 border-t border-border">
+                                        <div class="flex items-center gap-3 text-foreground-muted">
+                                            <span class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="message-square" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z">
+                                                        </path>
+                                                    </svg></span>2</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="paperclip" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="m16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
+                                                        </path>
+                                                    </svg></span>0</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="calendar" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4">
+                                                            <path d="M8 2v4m8-4v4"></path>
+                                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                                            <path d="M3 10h18"></path>
+                                                        </g>
+                                                    </svg></span>Today</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-mono font-bold bg-muted text-foreground-muted">
+                                                1h 10m
+                                            </div>
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold bg-primary-glow text-primary"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="play" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z">
+                                                        </path>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-4 right-12">
+                                        <span
+                                            class="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-teal-bg text-primary"><span
+                                                class="w-1.5 h-1.5 rounded-full bg-primary"></span>In Progress</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex flex-col gap-3 rounded-xl border bg-surface p-5 border-border"
+                                    data-component="@components/TaskCard.jsx">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-foreground-muted">Development</span><span
+                                                class="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-warning-bg text-warning"><span
+                                                    class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 10px;
+                              height: 10px;
+                            " data-icon="minus" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4.8" d="M5 12h14">
+                                                        </path>
+                                                    </svg></span>Medium</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg border border-border text-foreground-muted"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 14px;
+                              height: 14px;
+                            " data-icon="more-horizontal" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </g>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-base text-foreground leading-snug">
+                                            Write unit tests for auth module
+                                        </h3>
+                                        <p class="text-sm text-foreground-muted mt-1 leading-relaxed line-clamp-2">
+                                            Cover edge cases and ensure 90%+ test coverage for the
+                                            authentication service.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <span class="text-xs text-foreground-muted"><span
+                                                    data-file="/components/TaskCard.jsx"
+                                                    data-idx="0">Progress</span></span><span
+                                                class="text-xs font-semibold text-foreground">0<!-- -->%</span>
+                                        </div>
+                                        <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                                            <div class="h-full rounded-full bg-primary" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1.5 flex-wrap">
+                                        <span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">Testing</span>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-1 border-t border-border">
+                                        <div class="flex items-center gap-3 text-foreground-muted">
+                                            <span class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="message-square" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z">
+                                                        </path>
+                                                    </svg></span>0</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="paperclip" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="m16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
+                                                        </path>
+                                                    </svg></span>1</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="calendar" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4">
+                                                            <path d="M8 2v4m8-4v4"></path>
+                                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                                            <path d="M3 10h18"></path>
+                                                        </g>
+                                                    </svg></span>Tomorrow</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-mono font-bold bg-muted text-foreground-muted">
+                                                0h 00m
+                                            </div>
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold bg-primary-glow text-primary"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="play" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z">
+                                                        </path>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-4 right-12">
+                                        <span
+                                            class="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-muted text-foreground-muted"><span
+                                                class="w-1.5 h-1.5 rounded-full bg-foreground-muted"></span>To Do</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex flex-col gap-3 rounded-xl border bg-surface p-5 border-border"
+                                    data-component="@components/TaskCard.jsx">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span
+                                                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-foreground-muted">Meeting</span><span
+                                                class="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-info-bg text-info"><span
+                                                    class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 10px;
+                              height: 10px;
+                            " data-icon="arrow-down" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="10px" height="10px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4.8"
+                                                            d="M12 5v14m7-7l-7 7l-7-7"></path>
+                                                    </svg></span>Low</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg border border-border text-foreground-muted"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 14px;
+                              height: 14px;
+                            " data-icon="more-horizontal" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="14px" height="14px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="3.4285714285714284">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </g>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-base text-foreground leading-snug">
+                                            Weekly sprint retrospective
+                                        </h3>
+                                        <p class="text-sm text-foreground-muted mt-1 leading-relaxed line-clamp-2">
+                                            Prepare slides and talking points for the end-of-sprint
+                                            team review session.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <span class="text-xs text-foreground-muted"><span
+                                                    data-file="/components/TaskCard.jsx"
+                                                    data-idx="0">Progress</span></span><span
+                                                class="text-xs font-semibold text-foreground">100<!-- -->%</span>
+                                        </div>
+                                        <div class="h-1.5 rounded-full bg-muted overflow-hidden">
+                                            <div class="h-full rounded-full bg-primary" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-1.5 flex-wrap">
+                                        <span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">Team</span><span
+                                            class="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-medium">Sprint</span>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-1 border-t border-border">
+                                        <div class="flex items-center gap-3 text-foreground-muted">
+                                            <span class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="message-square" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z">
+                                                        </path>
+                                                    </svg></span>6</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="paperclip" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="m16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
+                                                        </path>
+                                                    </svg></span>3</span><span
+                                                class="flex items-center gap-1 text-xs"><span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="calendar" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4">
+                                                            <path d="M8 2v4m8-4v4"></path>
+                                                            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                                                            <path d="M3 10h18"></path>
+                                                        </g>
+                                                    </svg></span>Yesterday</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-mono font-bold bg-muted text-foreground-muted">
+                                                0h 45m
+                                            </div>
+                                            <button
+                                                class="w-7 h-7 flex items-center justify-center rounded-lg text-sm font-bold bg-primary-glow text-primary"
+                                                data-media-type="banani-button">
+                                                <span class="" style="
+                              display: inline-flex;
+                              align-items: center;
+                              justify-content: center;
+                              flex-shrink: 0;
+                              width: 12px;
+                              height: 12px;
+                            " data-icon="play" data-component="@globalComponents/Icon.jsx"><svg
+                                                        xmlns="http://www.w3.org/2000/svg" width="12px" height="12px"
+                                                        viewBox="0 0 24 24">
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="4"
+                                                            d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z">
+                                                        </path>
+                                                    </svg></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="absolute top-4 right-12">
+                                        <span
+                                            class="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-success-bg text-success"><span
+                                                class="w-1.5 h-1.5 rounded-full bg-success"></span>Done</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-6 border-l border-border px-6 py-6"
+                        style="width: 300px; flex-shrink: 0">
+                        <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-bold text-foreground">
+                                    <span data-file="/screens/EmployeeDashboard.jsx" data-idx="17">Weekly Hours</span>
+                                </h3>
+                                <span class="text-xs text-foreground-muted"><span
+                                        data-file="/screens/EmployeeDashboard.jsx" data-idx="18">This week</span></span>
+                            </div>
+                            <div class="flex items-end gap-2 mb-1">
+                                <span class="text-2xl font-bold text-foreground font-headings">34.6h</span><span
+                                    class="text-xs text-success font-semibold mb-1">+8% vs last week</span>
+                            </div>
+                            <div class="flex items-end justify-between gap-2" style="height: 80px"
+                                data-component="@components/MiniBarChart.jsx">
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-surface-2"
+                                            style="height: 75%; min-height: 4px"></div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Mon</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-surface-2"
+                                            style="height: 82%; min-height: 4px"></div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Tue</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-surface-2"
+                                            style="height: 68%; min-height: 4px"></div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Wed</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-surface-2"
+                                            style="height: 90.99999999999999%; min-height: 4px"></div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Thu</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-primary" style="height: 54%; min-height: 4px">
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-medium text-primary">Fri</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-surface-2"
+                                            style="height: 20%; min-height: 4px"></div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Sat</span>
+                                </div>
+                                <div class="flex flex-col items-center gap-1 flex-1">
+                                    <div class="w-full flex flex-col justify-end rounded-sm overflow-hidden"
+                                        style="height: 56px">
+                                        <div class="w-full rounded-sm bg-border" style="height: 0%; min-height: 0">
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-medium text-foreground-muted">Sun</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-bold text-foreground">
+                                    <span data-file="/screens/EmployeeDashboard.jsx" data-idx="19">Time by
+                                        Category</span>
+                                </h3>
+                                <span class="text-xs text-foreground-muted"><span
+                                        data-file="/screens/EmployeeDashboard.jsx" data-idx="20">This week</span></span>
+                            </div>
+                            <div class="flex flex-col gap-3" data-component="@components/CategoryBreakdown.jsx">
+                                <div class="flex rounded-full overflow-hidden h-2.5 gap-0.5">
+                                    <div class="bg-primary rounded-full" style="width: 42%"></div>
+                                    <div class="bg-purple rounded-full" style="width: 25%"></div>
+                                    <div class="bg-warning rounded-full" style="width: 15%"></div>
+                                    <div class="bg-info rounded-full" style="width: 12%"></div>
+                                    <div class="bg-muted rounded-full" style="width: 6%"></div>
+                                </div>
+                                <div class="flex flex-col gap-2.5">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-primary flex-shrink-0"></span><span
+                                                class="text-sm text-foreground-muted">Development</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="text-sm font-semibold text-foreground">14.2<!-- -->h</span><span
+                                                class="text-xs font-bold text-primary">42<!-- -->%</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-purple flex-shrink-0"></span><span
+                                                class="text-sm text-foreground-muted">Design</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-semibold text-foreground">8.5<!-- -->h</span><span
+                                                class="text-xs font-bold text-purple">25<!-- -->%</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-warning flex-shrink-0"></span><span
+                                                class="text-sm text-foreground-muted">Meetings</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-semibold text-foreground">5.1<!-- -->h</span><span
+                                                class="text-xs font-bold text-warning">15<!-- -->%</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-info flex-shrink-0"></span><span
+                                                class="text-sm text-foreground-muted">Research</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-semibold text-foreground">4<!-- -->h</span><span
+                                                class="text-xs font-bold text-info">12<!-- -->%</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-muted flex-shrink-0"></span><span
+                                                class="text-sm text-foreground-muted">Other</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-semibold text-foreground">2<!-- -->h</span><span
+                                                class="text-xs font-bold text-foreground-muted">6<!-- -->%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3 rounded-xl border border-border bg-surface p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-bold text-foreground">
+                                    <span data-file="/screens/EmployeeDashboard.jsx" data-idx="21">Recent
+                                        Activity</span>
+                                </h3>
+                                <a class="text-xs text-primary font-semibold" data-media-type="banani-button"><span
+                                        data-file="/screens/EmployeeDashboard.jsx" data-idx="22">See all</span></a>
+                            </div>
+                            <div class="flex flex-col gap-0" data-component="@components/ActivityFeed.jsx">
+                                <div class="flex items-start gap-3 py-3 border-b border-border last:border-0">
+                                    <div
+                                        class="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0 mt-0.5 bg-success-bg">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="check-circle-2" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <path d="m9 12l2 2l4-4"></path>
+                                                </g>
+                                            </svg></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-foreground leading-snug">
+                                            Completed API integration task
+                                        </p>
+                                        <span class="text-xs text-foreground-muted">10 min ago</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 py-3 border-b border-border last:border-0">
+                                    <div
+                                        class="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0 mt-0.5 bg-teal-bg">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="play-circle" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925">
+                                                    <path
+                                                        d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z">
+                                                    </path>
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                </g>
+                                            </svg></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-foreground leading-snug">
+                                            Started timer on Dashboard redesign
+                                        </p>
+                                        <span class="text-xs text-foreground-muted">42 min ago</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 py-3 border-b border-border last:border-0">
+                                    <div
+                                        class="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0 mt-0.5 bg-purple-bg">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="message-circle" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925"
+                                                    d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092a10 10 0 1 0-4.777-4.719">
+                                                </path>
+                                            </svg></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-foreground leading-snug">
+                                            Added a comment on Sprint planning
+                                        </p>
+                                        <span class="text-xs text-foreground-muted">1h ago</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 py-3 border-b border-border last:border-0">
+                                    <div
+                                        class="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0 mt-0.5 bg-info-bg">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="plus-circle" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <path d="M8 12h8m-4-4v8"></path>
+                                                </g>
+                                            </svg></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-foreground leading-snug">
+                                            Created task "Write unit tests"
+                                        </p>
+                                        <span class="text-xs text-foreground-muted">2h ago</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 py-3 border-b border-border last:border-0">
+                                    <div
+                                        class="flex items-center justify-center rounded-lg w-7 h-7 flex-shrink-0 mt-0.5 bg-warning-bg">
+                                        <span class="" style="
+                          display: inline-flex;
+                          align-items: center;
+                          justify-content: center;
+                          flex-shrink: 0;
+                          width: 13px;
+                          height: 13px;
+                        " data-icon="paperclip" data-component="@globalComponents/Icon.jsx"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                                viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="3.6923076923076925"
+                                                    d="m16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
+                                                </path>
+                                            </svg></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-foreground leading-snug">
+                                            Attached 3 files to onboarding task
+                                        </p>
+                                        <span class="text-xs text-foreground-muted">3h ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3 rounded-xl border border-dashed border-border p-4">
+                            <div class="flex items-center gap-2 text-foreground-muted">
+                                <span class="" style="
+                      display: inline-flex;
+                      align-items: center;
+                      justify-content: center;
+                      flex-shrink: 0;
+                      width: 15px;
+                      height: 15px;
+                    " data-icon="file-text" data-component="@globalComponents/Icon.jsx"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="15px" height="15px"
+                                        viewBox="0 0 24 24">
+                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="3.2">
+                                            <path
+                                                d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
+                                            </path>
+                                            <path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8"></path>
+                                        </g>
+                                    </svg></span><span class="text-sm font-medium"><span
+                                        data-file="/screens/EmployeeDashboard.jsx" data-idx="23">Quick
+                                        Note</span></span>
+                            </div>
+                            <div
+                                class="rounded-lg bg-surface border border-border px-3 py-2 text-sm text-foreground-muted min-h-16">
+                                <span data-file="/screens/EmployeeDashboard.jsx" data-idx="24">Jot down
+                                    something...</span>
+                            </div>
+                            <button
+                                class="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold"
+                                data-media-type="banani-button">
+                                <span class="" style="
+                      display: inline-flex;
+                      align-items: center;
+                      justify-content: center;
+                      flex-shrink: 0;
+                      width: 13px;
+                      height: 13px;
+                    " data-icon="plus" data-component="@globalComponents/Icon.jsx"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="13px" height="13px"
+                                        viewBox="0 0 24 24">
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="3.6923076923076925"
+                                            d="M5 12h14m-7-7v14"></path>
+                                    </svg></span><span data-file="/screens/EmployeeDashboard.jsx" data-idx="25">Add
+                                    Note</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    </html>
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+</div>

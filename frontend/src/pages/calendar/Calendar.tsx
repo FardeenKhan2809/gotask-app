@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 interface CalendarEvent {
     id: string;
@@ -137,31 +138,44 @@ const Calendar: React.FC = () => {
         setSelectedDate(today);
     };
 
+    const { success, warning: toastWarning } = useToast();
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [newCategory, setNewCategory] = useState<CalendarEvent['category']>('Development');
+    const [newStart, setNewStart] = useState('10:00');
+    const [newEnd, setNewEnd] = useState('11:00');
+
     const addEvent = () => {
-        const title = prompt('Event title:');
-        if (!title) return;
-        const category = prompt('Category (Development/Design/Meeting/Research/Testing):') as CalendarEvent['category'];
-        if (!category) return;
-        const start = prompt('Start time (HH:MM):', '10:00');
-        const end = prompt('End time (HH:MM):', '11:00');
-        if (!start || !end) return;
-        const [startHour, startMin] = start.split(':').map(Number);
-        const [endHour, endMin] = end.split(':').map(Number);
-        const durationMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
+        setIsAddModalOpen(true);
+    };
+
+    const handleSaveNewEvent = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTitle.trim()) {
+            toastWarning('Title Required', 'Please enter a title for the event.');
+            return;
+        }
+        const [startHour, startMin] = newStart.split(':').map(Number);
+        const [endHour, endMin] = newEnd.split(':').map(Number);
+        const durationMinutes = Math.max(15, (endHour * 60 + endMin) - (startHour * 60 + startMin));
         const newEvent: CalendarEvent = {
             id: Date.now().toString(),
-            title,
-            category,
-            start,
-            end,
+            title: newTitle.trim(),
+            category: newCategory,
+            start: newStart,
+            end: newEnd,
             date: selectedDate,
             durationMinutes,
         };
-        setEvents([...events, newEvent]);
+        setEvents((prev) => [...prev, newEvent]);
+        success('Event Scheduled', `"${newTitle.trim()}" added to your calendar.`);
+        setNewTitle('');
+        setIsAddModalOpen(false);
     };
 
     const deleteEvent = (id: string) => {
-        setEvents(events.filter(e => e.id !== id));
+        setEvents((prev) => prev.filter(e => e.id !== id));
+        success('Event Removed', 'The event was successfully deleted.');
     };
 
     const currentMonthStats = useMemo(() => {
@@ -212,7 +226,6 @@ const Calendar: React.FC = () => {
         <div className="flex flex-col flex-1 min-w-0">
             <div className="flex flex-1 min-w-0">
                 <div className="flex flex-col flex-1 min-w-0 gap-0">
-                    {/* Toolbar */}
                     <div className="flex items-center justify-between px-8 py-4 border-b border-border">
                         <div className="flex items-center gap-3">
                             <button
@@ -238,7 +251,7 @@ const Calendar: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="flex items-center gap-3 mr-4">
-                                {Object.entries(categoryColors).map(([cat, color]) => (
+                                {Object.keys(categoryColors).map((cat) => (
                                     <div key={cat} className="flex items-center gap-1.5">
                                         <span className={`w-2.5 h-2.5 rounded-full bg-${cat === 'Development' ? 'primary' : cat === 'Design' ? 'purple' : cat === 'Meeting' ? 'warning' : cat === 'Research' ? 'info' : 'success'}`} />
                                         <span className="text-xs text-foreground-muted">{cat}</span>
@@ -271,7 +284,6 @@ const Calendar: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Month View */}
                     {viewMode === 'month' && (
                         <div className="flex-1 px-8 py-6 overflow-auto">
                             <div className="flex flex-col gap-0 rounded-xl border border-border bg-surface overflow-hidden">
@@ -302,7 +314,6 @@ const Calendar: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Week View */}
                     {viewMode === 'week' && (
                         <div className="flex-1 px-8 py-6 overflow-auto">
                             <div className="flex flex-col gap-0 rounded-xl border border-border bg-surface overflow-hidden">
@@ -335,7 +346,6 @@ const Calendar: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Day View */}
                     {viewMode === 'day' && (
                         <div className="flex-1 px-8 py-6 overflow-auto">
                             <div className="rounded-xl border border-border bg-surface overflow-hidden">
@@ -399,9 +409,9 @@ const Calendar: React.FC = () => {
                             {selectedDayEvents.map(event => {
                                 const borderColor = event.category === 'Development' ? 'border-primary' : event.category === 'Design' ? 'border-purple' : event.category === 'Meeting' ? 'border-warning' : event.category === 'Research' ? 'border-info' : 'border-success';
                                 const dotColor = event.category === 'Development' ? 'bg-primary' : event.category === 'Design' ? 'bg-purple' : event.category === 'Meeting' ? 'bg-warning' : event.category === 'Research' ? 'bg-info' : 'bg-success';
-                                const isLive = event.id === 'e8'; // example: design system tokens is live
+                                const isLive = event.id === 'e8';
                                 return (
-                                    <div key={event.id} className={`flex items-start gap-3 rounded-lg p-3 border-l-2 ${borderColor} bg-background-2`}>
+                                    <div key={event.id} className={`flex items-start gap-3 rounded-lg p-3 border-l-2 z-[1] ${borderColor} bg-background-2`}>
                                         <div className="flex flex-col items-center w-10 flex-shrink-0">
                                             <span className="text-xs font-mono font-bold text-foreground-muted">{event.start}</span>
                                             <div className={`w-2 h-2 rounded-full mt-1 ${dotColor}`} />
@@ -475,6 +485,84 @@ const Calendar: React.FC = () => {
                     </div>
                 </motion.div>
             </div>
+
+            {isAddModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+                    <div className="w-full max-w-md bg-surface border border-border rounded-2xl shadow-2xl p-6 flex flex-col gap-5">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-foreground">Schedule New Task</h3>
+                            <button
+                                onClick={() => setIsAddModalOpen(false)}
+                                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-surface-2 transition"
+                            >
+                                <Icon name="x" size={16} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSaveNewEvent} className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-semibold text-foreground">Task / Event Title</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={newTitle}
+                                    onChange={(e) => setNewTitle(e.target.value)}
+                                    placeholder="e.g. Design review session"
+                                    className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                />
+                            </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-semibold text-foreground">Category</label>
+                                <select
+                                    value={newCategory}
+                                    onChange={(e) => setNewCategory(e.target.value as CalendarEvent['category'])}
+                                    className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                >
+                                    <option value="Development">Development</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Meeting">Meeting</option>
+                                    <option value="Research">Research</option>
+                                    <option value="Testing">Testing</option>
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-xs font-semibold text-foreground">Start Time</label>
+                                    <input
+                                        type="time"
+                                        value={newStart}
+                                        onChange={(e) => setNewStart(e.target.value)}
+                                        className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-xs font-semibold text-foreground">End Time</label>
+                                    <input
+                                        type="time"
+                                        value={newEnd}
+                                        onChange={(e) => setNewEnd(e.target.value)}
+                                        className="px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-2.5 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsAddModalOpen(false)}
+                                    className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground-muted hover:bg-surface-2 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
+                                >
+                                    Create Event
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
