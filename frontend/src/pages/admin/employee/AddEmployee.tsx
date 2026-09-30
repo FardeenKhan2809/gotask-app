@@ -1,6 +1,5 @@
-// src/pages/admin/AdminAddEmployee.tsx
 import React, { useState } from 'react';
-import Icon from '../../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
 
 interface EmployeeForm {
     firstName: string;
@@ -55,7 +54,7 @@ const AdminAddEmployee: React.FC = () => {
     const totalMonthly = form.baseSalary + form.allowances.hra + form.allowances.transport + form.allowances.medical;
     const annualCTC = totalMonthly * 12;
 
-    const handleChange = (field: keyof EmployeeForm, value: any) => {
+    const handleChange = <K extends keyof EmployeeForm>(field: K, value: EmployeeForm[K]) => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
@@ -64,9 +63,7 @@ const AdminAddEmployee: React.FC = () => {
 
     return (
         <div className="flex flex-1 min-w-0 gap-0">
-            {/* Main form area */}
             <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6">
-                {/* Stepper */}
                 <div className="flex items-center gap-0">
                     {[
                         { step: 1, label: 'Personal Info' },
@@ -103,7 +100,6 @@ const AdminAddEmployee: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Step 1: Personal Information */}
                 {step === 1 && (
                     <div className="rounded-xl border border-border bg-surface overflow-hidden">
                         <div className="px-6 py-3.5 border-b border-border bg-background-3">
@@ -238,7 +234,6 @@ const AdminAddEmployee: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 2: Role & Department */}
                 {step === 2 && (
                     <div className="rounded-xl border border-border bg-surface overflow-hidden">
                         <div className="px-6 py-3.5 border-b border-border bg-background-3">
@@ -383,7 +378,6 @@ const AdminAddEmployee: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 3: Compensation */}
                 {step === 3 && (
                     <div className="rounded-xl border border-border bg-surface overflow-hidden">
                         <div className="px-6 py-3.5 border-b border-border bg-background-3">
@@ -484,7 +478,6 @@ const AdminAddEmployee: React.FC = () => {
                     </div>
                 )}
 
-                {/* Step 4: Review - placeholder */}
                 {step === 4 && (
                     <div className="rounded-xl border border-border bg-surface p-8 text-center text-foreground-muted">
                         <Icon name="check" size={32} className="text-primary mx-auto mb-4" />
@@ -493,7 +486,6 @@ const AdminAddEmployee: React.FC = () => {
                     </div>
                 )}
 
-                {/* Navigation buttons */}
                 <div className="flex items-center justify-between pt-2">
                     <button
                         onClick={prevStep}
@@ -516,7 +508,6 @@ const AdminAddEmployee: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right summary panel */}
             <div className="flex flex-col gap-5 border-l border-border px-6 py-6 bg-background-2" style={{ width: "280px", flexShrink: 0 }}>
                 <div className="flex flex-col items-center gap-3 p-5 rounded-xl border border-dashed border-border">
                     <div className="relative">

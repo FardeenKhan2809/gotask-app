@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Icon from '../../../../components/ui/Icon';
-import { useTheme } from '../../../../context/ThemeContext';
+import Icon from '@/components/ui/Icon';
+import { useTheme, type LayoutDensity, type SidebarStyle } from '@/context/ThemeContext';
 
-type ThemePreset = 'dark' | 'midnight' | 'light' | 'dim';
-type AccentPreset = 'emerald-teal' | 'electric-indigo' | 'vivid-violet' | 'coral-flame' | 'amber-glow' | 'sky-blue' | 'rose-pink' | 'lime-zest';
-type FontFamily = 'Inter' | 'DM Sans' | 'Geist' | 'IBM Plex Mono' | 'Plus Jakarta Sans';
-type LayoutDensity = 'compact' | 'default' | 'spacious';
-type CornerRadius = 'sharp' | 'subtle' | 'rounded' | 'pill';
-type SidebarStyle = 'full-labels' | 'icon-only' | 'floating-rail';
+export type ThemePreset = 'dark' | 'midnight' | 'monochrome' | 'paper' | 'light' | 'dim' | 'cyberpunk' | 'forest';
+export type AccentPreset = 'stark-black' | 'monochrome-white' | 'emerald-teal' | 'electric-indigo' | 'vivid-violet' | 'coral-flame' | 'amber-glow' | 'sky-blue' | 'rose-pink' | 'lime-zest' | 'neon-cyan';
+export type FontFamily = 'Plus Jakarta Sans' | 'Inter' | 'DM Sans' | 'Geist' | 'IBM Plex Mono' | 'Outfit' | 'Space Grotesk';
+export type CornerRadius = 'sharp' | 'subtle' | 'rounded' | 'pill';
 
-const themePresets: Record<ThemePreset, {
+interface ThemePresetColors {
     background: string;
     background2: string;
     background3: string;
@@ -31,7 +29,12 @@ const themePresets: Record<ThemePreset, {
     purple: string;
     purpleBg: string;
     tealBg: string;
-}> = {
+    primaryForeground: string;
+    defaultAccent: AccentPreset;
+    description: string;
+}
+
+const themePresets: Record<ThemePreset, ThemePresetColors> = {
     dark: {
         background: '#0f1117',
         background2: '#161b25',
@@ -54,18 +57,21 @@ const themePresets: Record<ThemePreset, {
         purple: '#8b5cf6',
         purpleBg: '#8b5cf620',
         tealBg: '#00c9a715',
+        primaryForeground: '#09090b',
+        defaultAccent: 'emerald-teal',
+        description: 'Deep navy obsidian default',
     },
     midnight: {
         background: '#000000',
-        background2: '#050505',
-        background3: '#0a0a0a',
-        surface: '#0d0d0d',
-        surface2: '#151515',
-        foreground: '#e8e8e8',
-        foregroundMuted: '#808080',
-        border: '#1a1a1a',
-        muted: '#1a1a1a',
-        mutedForeground: '#808080',
+        background2: '#070709',
+        background3: '#0f0f14',
+        surface: '#111116',
+        surface2: '#191920',
+        foreground: '#f1f1f6',
+        foregroundMuted: '#8b8e9b',
+        border: '#21212c',
+        muted: '#1d1d27',
+        mutedForeground: '#8b8e9b',
         success: '#10b981',
         successBg: '#10b98120',
         warning: '#f59e0b',
@@ -77,41 +83,99 @@ const themePresets: Record<ThemePreset, {
         purple: '#8b5cf6',
         purpleBg: '#8b5cf620',
         tealBg: '#00c9a715',
+        primaryForeground: '#09090b',
+        defaultAccent: 'emerald-teal',
+        description: 'Pure OLED black pitch',
+    },
+    monochrome: {
+        background: '#000000',
+        background2: '#080808',
+        background3: '#101010',
+        surface: '#121212',
+        surface2: '#1a1a1a',
+        foreground: '#ffffff',
+        foregroundMuted: '#a1a1aa',
+        border: '#262626',
+        muted: '#181818',
+        mutedForeground: '#737373',
+        success: '#ffffff',
+        successBg: '#ffffff18',
+        warning: '#f4f4f5',
+        warningBg: '#ffffff14',
+        danger: '#ef4444',
+        dangerBg: '#ef444420',
+        info: '#e5e5e5',
+        infoBg: '#ffffff14',
+        purple: '#d4d4d8',
+        purpleBg: '#ffffff14',
+        tealBg: '#ffffff18',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'monochrome-white',
+        description: 'Stark black & white contrast',
+    },
+    paper: {
+        background: '#ffffff',
+        background2: '#f8f9fa',
+        background3: '#f1f3f5',
+        surface: '#ffffff',
+        surface2: '#f4f4f6',
+        foreground: '#000000',
+        foregroundMuted: '#52525b',
+        border: '#000000',
+        muted: '#e4e4e7',
+        mutedForeground: '#71717a',
+        success: '#16a34a',
+        successBg: '#16a34a18',
+        warning: '#d97706',
+        warningBg: '#d9770618',
+        danger: '#dc2626',
+        dangerBg: '#dc262618',
+        info: '#2563eb',
+        infoBg: '#2563eb18',
+        purple: '#7c3aed',
+        purpleBg: '#7c3aed18',
+        tealBg: '#00000012',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'stark-black',
+        description: 'White background & black borders',
     },
     light: {
-        background: '#ffffff',
-        background2: '#f4f6f9',
-        background3: '#eef0f3',
+        background: '#f8fafc',
+        background2: '#ffffff',
+        background3: '#f1f5f9',
         surface: '#ffffff',
-        surface2: '#fafbfc',
-        foreground: '#1e1e2f',
-        foregroundMuted: '#6b7280',
-        border: '#d1d5db',
-        muted: '#e5e7eb',
-        mutedForeground: '#6b7280',
+        surface2: '#f8fafc',
+        foreground: '#0f172a',
+        foregroundMuted: '#64748b',
+        border: '#e2e8f0',
+        muted: '#e2e8f0',
+        mutedForeground: '#64748b',
         success: '#10b981',
-        successBg: '#10b98120',
+        successBg: '#10b98118',
         warning: '#f59e0b',
-        warningBg: '#f59e0b20',
+        warningBg: '#f59e0b18',
         danger: '#ef4444',
-        dangerBg: '#ef444420',
+        dangerBg: '#ef444418',
         info: '#3b82f6',
-        infoBg: '#3b82f620',
+        infoBg: '#3b82f618',
         purple: '#8b5cf6',
-        purpleBg: '#8b5cf620',
+        purpleBg: '#8b5cf618',
         tealBg: '#00c9a715',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'sky-blue',
+        description: 'Crisp & clean daylight',
     },
     dim: {
-        background: '#1c1e26',
-        background2: '#181a21',
-        background3: '#14161c',
-        surface: '#23262f',
-        surface2: '#2b2e38',
-        foreground: '#e2e4ea',
-        foregroundMuted: '#8a8d99',
-        border: '#2e3240',
-        muted: '#2e3240',
-        mutedForeground: '#8a8d99',
+        background: '#15171e',
+        background2: '#1b1e27',
+        background3: '#222632',
+        surface: '#202430',
+        surface2: '#292e3d',
+        foreground: '#e2e8f0',
+        foregroundMuted: '#94a3b8',
+        border: '#2f3545',
+        muted: '#2f3545',
+        mutedForeground: '#94a3b8',
         success: '#10b981',
         successBg: '#10b98120',
         warning: '#f59e0b',
@@ -123,82 +187,143 @@ const themePresets: Record<ThemePreset, {
         purple: '#8b5cf6',
         purpleBg: '#8b5cf620',
         tealBg: '#00c9a715',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'electric-indigo',
+        description: 'Warm soothing charcoal',
+    },
+    cyberpunk: {
+        background: '#0c071e',
+        background2: '#150b33',
+        background3: '#1f1047',
+        surface: '#1b0d3b',
+        surface2: '#291357',
+        foreground: '#f5e6ff',
+        foregroundMuted: '#b39ddb',
+        border: '#401d73',
+        muted: '#32145a',
+        mutedForeground: '#b39ddb',
+        success: '#00e676',
+        successBg: '#00e67625',
+        warning: '#ffea00',
+        warningBg: '#ffea0025',
+        danger: '#ff1744',
+        dangerBg: '#ff174425',
+        info: '#00e5ff',
+        infoBg: '#00e5ff25',
+        purple: '#d500f9',
+        purpleBg: '#d500f925',
+        tealBg: '#00e5ff20',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'vivid-violet',
+        description: 'Synthwave electric neon',
+    },
+    forest: {
+        background: '#06120e',
+        background2: '#0b1a15',
+        background3: '#11241e',
+        surface: '#142922',
+        surface2: '#1c382f',
+        foreground: '#ecfdf5',
+        foregroundMuted: '#86efac',
+        border: '#204337',
+        muted: '#1d3b31',
+        mutedForeground: '#86efac',
+        success: '#34d399',
+        successBg: '#34d39925',
+        warning: '#fbbf24',
+        warningBg: '#fbbf2425',
+        danger: '#f87171',
+        dangerBg: '#f8717125',
+        info: '#38bdf8',
+        infoBg: '#38bdf825',
+        purple: '#a78bfa',
+        purpleBg: '#a78bfa25',
+        tealBg: '#34d39920',
+        primaryForeground: '#ffffff',
+        defaultAccent: 'lime-zest',
+        description: 'Deep emerald evergreen',
     },
 };
 
-const accentPresets: Record<AccentPreset, { primary: string; gradient: string }> = {
-    'emerald-teal': { primary: '#00c9a7', gradient: 'linear-gradient(135deg, #00c9a7, #6366f1)' },
-    'electric-indigo': { primary: '#6366f1', gradient: 'linear-gradient(135deg, #6366f1, #00c9a7)' },
-    'vivid-violet': { primary: '#8b5cf6', gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)' },
-    'coral-flame': { primary: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #f59e0b)' },
-    'amber-glow': { primary: '#f59e0b', gradient: 'linear-gradient(135deg, #f59e0b, #10b981)' },
-    'sky-blue': { primary: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' },
-    'rose-pink': { primary: '#ec4899', gradient: 'linear-gradient(135deg, #ec4899, #6366f1)' },
-    'lime-zest': { primary: '#84cc16', gradient: 'linear-gradient(135deg, #84cc16, #06b6d4)' },
+const accentPresets: Record<AccentPreset, { label: string; primary: string; gradient: string }> = {
+    'stark-black': { label: 'Stark Black', primary: '#000000', gradient: 'linear-gradient(135deg, #000000, #3f3f46)' },
+    'monochrome-white': { label: 'Titanium White', primary: '#ffffff', gradient: 'linear-gradient(135deg, #ffffff, #71717a)' },
+    'emerald-teal': { label: 'Emerald Teal', primary: '#00c9a7', gradient: 'linear-gradient(135deg, #00c9a7, #6366f1)' },
+    'electric-indigo': { label: 'Electric Indigo', primary: '#6366f1', gradient: 'linear-gradient(135deg, #6366f1, #00c9a7)' },
+    'vivid-violet': { label: 'Vivid Violet', primary: '#8b5cf6', gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)' },
+    'coral-flame': { label: 'Coral Flame', primary: '#ef4444', gradient: 'linear-gradient(135deg, #ef4444, #f59e0b)' },
+    'amber-glow': { label: 'Amber Glow', primary: '#f59e0b', gradient: 'linear-gradient(135deg, #f59e0b, #10b981)' },
+    'sky-blue': { label: 'Sky Blue', primary: '#3b82f6', gradient: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' },
+    'rose-pink': { label: 'Rose Pink', primary: '#ec4899', gradient: 'linear-gradient(135deg, #ec4899, #6366f1)' },
+    'lime-zest': { label: 'Lime Zest', primary: '#84cc16', gradient: 'linear-gradient(135deg, #84cc16, #06b6d4)' },
+    'neon-cyan': { label: 'Neon Cyan', primary: '#06b6d4', gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)' },
 };
 
 const cornerRadiusValues: Record<CornerRadius, string> = {
-    sharp: '2px',
+    sharp: '0px',
     subtle: '6px',
-    rounded: '10px',
-    pill: '20px',
+    rounded: '12px',
+    pill: '24px',
 };
 
 const fontFamilies: Record<FontFamily, string> = {
+    'Plus Jakarta Sans': 'Plus Jakarta Sans',
     Inter: 'Inter',
     'DM Sans': 'DM Sans',
     Geist: 'Geist',
     'IBM Plex Mono': 'IBM Plex Mono',
-    'Plus Jakarta Sans': 'Plus Jakarta Sans',
+    Outfit: 'Outfit',
+    'Space Grotesk': 'Space Grotesk',
 };
 
 const fontUrls: Record<FontFamily, string> = {
-    Inter: 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap',
-    'DM Sans': 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap',
-    Geist: 'https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap',
-    'IBM Plex Mono': 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&display=swap',
-    'Plus Jakarta Sans': 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap',
-};
-
-const layoutDensityStyles: Record<LayoutDensity, string> = {
-    compact: '0.75',
-    default: '1',
-    spacious: '1.25',
+    'Plus Jakarta Sans': 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap',
+    Inter: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+    'DM Sans': 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap',
+    Geist: 'https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap',
+    'IBM Plex Mono': 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap',
+    Outfit: 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap',
+    'Space Grotesk': 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap',
 };
 
 const AppearanceTab: React.FC = () => {
     const { theme, updateTheme } = useTheme();
 
-    const [themePreset, setThemePreset] = useState<ThemePreset>('dark');
-    const [accentPreset, setAccentPreset] = useState<AccentPreset>('emerald-teal');
-    const [customAccentColor, setCustomAccentColor] = useState('#00c9a7');
+    const [themePreset, setThemePreset] = useState<ThemePreset>(() => (theme.preset as ThemePreset) || 'dark');
+    const [accentPreset, setAccentPreset] = useState<AccentPreset | 'custom'>(() => (theme.accentPreset as AccentPreset) || 'emerald-teal');
+    const [customAccentColor, setCustomAccentColor] = useState<string>(() => theme.primary || '#00c9a7');
     const [fontFamily, setFontFamily] = useState<FontFamily>('Plus Jakarta Sans');
-    const [layoutDensity, setLayoutDensity] = useState<LayoutDensity>('default');
+    const [layoutDensity, setLayoutDensity] = useState<LayoutDensity>(() => theme.layoutDensity || 'default');
     const [cornerRadius, setCornerRadius] = useState<CornerRadius>('rounded');
-    const [sidebarStyle, setSidebarStyle] = useState<SidebarStyle>('full-labels');
+    const [sidebarStyle, setSidebarStyle] = useState<SidebarStyle>(() => theme.sidebarStyle || 'full-labels');
+    const [showSavedToast, setShowSavedToast] = useState(false);
 
     useEffect(() => {
         const saved = localStorage.getItem('appearance-settings');
         if (saved) {
-            const settings = JSON.parse(saved);
-            setThemePreset(settings.themePreset || 'dark');
-            setAccentPreset(settings.accentPreset || 'emerald-teal');
-            setCustomAccentColor(settings.customAccentColor || '#00c9a7');
-            setFontFamily(settings.fontFamily || 'Plus Jakarta Sans');
-            setLayoutDensity(settings.layoutDensity || 'default');
-            setCornerRadius(settings.cornerRadius || 'rounded');
-            setSidebarStyle(settings.sidebarStyle || 'full-labels');
-            applyTheme(settings);
+            try {
+                const s = JSON.parse(saved);
+                if (s.themePreset) {
+                    if (s.themePreset === 'nord') {
+                        setThemePreset('paper');
+                    } else {
+                        setThemePreset(s.themePreset);
+                    }
+                }
+                if (s.accentPreset) setAccentPreset(s.accentPreset);
+                if (s.customAccentColor) setCustomAccentColor(s.customAccentColor);
+                if (s.fontFamily) {
+                    setFontFamily(s.fontFamily);
+                    loadFont(s.fontFamily);
+                }
+                if (s.layoutDensity) setLayoutDensity(s.layoutDensity);
+                if (s.cornerRadius) setCornerRadius(s.cornerRadius);
+                if (s.sidebarStyle) setSidebarStyle(s.sidebarStyle);
+            } catch {
+                loadFont('Plus Jakarta Sans');
+            }
         } else {
-            applyTheme({
-                themePreset: 'dark',
-                accentPreset: 'emerald-teal',
-                customAccentColor: '#00c9a7',
-                cornerRadius: 'rounded',
-                fontFamily: 'Plus Jakarta Sans',
-                layoutDensity: 'default',
-                sidebarStyle: 'full-labels',
-            });
+            loadFont('Plus Jakarta Sans');
         }
     }, []);
 
@@ -214,23 +339,28 @@ const AppearanceTab: React.FC = () => {
         link.href = fontUrls[font];
     };
 
-    const applyTheme = (settings: {
-        themePreset: ThemePreset;
-        accentPreset: AccentPreset | 'custom';
-        customAccentColor: string;
-        fontFamily: FontFamily;
-        layoutDensity: LayoutDensity;
-        cornerRadius: CornerRadius;
-        sidebarStyle: SidebarStyle;
+    const applyThemeSettings = (settings: {
+        preset: ThemePreset;
+        accent: AccentPreset | 'custom';
+        customColor: string;
+        font: FontFamily;
+        density: LayoutDensity;
+        radius: CornerRadius;
+        sidebar: SidebarStyle;
     }) => {
-        const accentColor = settings.accentPreset === 'custom'
-            ? settings.customAccentColor
-            : accentPresets[settings.accentPreset as AccentPreset].primary;
-        const colors = themePresets[settings.themePreset as ThemePreset];
+        const colors = themePresets[settings.preset];
+        const primaryColor = settings.accent === 'custom'
+            ? settings.customColor
+            : accentPresets[settings.accent as AccentPreset].primary;
+        const primaryFg = settings.accent === 'custom'
+            ? undefined
+            : colors.primaryForeground;
 
         updateTheme({
-            // Base colors
-            primary: accentColor,
+            preset: settings.preset,
+            accentPreset: settings.accent,
+            primary: primaryColor,
+            primaryForeground: primaryFg,
             background: colors.background,
             background2: colors.background2,
             background3: colors.background3,
@@ -252,453 +382,755 @@ const AppearanceTab: React.FC = () => {
             purple: colors.purple,
             purpleBg: colors.purpleBg,
             tealBg: colors.tealBg,
-            borderRadius: cornerRadiusValues[settings.cornerRadius as CornerRadius],
-            fontBody: `${fontFamilies[settings.fontFamily as FontFamily]}, sans-serif`,
-            fontHeadings: `${fontFamilies[settings.fontFamily as FontFamily]}, sans-serif`,
-            layoutDensity: settings.layoutDensity,
-            sidebarStyle: settings.sidebarStyle,
+            borderRadius: cornerRadiusValues[settings.radius],
+            fontBody: `"${fontFamilies[settings.font]}", sans-serif`,
+            fontHeadings: `"${fontFamilies[settings.font]}", sans-serif`,
+            layoutDensity: settings.density,
+            sidebarStyle: settings.sidebar,
         });
+
+        localStorage.setItem('appearance-settings', JSON.stringify({
+            themePreset: settings.preset,
+            accentPreset: settings.accent,
+            customAccentColor: settings.customColor,
+            fontFamily: settings.font,
+            layoutDensity: settings.density,
+            cornerRadius: settings.radius,
+            sidebarStyle: settings.sidebar,
+        }));
     };
 
     const handleThemePresetChange = (preset: ThemePreset) => {
         setThemePreset(preset);
-        const colors = themePresets[preset];
-        const newSettings = { themePreset: preset, accentPreset, customAccentColor, fontFamily, layoutDensity, cornerRadius, sidebarStyle };
-        applyTheme(newSettings);
+        let nextAccent = accentPreset;
+        if (preset === 'monochrome' && accentPreset !== 'custom') {
+            nextAccent = 'monochrome-white';
+            setAccentPreset('monochrome-white');
+        } else if (preset === 'paper' && accentPreset !== 'custom') {
+            nextAccent = 'stark-black';
+            setAccentPreset('stark-black');
+        } else if ((accentPreset === 'monochrome-white' || accentPreset === 'stark-black') && preset !== 'monochrome' && preset !== 'paper') {
+            nextAccent = themePresets[preset].defaultAccent;
+            setAccentPreset(nextAccent);
+        }
+        applyThemeSettings({
+            preset,
+            accent: nextAccent,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
     };
 
     const handleAccentChange = (preset: AccentPreset) => {
         setAccentPreset(preset);
-        const newSettings = { themePreset, accentPreset: preset, customAccentColor, fontFamily, layoutDensity, cornerRadius, sidebarStyle };
-        applyTheme(newSettings);
+        applyThemeSettings({
+            preset: themePreset,
+            accent: preset,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
     };
 
-    const handleCustomAccent = () => {
-        const newSettings = { themePreset, accentPreset: 'custom' as any, customAccentColor, fontFamily, layoutDensity, cornerRadius, sidebarStyle };
-        applyTheme(newSettings);
+    const handleCustomColorInput = (color: string) => {
+        setCustomAccentColor(color);
+        setAccentPreset('custom');
+        applyThemeSettings({
+            preset: themePreset,
+            accent: 'custom',
+            customColor: color,
+            font: fontFamily,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
     };
 
     const handleFontChange = (font: FontFamily) => {
         setFontFamily(font);
         loadFont(font);
-        const newSettings = { themePreset, accentPreset, customAccentColor, fontFamily: font, layoutDensity, cornerRadius, sidebarStyle };
-        applyTheme(newSettings);
+        applyThemeSettings({
+            preset: themePreset,
+            accent: accentPreset,
+            customColor: customAccentColor,
+            font,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
     };
 
     const handleCornerRadiusChange = (radius: CornerRadius) => {
         setCornerRadius(radius);
-        const newSettings = { themePreset, accentPreset, customAccentColor, fontFamily, layoutDensity, cornerRadius: radius, sidebarStyle };
-        applyTheme(newSettings);
+        applyThemeSettings({
+            preset: themePreset,
+            accent: accentPreset,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density: layoutDensity,
+            radius,
+            sidebar: sidebarStyle,
+        });
     };
 
     const handleLayoutDensityChange = (density: LayoutDensity) => {
         setLayoutDensity(density);
-        const newSettings = { themePreset, accentPreset, customAccentColor, fontFamily, layoutDensity: density, cornerRadius, sidebarStyle };
-        applyTheme(newSettings);
+        applyThemeSettings({
+            preset: themePreset,
+            accent: accentPreset,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
     };
 
-    const handleSidebarStyleChange = (style: SidebarStyle) => {
-        setSidebarStyle(style);
-        const newSettings = { themePreset, accentPreset, customAccentColor, fontFamily, layoutDensity, cornerRadius, sidebarStyle: style };
-        applyTheme(newSettings);
+    const handleSidebarStyleChange = (sidebar: SidebarStyle) => {
+        setSidebarStyle(sidebar);
+        applyThemeSettings({
+            preset: themePreset,
+            accent: accentPreset,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar,
+        });
     };
 
     const handleReset = () => {
-        const defaultSettings = {
-            themePreset: 'dark' as ThemePreset,
-            accentPreset: 'emerald-teal' as AccentPreset,
-            customAccentColor: '#00c9a7',
-            fontFamily: 'Plus Jakarta Sans' as FontFamily,
-            layoutDensity: 'default' as LayoutDensity,
-            cornerRadius: 'rounded' as CornerRadius,
-            sidebarStyle: 'full-labels' as SidebarStyle,
-        };
         setThemePreset('dark');
         setAccentPreset('emerald-teal');
         setCustomAccentColor('#00c9a7');
         setFontFamily('Plus Jakarta Sans');
+        loadFont('Plus Jakarta Sans');
         setLayoutDensity('default');
         setCornerRadius('rounded');
         setSidebarStyle('full-labels');
-        applyTheme(defaultSettings);
+
+        applyThemeSettings({
+            preset: 'dark',
+            accent: 'emerald-teal',
+            customColor: '#00c9a7',
+            font: 'Plus Jakarta Sans',
+            density: 'default',
+            radius: 'rounded',
+            sidebar: 'full-labels',
+        });
     };
 
     const handleApply = () => {
-        const settings = { themePreset, accentPreset, customAccentColor, fontFamily, layoutDensity, cornerRadius, sidebarStyle };
-        localStorage.setItem('appearance-settings', JSON.stringify(settings));
-        applyTheme(settings);
-        alert('Settings applied and saved');
+        applyThemeSettings({
+            preset: themePreset,
+            accent: accentPreset,
+            customColor: customAccentColor,
+            font: fontFamily,
+            density: layoutDensity,
+            radius: cornerRadius,
+            sidebar: sidebarStyle,
+        });
+        setShowSavedToast(true);
+        setTimeout(() => setShowSavedToast(false), 3000);
     };
 
-    return (
-        <div className="flex flex-1 min-w-0">
-            {/* Main content - no duplicate sidebar */}
-            <div className="flex flex-col flex-1 min-w-0 px-10 py-8 gap-8 overflow-y-auto">
-                <div>
-                    <h2 className="text-lg font-bold text-foreground">Appearance</h2>
-                    <p className="text-sm text-foreground-muted">Customize how FlowWork looks and feels — changes apply instantly across the app.</p>
-                </div>
+    const currentColors = themePresets[themePreset];
 
-                {/* Theme Section */}
-                <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                    <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
-                        <div>
-                            <h3 className="text-sm font-bold text-foreground">Theme</h3>
-                            <p className="text-xs text-foreground-muted mt-0.5">Choose your base color scheme</p>
-                        </div>
-                        <span className="text-xs font-semibold text-primary bg-teal-bg px-2.5 py-1 rounded-full">
-                            {themePreset === 'dark' ? 'Dark — Active' : themePreset === 'midnight' ? 'Midnight' : themePreset === 'light' ? 'Light' : 'Dim'}
-                        </span>
+    return (
+        <div className="flex flex-col gap-8">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-xl font-bold text-foreground tracking-tight">Appearance & Themes</h2>
+                    <p className="text-sm text-foreground-muted mt-1">
+                        Customize FlowWork with tailored color palettes, black & white monochrome styling, custom accents, and dynamic layout scaling.
+                    </p>
+                </div>
+                {showSavedToast && (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-success-bg border border-success text-success text-sm font-semibold animate-pulse">
+                        <Icon name="check-circle-2" size={16} />
+                        <span>Settings saved and applied!</span>
                     </div>
-                    <div className="grid grid-cols-4 gap-4 p-6">
-                        {(['dark', 'midnight', 'light', 'dim'] as ThemePreset[]).map((preset) => (
+                )}
+            </div>
+
+            <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-sm font-bold text-foreground">Theme Presets</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Select a master color scheme for all dashboards and interfaces</p>
+                    </div>
+                    <span className="text-xs font-semibold text-primary bg-teal-bg px-3 py-1 rounded-full uppercase tracking-wider">
+                        {themePreset === 'paper' ? 'White & Black Borders' : themePreset} — Active
+                    </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
+                    {(Object.keys(themePresets) as ThemePreset[]).map((preset) => {
+                        const p = themePresets[preset];
+                        const isSelected = themePreset === preset;
+                        const isMonochrome = preset === 'monochrome';
+                        const isPaper = preset === 'paper';
+
+                        return (
                             <button
                                 key={preset}
                                 onClick={() => handleThemePresetChange(preset)}
-                                className={`flex flex-col gap-3 rounded-xl border-2 p-3 ${themePreset === preset ? 'border-primary' : 'border-border'}`}
+                                className={`flex flex-col gap-3 rounded-xl border-2 p-3.5 transition-all text-left group ${
+                                    isSelected
+                                        ? 'border-primary ring-2 ring-primary/20 bg-background-2'
+                                        : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                }`}
                             >
-                                <div className="w-full rounded-lg overflow-hidden border border-border" style={{ height: 64, background: themePresets[preset].background }}>
-                                    <div className="flex h-full">
-                                        <div className="flex flex-col gap-1 p-1.5" style={{ width: '30%', background: themePresets[preset].surface }}>
-                                            <div className="h-1.5 rounded-full" style={{ background: themePresets[preset].border }} />
-                                            <div className="h-1.5 rounded-full" style={{ background: themePresets[preset].border }} />
-                                            <div className="h-1.5 rounded-full" style={{ background: themePresets[preset].border }} />
+                                <div
+                                    className="w-full rounded-lg overflow-hidden border flex flex-col justify-between p-2.5 transition-transform group-hover:scale-[1.02]"
+                                    style={{
+                                        height: 86,
+                                        background: p.background,
+                                        borderColor: isPaper ? '#000000' : p.border,
+                                        boxShadow: isPaper ? 'inset 0 0 0 1px #000000' : isMonochrome ? 'inset 0 0 0 1px rgba(255,255,255,0.1)' : undefined,
+                                    }}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1.5">
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: isPaper ? '#000000' : isMonochrome ? '#ffffff' : '#ef4444' }} />
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: isPaper ? '#52525b' : isMonochrome ? '#a1a1aa' : '#f59e0b' }} />
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: isPaper ? '#a1a1aa' : isMonochrome ? '#52525b' : '#10b981' }} />
                                         </div>
-                                        <div className="flex flex-col gap-1.5 p-2 flex-1">
-                                            <div className="rounded p-1 flex gap-1" style={{ background: themePresets[preset].surface }}>
-                                                <div className="w-1 h-4 rounded-full" style={{ background: '#00c9a7' }} />
-                                                <div className="flex flex-col gap-0.5 justify-center">
-                                                    <div className="h-1 rounded" style={{ background: themePresets[preset].border, width: 32 }} />
-                                                    <div className="h-1 rounded" style={{ background: themePresets[preset].border, width: 20 }} />
-                                                </div>
+                                        <div
+                                            className="px-1.5 py-0.5 rounded text-[9px] font-bold"
+                                            style={{
+                                                background: isPaper ? '#000000' : isMonochrome ? '#ffffff' : p.surface2,
+                                                color: isPaper ? '#ffffff' : isMonochrome ? '#000000' : p.foreground,
+                                                border: `1px solid ${isPaper ? '#000000' : p.border}`,
+                                            }}
+                                        >
+                                            {isPaper ? 'INK B&W' : isMonochrome ? 'B&W DARK' : preset.toUpperCase()}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-2">
+                                        <div
+                                            className="w-1/3 rounded p-1 flex flex-col gap-1"
+                                            style={{ background: p.surface, border: `1px solid ${isPaper ? '#000000' : p.border}` }}
+                                        >
+                                            <div className="h-1 rounded" style={{ background: isPaper ? '#000000' : isMonochrome ? '#ffffff' : '#00c9a7', width: '70%' }} />
+                                            <div className="h-1 rounded" style={{ background: isPaper ? '#000000' : p.border, width: '90%' }} />
+                                            <div className="h-1 rounded" style={{ background: isPaper ? '#71717a' : p.border, width: '50%' }} />
+                                        </div>
+                                        <div className="flex-1 flex flex-col gap-1.5 justify-center">
+                                            <div
+                                                className="h-3.5 rounded px-1.5 flex items-center gap-1"
+                                                style={{ background: p.surface2, border: `1px solid ${p.border}` }}
+                                            >
+                                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: isPaper ? '#000000' : isMonochrome ? '#ffffff' : '#00c9a7' }} />
+                                                <div className="h-1 rounded flex-1" style={{ background: isPaper ? '#000000' : p.border }} />
                                             </div>
-                                            <div className="rounded p-1 flex gap-1" style={{ background: themePresets[preset].surface }}>
-                                                <div className="w-1 h-4 rounded-full" style={{ background: '#00c9a7' }} />
-                                                <div className="flex flex-col gap-0.5 justify-center">
-                                                    <div className="h-1 rounded" style={{ background: themePresets[preset].border, width: 32 }} />
-                                                    <div className="h-1 rounded" style={{ background: themePresets[preset].border, width: 20 }} />
-                                                </div>
+                                            <div
+                                                className="h-3.5 rounded px-1.5 flex items-center gap-1"
+                                                style={{ background: p.surface2, border: `1px solid ${p.border}` }}
+                                            >
+                                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: isPaper ? '#71717a' : isMonochrome ? '#a1a1aa' : '#8b5cf6' }} />
+                                                <div className="h-1 rounded flex-1" style={{ background: isPaper ? '#71717a' : p.border }} />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="flex items-center justify-between">
-                                    <div className="flex flex-col">
-                                        <span className="text-xs font-bold text-foreground capitalize">{preset}</span>
-                                        <span className="text-xs text-foreground-muted">
-                                            {preset === 'dark' ? 'Deep navy — default' : preset === 'midnight' ? 'Pure black OLED' : preset === 'light' ? 'Clean & bright' : 'Easy on eyes'}
+                                    <div className="flex flex-col min-w-0 pr-2">
+                                        <span className="text-xs font-bold text-foreground capitalize flex items-center gap-1.5">
+                                            {preset === 'monochrome' ? 'Black & White (Dark)' : preset === 'paper' ? 'White & Black' : preset}
+                                            {isPaper && (
+                                                <span className="px-1.5 py-0.2 rounded text-[9px] bg-black text-white font-extrabold uppercase">
+                                                    Ink
+                                                </span>
+                                            )}
+                                            {preset === 'monochrome' && (
+                                                <span className="px-1.5 py-0.2 rounded text-[9px] bg-white text-black font-extrabold uppercase">
+                                                    Pro
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span className="text-xs text-foreground-muted truncate">
+                                            {p.description}
                                         </span>
                                     </div>
-                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${themePreset === preset ? 'border-primary bg-primary' : 'border-border'}`}>
-                                        {themePreset === preset && <Icon name="check" size={9} />}
+                                    <div
+                                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                            isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                        }`}
+                                    >
+                                        {isSelected && <Icon name="check" size={9} />}
                                     </div>
                                 </div>
                             </button>
-                        ))}
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-sm font-bold text-foreground">Accent Color</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Defines buttons, interactive highlights, active tabs, and chart indicators</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3.5 h-3.5 rounded-full border border-border" style={{ background: theme.primary }} />
+                        <span className="text-xs font-mono font-semibold text-foreground uppercase">{theme.primary}</span>
                     </div>
                 </div>
+                <div className="p-6 flex flex-col gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                        {(Object.keys(accentPresets) as AccentPreset[]).map((preset) => {
+                            const ap = accentPresets[preset];
+                            const isSelected = accentPreset === preset;
 
-                {/* Accent Color */}
-                <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                    <div className="px-6 py-4 border-b border-border bg-background-3">
-                        <h3 className="text-sm font-bold text-foreground">Accent Color</h3>
-                        <p className="text-xs text-foreground-muted mt-0.5">Sets the primary interactive color — buttons, links, active states, charts</p>
-                    </div>
-                    <div className="p-6">
-                        <div className="grid grid-cols-4 gap-3">
-                            {(Object.keys(accentPresets) as AccentPreset[]).map((preset) => (
+                            return (
                                 <button
                                     key={preset}
                                     onClick={() => handleAccentChange(preset)}
-                                    className={`flex flex-col gap-2.5 rounded-xl border-2 p-3.5 ${accentPreset === preset ? 'border-primary' : 'border-border'}`}
+                                    className={`flex flex-col gap-2.5 rounded-xl border-2 p-3 text-left transition-all group ${
+                                        isSelected
+                                            ? 'border-primary ring-2 ring-primary/20 bg-background-2'
+                                            : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                    }`}
                                 >
-                                    <div className="w-full h-10 rounded-lg" style={{ background: accentPresets[preset].gradient }} />
+                                    <div
+                                        className="w-full h-8 rounded-lg shadow-sm transition-transform group-hover:scale-[1.02] border border-black/10"
+                                        style={{ background: ap.gradient }}
+                                    />
                                     <div className="flex items-center justify-between">
-                                        <span className="text-xs font-semibold text-foreground capitalize">{preset.replace('-', ' ')}</span>
-                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${accentPreset === preset ? 'border-primary bg-primary' : 'border-border'}`}>
-                                            {accentPreset === preset && <Icon name="check" size={9} />}
+                                        <span className="text-xs font-semibold text-foreground truncate">{ap.label}</span>
+                                        <div
+                                            className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                                isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                            }`}
+                                        >
+                                            {isSelected && <Icon name="check" size={8} />}
                                         </div>
                                     </div>
-                                    <div className="flex gap-1">
-                                        <div className="flex-1 h-1.5 rounded-full" style={{ background: accentPresets[preset].gradient.split(',')[0].split('(')[1] }} />
-                                        <div className="flex-1 h-1.5 rounded-full" style={{ background: accentPresets[preset].gradient.split(',')[1].split(')')[0] }} />
-                                    </div>
                                 </button>
-                            ))}
+                            );
+                        })}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-dashed border-border p-4 bg-background-2/60">
+                        <div className="flex items-center gap-3.5 w-full sm:w-auto">
+                            <div
+                                className="w-10 h-10 rounded-xl border-2 border-border shadow-inner flex-shrink-0"
+                                style={{ background: customAccentColor }}
+                            />
+                            <div className="flex flex-col">
+                                <span className="text-xs font-bold text-foreground">Custom Color Hex</span>
+                                <span className="text-xs text-foreground-muted">Type any hex code or pick from the palette</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4 rounded-xl border border-dashed border-border p-4 mt-4">
-                            <div className="w-10 h-10 rounded-lg" style={{ background: customAccentColor }} />
-                            <div className="flex flex-col gap-1 flex-1">
-                                <span className="text-xs font-bold text-foreground">Custom Color</span>
-                                <span className="text-xs text-foreground-muted">Enter a custom hex value for the primary accent</span>
+
+                        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                            <div className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3 py-1.5 focus-within:border-primary">
+                                <input
+                                    type="color"
+                                    value={customAccentColor}
+                                    onChange={(e) => handleCustomColorInput(e.target.value)}
+                                    className="w-6 h-6 p-0 border-0 bg-transparent cursor-pointer rounded overflow-hidden"
+                                />
+                                <input
+                                    type="text"
+                                    value={customAccentColor}
+                                    onChange={(e) => handleCustomColorInput(e.target.value)}
+                                    placeholder="#000000"
+                                    className="text-xs font-mono text-foreground uppercase bg-transparent outline-none w-20"
+                                />
                             </div>
-                            <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-2 rounded-lg border border-border bg-input px-3 py-2">
-                                    <input type="color" value={customAccentColor} onChange={(e) => setCustomAccentColor(e.target.value)} className="w-4 h-4 p-0 border-0 bg-transparent cursor-pointer" />
-                                    <span className="text-sm font-mono text-foreground">{customAccentColor}</span>
-                                </div>
-                                <button onClick={handleCustomAccent} className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold">
-                                    <Icon name="check" size={13} /> Apply
-                                </button>
-                            </div>
+                            <button
+                                onClick={() => handleCustomColorInput(customAccentColor)}
+                                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition ${
+                                    accentPreset === 'custom'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-surface border border-border text-foreground hover:bg-surface-2'
+                                }`}
+                            >
+                                <Icon name="check" size={13} />
+                                <span>{accentPreset === 'custom' ? 'Active' : 'Apply'}</span>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Font Family */}
-                <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                    <div className="px-6 py-4 border-b border-border bg-background-3">
-                        <h3 className="text-sm font-bold text-foreground">Font Family</h3>
-                        <p className="text-xs text-foreground-muted mt-0.5">Sets the typeface for all UI text</p>
+            <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-sm font-bold text-foreground">Typography</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Select font family applied to interface headings, buttons, and content</p>
                     </div>
-                    <div className="grid grid-cols-4 gap-4 p-6">
-                        {(Object.keys(fontFamilies) as FontFamily[]).map((font) => (
+                    <span className="text-xs font-mono font-semibold text-primary bg-teal-bg px-2.5 py-1 rounded-full">
+                        {fontFamily}
+                    </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 p-6">
+                    {(Object.keys(fontFamilies) as FontFamily[]).map((font) => {
+                        const isSelected = fontFamily === font;
+                        return (
                             <button
                                 key={font}
                                 onClick={() => handleFontChange(font)}
-                                className={`flex flex-col gap-3 rounded-xl border-2 p-4 ${fontFamily === font ? 'border-primary bg-teal-bg' : 'border-border'}`}
+                                className={`flex flex-col gap-2 rounded-xl border-2 p-4 text-left transition-all ${
+                                    isSelected
+                                        ? 'border-primary ring-2 ring-primary/20 bg-background-2'
+                                        : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                }`}
                             >
-                                <span className="text-2xl font-bold text-foreground" style={{ fontFamily: fontFamilies[font] }}>Aa</span>
+                                <span className="text-2xl font-bold text-foreground tracking-tight" style={{ fontFamily: fontFamilies[font] }}>
+                                    Aa
+                                </span>
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-sm font-bold text-foreground">{font}</span>
-                                    <span className="text-xs text-foreground-muted" style={{ fontFamily: fontFamilies[font] }}>The quick brown fox</span>
+                                    <span className="text-xs font-bold text-foreground">{font}</span>
+                                    <span className="text-[11px] text-foreground-muted truncate" style={{ fontFamily: fontFamilies[font] }}>
+                                        Modern readable UI text
+                                    </span>
                                 </div>
-                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center self-end ${fontFamily === font ? 'border-primary bg-primary' : 'border-border'}`}>
-                                    {fontFamily === font && <Icon name="check" size={9} />}
+                                <div
+                                    className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center self-end mt-1 ${
+                                        isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                    }`}
+                                >
+                                    {isSelected && <Icon name="check" size={8} />}
                                 </div>
                             </button>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </div>
+            </div>
 
-                {/* Layout Density & Corner Radius (grid) */}
-                <div className="grid grid-cols-2 gap-6">
-                    <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                        <div className="px-6 py-4 border-b border-border bg-background-3">
-                            <h3 className="text-sm font-bold text-foreground">Layout Density</h3>
-                            <p className="text-xs text-foreground-muted mt-0.5">Controls padding and spacing throughout the UI</p>
-                        </div>
-                        <div className="flex flex-col gap-2 p-4">
-                            {(['compact', 'default', 'spacious'] as LayoutDensity[]).map((density) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                    <div className="px-6 py-4 border-b border-border bg-background-3">
+                        <h3 className="text-sm font-bold text-foreground">Layout Density</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Adjust padding and vertical breathing space</p>
+                    </div>
+                    <div className="flex flex-col gap-2.5 p-5">
+                        {(['compact', 'default', 'spacious'] as LayoutDensity[]).map((density) => {
+                            const isSelected = layoutDensity === density;
+                            return (
                                 <button
                                     key={density}
                                     onClick={() => handleLayoutDensityChange(density)}
-                                    className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 ${layoutDensity === density ? 'border-primary bg-teal-bg' : 'border-border'}`}
+                                    className={`flex items-center gap-3.5 rounded-xl border-2 px-4 py-3 text-left transition ${
+                                        isSelected
+                                            ? 'border-primary bg-background-2 ring-2 ring-primary/20'
+                                            : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                    }`}
                                 >
-                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${layoutDensity === density ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground-muted'}`}>
+                                    <div
+                                        className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                            isSelected ? 'bg-primary text-primary-foreground' : 'bg-background-3 text-foreground-muted'
+                                        }`}
+                                    >
                                         <Icon name={density === 'compact' ? 'align-justify' : density === 'default' ? 'menu' : 'layout-list'} size={15} />
                                     </div>
-                                    <div className="flex flex-col text-left flex-1">
-                                        <span className="text-sm font-bold text-foreground capitalize">{density}</span>
-                                        <span className="text-xs text-foreground-muted">
-                                            {density === 'compact' ? 'More content, less whitespace' : density === 'default' ? 'Balanced spacing' : 'Relaxed, airy layout'}
+                                    <div className="flex flex-col flex-1 min-w-0">
+                                        <span className="text-xs font-bold text-foreground capitalize">{density}</span>
+                                        <span className="text-[11px] text-foreground-muted truncate">
+                                            {density === 'compact' ? 'Tight rows, higher information density' : density === 'default' ? 'Balanced modern UI proportion' : 'Airy comfort with roomy padding'}
                                         </span>
                                     </div>
-                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${layoutDensity === density ? 'border-primary bg-primary' : 'border-border'}`}>
-                                        {layoutDensity === density && <Icon name="check" size={9} />}
+                                    <div
+                                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                            isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                        }`}
+                                    >
+                                        {isSelected && <Icon name="check" size={9} />}
                                     </div>
                                 </button>
-                            ))}
-                        </div>
+                            );
+                        })}
                     </div>
+                </div>
 
-                    <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                        <div className="px-6 py-4 border-b border-border bg-background-3">
-                            <h3 className="text-sm font-bold text-foreground">Corner Radius</h3>
-                            <p className="text-xs text-foreground-muted mt-0.5">Applies to cards, buttons, inputs and modals</p>
-                        </div>
-                        <div className="flex flex-col gap-2 p-4">
-                            {(['sharp', 'subtle', 'rounded', 'pill'] as CornerRadius[]).map((radius) => (
+                <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                    <div className="px-6 py-4 border-b border-border bg-background-3">
+                        <h3 className="text-sm font-bold text-foreground">Corner Radius</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Controls curves across cards, inputs, and buttons</p>
+                    </div>
+                    <div className="flex flex-col gap-2.5 p-5">
+                        {(['sharp', 'subtle', 'rounded', 'pill'] as CornerRadius[]).map((radius) => {
+                            const isSelected = cornerRadius === radius;
+                            return (
                                 <button
                                     key={radius}
                                     onClick={() => handleCornerRadiusChange(radius)}
-                                    className={`flex items-center gap-4 rounded-xl border-2 px-4 py-3 ${cornerRadius === radius ? 'border-primary bg-teal-bg' : 'border-border'}`}
+                                    className={`flex items-center gap-3.5 rounded-xl border-2 px-4 py-3 text-left transition ${
+                                        isSelected
+                                            ? 'border-primary bg-background-2 ring-2 ring-primary/20'
+                                            : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                    }`}
                                 >
-                                    <div className="w-8 h-8 flex-shrink-0 border-2 border-foreground-muted" style={{ borderRadius: cornerRadiusValues[radius] }} />
-                                    <div className="flex flex-col text-left flex-1">
-                                        <span className="text-sm font-bold text-foreground capitalize">{radius}</span>
-                                        <span className="text-xs text-foreground-muted font-mono">{cornerRadiusValues[radius]}</span>
+                                    <div
+                                        className="w-7 h-7 flex-shrink-0 border-2 border-foreground-muted/60"
+                                        style={{ borderRadius: cornerRadiusValues[radius] }}
+                                    />
+                                    <div className="flex flex-col flex-1 min-w-0">
+                                        <span className="text-xs font-bold text-foreground capitalize">{radius}</span>
+                                        <span className="text-[11px] text-foreground-muted font-mono">{cornerRadiusValues[radius]} radius</span>
                                     </div>
-                                    <div className="flex gap-1.5 items-center">
-                                        <div className="w-10 h-3 bg-primary opacity-50" style={{ borderRadius: cornerRadiusValues[radius] }} />
-                                        <div className="w-6 h-3 bg-primary opacity-50" style={{ borderRadius: cornerRadiusValues[radius] }} />
-                                        <div className="w-8 h-3 bg-primary opacity-50" style={{ borderRadius: cornerRadiusValues[radius] }} />
+                                    <div className="flex gap-1.5 items-center mr-2">
+                                        <div className="w-6 h-2.5 bg-primary/40" style={{ borderRadius: cornerRadiusValues[radius] }} />
+                                        <div className="w-4 h-2.5 bg-primary/70" style={{ borderRadius: cornerRadiusValues[radius] }} />
                                     </div>
-                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${cornerRadius === radius ? 'border-primary bg-primary' : 'border-border'}`}>
-                                        {cornerRadius === radius && <Icon name="check" size={9} />}
+                                    <div
+                                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                                            isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                        }`}
+                                    >
+                                        {isSelected && <Icon name="check" size={9} />}
                                     </div>
                                 </button>
-                            ))}
-                        </div>
+                            );
+                        })}
                     </div>
                 </div>
+            </div>
 
-                {/* Sidebar Style */}
-                <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                    <div className="px-6 py-4 border-b border-border bg-background-3">
-                        <h3 className="text-sm font-bold text-foreground">Sidebar Style</h3>
-                        <p className="text-xs text-foreground-muted mt-0.5">Choose how the navigation sidebar is displayed</p>
-                    </div>
-                    <div className="flex gap-4 p-6">
-                        {(['full-labels', 'icon-only', 'floating-rail'] as SidebarStyle[]).map((style) => (
+            <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-background-3">
+                    <h3 className="text-sm font-bold text-foreground">Navigation Sidebar Style</h3>
+                    <p className="text-xs text-foreground-muted mt-0.5">Choose how the primary navigation behaves across the app</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6">
+                    {(['full-labels', 'icon-only', 'floating-rail'] as SidebarStyle[]).map((style) => {
+                        const isSelected = sidebarStyle === style;
+                        return (
                             <button
                                 key={style}
                                 onClick={() => handleSidebarStyleChange(style)}
-                                className={`flex flex-col items-center gap-3 rounded-xl border-2 px-6 py-5 flex-1 ${sidebarStyle === style ? 'border-primary bg-teal-bg' : 'border-border'}`}
+                                className={`flex flex-col items-center gap-3 rounded-xl border-2 p-5 text-center transition ${
+                                    isSelected
+                                        ? 'border-primary bg-background-2 ring-2 ring-primary/20'
+                                        : 'border-border hover:border-foreground-muted/40 bg-surface'
+                                }`}
                             >
-                                <div className="flex rounded-lg overflow-hidden border border-border" style={{ height: 60, width: 80, background: themePresets[themePreset].background2 }}>
-                                    <div className="flex flex-col gap-1.5 p-2" style={{ width: style === 'icon-only' ? 24 : '50%', background: themePresets[themePreset].surface }}>
+                                <div
+                                    className="flex rounded-lg overflow-hidden border border-border"
+                                    style={{ height: 64, width: 90, background: currentColors.background2 }}
+                                >
+                                    <div
+                                        className="flex flex-col gap-1.5 p-2 transition-all"
+                                        style={{
+                                            width: style === 'icon-only' ? 26 : '48%',
+                                            background: currentColors.surface,
+                                            borderRight: `1px solid ${currentColors.border}`,
+                                        }}
+                                    >
                                         <div className="flex items-center gap-1">
                                             <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: theme.primary }} />
-                                            {(style === 'full-labels' || style === 'floating-rail') && <div className="h-1 rounded flex-1" style={{ background: theme.primary }} />}
+                                            {style !== 'icon-only' && <div className="h-1 rounded flex-1" style={{ background: theme.primary }} />}
                                         </div>
                                         {[1, 2, 3].map((i) => (
                                             <div key={i} className="flex items-center gap-1">
-                                                <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: '#2a3347' }} />
-                                                {(style === 'full-labels' || style === 'floating-rail') && <div className="h-1 rounded flex-1" style={{ background: '#2a3347' }} />}
+                                                <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: currentColors.border }} />
+                                                {style !== 'icon-only' && <div className="h-1 rounded flex-1" style={{ background: currentColors.border }} />}
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="flex-1 p-1.5 flex flex-col gap-1">
-                                        <div className="h-1.5 rounded" style={{ background: '#2a3347' }} />
-                                        <div className="h-1.5 rounded" style={{ background: '#2a3347' }} />
-                                        <div className="h-1.5 rounded" style={{ background: '#2a3347' }} />
+                                    <div className="flex-1 p-2 flex flex-col gap-1.5">
+                                        <div className="h-2 rounded" style={{ background: currentColors.surface2 }} />
+                                        <div className="h-2 rounded" style={{ background: currentColors.surface2, width: '70%' }} />
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center gap-0.5">
-                                    <span className="text-xs font-bold text-foreground">{style === 'full-labels' ? 'Full Labels' : style === 'icon-only' ? 'Icon Only' : 'Floating Rail'}</span>
-                                    <span className="text-xs text-foreground-muted">
-                                        {style === 'full-labels' ? 'Icon + text' : style === 'icon-only' ? 'Compact sidebar' : 'Minimal hover bar'}
+                                    <span className="text-xs font-bold text-foreground">
+                                        {style === 'full-labels' ? 'Full Expanded' : style === 'icon-only' ? 'Compact Icons' : 'Hover Expand Rail'}
+                                    </span>
+                                    <span className="text-[11px] text-foreground-muted">
+                                        {style === 'full-labels' ? 'Standard 220px width' : style === 'icon-only' ? 'Space-efficient 68px rail' : 'Slides out on hover'}
                                     </span>
                                 </div>
-                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${sidebarStyle === style ? 'border-primary bg-primary' : 'border-border'}`}>
-                                    {sidebarStyle === style && <Icon name="check" size={9} />}
+                                <div
+                                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                        isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border'
+                                    }`}
+                                >
+                                    {isSelected && <Icon name="check" size={9} />}
                                 </div>
                             </button>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </div>
+            </div>
 
-                {/* Live Preview */}
-                <div className="rounded-xl border border-border bg-surface overflow-hidden">
-                    <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
-                        <div>
-                            <h3 className="text-sm font-bold text-foreground">Live Preview</h3>
-                            <p className="text-xs text-foreground-muted mt-0.5">See how your theme looks before saving</p>
-                        </div>
-                        <span className="flex items-center gap-1.5 text-xs font-semibold text-success bg-success-bg px-2.5 py-1 rounded-full">
-                            <span className="w-1.5 h-1.5 rounded-full bg-success"></span> Auto-updating
-                        </span>
+            <div className="rounded-xl border border-border bg-surface overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-sm font-bold text-foreground">Live Application Preview</h3>
+                        <p className="text-xs text-foreground-muted mt-0.5">Interactive simulation reflecting active theme, accent, and radius</p>
                     </div>
-                    <div className="p-6">
-                        <div className="rounded-xl border border-border overflow-hidden" style={{ background: theme.background }}>
-                            {/* Preview header */}
-                            <div className="flex items-center gap-3 px-4 py-3 border-b border-border" style={{ background: themePresets[themePreset].surface }}>
-                                <div className="flex items-center gap-1.5">
-                                    <div className="w-3 h-3 rounded-full bg-danger opacity-70" />
-                                    <div className="w-3 h-3 rounded-full bg-warning opacity-70" />
-                                    <div className="w-3 h-3 rounded-full bg-success opacity-70" />
-                                </div>
-                                <div className="flex items-center gap-2 ml-2">
-                                    <div className="w-4 h-4 rounded flex items-center justify-center" style={{ background: theme.primary }}>
-                                        <Icon name="zap" size={9} className="text-primary-foreground" />
-                                    </div>
-                                    <span className="text-xs font-bold text-foreground">FlowWork</span>
-                                </div>
-                                <div className="ml-auto flex items-center gap-2">
-                                    <div className="h-5 rounded-lg px-3 flex items-center text-xs text-foreground-muted" style={{ background: theme.surface, border: `1px solid ${themePresets[themePreset].border}` }}>
-                                        Search...
-                                    </div>
-                                    <div className="h-6 rounded-lg px-2 flex items-center text-xs font-bold" style={{ background: theme.primary, color: '#0f1117' }}>
-                                        + Task
-                                    </div>
-                                </div>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-success bg-success-bg px-3 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-success"></span> Live Sync
+                    </span>
+                </div>
+                <div className="p-6 flex flex-col gap-6">
+                    <div
+                        className="rounded-xl border border-border overflow-hidden transition-all shadow-xl"
+                        style={{ background: theme.background }}
+                    >
+                        <div
+                            className="flex items-center gap-3 px-4 py-3 border-b border-border"
+                            style={{ background: theme.surface }}
+                        >
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full bg-danger/80" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-warning/80" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-success/80" />
                             </div>
-                            {/* Preview body */}
-                            <div className="flex" style={{ height: 200 }}>
-                                <div className="flex flex-col gap-1.5 p-2 border-r border-border" style={{ width: sidebarStyle === 'icon-only' ? 60 : 100, background: themePresets[themePreset].surface }}>
-                                    {['Dashboard', 'My Tasks', 'Tracker', 'Calendar'].map((item, idx) => (
-                                        <div key={idx} className={`flex items-center gap-1.5 px-2 py-1.5 rounded text-xs ${idx === 2 ? 'bg-teal-bg text-primary' : 'text-foreground-muted'}`}>
-                                            <Icon name={idx === 0 ? 'layout-dashboard' : idx === 1 ? 'check-square' : idx === 2 ? 'timer' : 'calendar'} size={10} />
-                                            {(sidebarStyle !== 'icon-only') && <span style={{ fontSize: 9 }}>{item}</span>}
-                                        </div>
-                                    ))}
+                            <div className="flex items-center gap-2 ml-2">
+                                <div
+                                    className="w-5 h-5 rounded flex items-center justify-center font-bold text-[10px]"
+                                    style={{ background: theme.primary, color: theme.primaryForeground }}
+                                >
+                                    <Icon name="zap" size={11} />
                                 </div>
-                                <div className="flex-1 p-3 flex flex-col gap-2">
-                                    <div className="flex gap-2">
-                                        {[theme.primary, '#8b5cf6', '#f59e0b'].map((color, i) => (
-                                            <div key={i} className="flex-1 rounded-lg p-2" style={{ background: theme.surface, border: `1px solid ${themePresets[themePreset].border}` }}>
-                                                <div className="w-5 h-5 rounded mb-1" style={{ background: `${color}20` }} />
-                                                <div className="h-3 rounded" style={{ background: color, width: '60%' }} />
-                                                <div className="h-2 rounded mt-1" style={{ background: themePresets[themePreset].border, width: '40%' }} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {[1, 2].map((i) => (
-                                        <div key={i} className="flex items-center gap-2 rounded-lg p-2" style={{ background: theme.surface, border: `1px solid ${themePresets[themePreset].border}` }}>
-                                            <div className="w-1 h-8 rounded-full" style={{ background: i === 1 ? theme.primary : '#8b5cf6' }} />
-                                            <div className="flex flex-col gap-1 flex-1">
-                                                <div className="h-2 rounded" style={{ background: themePresets[themePreset].border, width: '70%' }} />
-                                                <div className="h-1.5 rounded" style={{ background: themePresets[themePreset].border, width: '40%' }} />
-                                            </div>
-                                            <div className="h-5 w-12 rounded-full" style={{ background: `${theme.primary}30` }} />
-                                        </div>
-                                    ))}
+                                <span className="text-xs font-bold text-foreground">FlowWork</span>
+                            </div>
+                            <div className="ml-auto flex items-center gap-2">
+                                <div
+                                    className="h-6 rounded-lg px-2.5 flex items-center text-xs text-foreground-muted border border-border"
+                                    style={{ background: theme.background2 }}
+                                >
+                                    Search tasks...
+                                </div>
+                                <div
+                                    className="h-6 rounded-lg px-3 flex items-center text-xs font-bold shadow-sm"
+                                    style={{ background: theme.primary, color: theme.primaryForeground }}
+                                >
+                                    + New Task
                                 </div>
                             </div>
                         </div>
+
+                        <div className="flex" style={{ minHeight: 180 }}>
+                            <div
+                                className="flex flex-col gap-1 p-2 border-r border-border"
+                                style={{ width: sidebarStyle === 'icon-only' ? 56 : 110, background: theme.surface }}
+                            >
+                                {['Overview', 'Tasks', 'Tracker', 'Reports'].map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`flex items-center gap-2 px-2 py-1.5 rounded text-xs font-medium ${
+                                            idx === 1
+                                                ? 'bg-teal-bg text-primary font-bold'
+                                                : 'text-foreground-muted'
+                                        }`}
+                                    >
+                                        <Icon name={idx === 0 ? 'layout-dashboard' : idx === 1 ? 'check-square' : idx === 2 ? 'timer' : 'bar-chart-2'} size={12} />
+                                        {sidebarStyle !== 'icon-only' && <span className="text-[11px] truncate">{item}</span>}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex-1 p-4 flex flex-col gap-3">
+                                <div className="grid grid-cols-3 gap-3">
+                                    {[
+                                        { label: 'Completed', val: '24', color: theme.primary },
+                                        { label: 'In Progress', val: '8', color: '#8b5cf6' },
+                                        { label: 'Pending', val: '3', color: '#f59e0b' },
+                                    ].map((stat, i) => (
+                                        <div
+                                            key={i}
+                                            className="rounded-lg p-2.5 border border-border flex flex-col gap-1"
+                                            style={{ background: theme.surface }}
+                                        >
+                                            <span className="text-[10px] text-foreground-muted uppercase tracking-wider">{stat.label}</span>
+                                            <div className="flex items-baseline justify-between">
+                                                <span className="text-base font-bold text-foreground">{stat.val}</span>
+                                                <div className="w-2 h-2 rounded-full" style={{ background: stat.color }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div
+                                    className="rounded-lg p-3 border border-border flex items-center justify-between"
+                                    style={{ background: theme.surface2 }}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1.5 h-8 rounded-full" style={{ background: theme.primary }} />
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="text-xs font-bold text-foreground">Launch Design System</span>
+                                            <span className="text-[10px] text-foreground-muted">Frontend • Due Today</span>
+                                        </div>
+                                    </div>
+                                    <span
+                                        className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-primary/20"
+                                        style={{ background: 'var(--color-teal-bg)', color: theme.primary }}
+                                    >
+                                        Active
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="px-6 pb-6 flex flex-col gap-4">
-                        <h4 className="text-xs font-bold text-foreground-muted uppercase tracking-wide">Component Samples</h4>
-                        <div className="flex flex-wrap gap-3 items-center">
-                            <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold">Primary Button</button>
-                            <button className="px-4 py-2 rounded-lg border border-border bg-surface text-sm font-semibold text-foreground">Secondary</button>
-                            <button className="px-4 py-2 rounded-lg bg-danger-bg text-danger text-sm font-semibold">Danger</button>
-                            <span className="flex items-center gap-1.5 text-xs font-semibold bg-teal-bg text-primary px-3 py-1.5 rounded-full">
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span> In Progress
+
+                    <div className="flex flex-col gap-3 pt-2 border-t border-border">
+                        <span className="text-xs font-bold text-foreground-muted uppercase tracking-wider">Button & Badge Samples</span>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <button
+                                className="px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm"
+                                style={{ background: theme.primary, color: theme.primaryForeground }}
+                            >
+                                Primary Action
+                            </button>
+                            <button className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-semibold text-foreground hover:bg-surface-2 transition">
+                                Secondary Button
+                            </button>
+                            <button className="px-4 py-2 rounded-lg bg-danger-bg text-danger border border-danger/30 text-xs font-semibold">
+                                Danger
+                            </button>
+                            <span className="flex items-center gap-1.5 text-xs font-semibold bg-teal-bg text-primary px-3 py-1.5 rounded-full border border-primary/20">
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: theme.primary }}></span>
+                                In Progress
                             </span>
-                            <span className="text-xs font-semibold bg-success-bg text-success px-3 py-1.5 rounded-full">Done</span>
-                            <span className="text-xs font-semibold bg-warning-bg text-warning px-3 py-1.5 rounded-full">Paused</span>
-                            <div className="flex items-center gap-2 rounded-lg border border-primary bg-teal-bg px-3 py-2">
-                                <Icon name="timer" size={14} /> <span className="font-mono text-sm font-bold text-primary">02:34:17</span>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4 rounded-xl border border-border bg-background-2 px-5 py-4">
-                            <div className="w-1 h-10 rounded-full bg-purple flex-shrink-0" />
-                            <div className="flex flex-col gap-1 flex-1">
-                                <span className="text-sm font-bold text-foreground">Design new onboarding flow</span>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-foreground-muted">Design</span>
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-purple-bg text-purple font-semibold">UI/UX</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
-                                    <div className="h-full rounded-full bg-primary" style={{ width: '65%' }} />
-                                </div>
-                                <span className="text-xs font-bold text-primary">65%</span>
-                                <div className="flex items-center gap-1 bg-teal-bg text-primary rounded-lg px-2 py-1 font-mono text-xs font-bold">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>02:34
-                                </div>
+                            <span className="text-xs font-semibold bg-success-bg text-success px-3 py-1.5 rounded-full border border-success/30">
+                                Completed
+                            </span>
+                            <span className="text-xs font-semibold bg-warning-bg text-warning px-3 py-1.5 rounded-full border border-warning/30">
+                                Pending Review
+                            </span>
+                            <div className="flex items-center gap-1.5 rounded-lg border border-primary bg-teal-bg px-3 py-1.5 text-xs font-mono font-bold text-primary">
+                                <Icon name="timer" size={13} />
+                                <span>03:42:19</span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Sticky footer action buttons */}
-                <div className="flex items-center justify-between rounded-xl border border-border bg-surface-2 px-6 py-4 sticky bottom-0">
-                    <div className="flex items-center gap-2 text-sm text-foreground-muted">
-                        <Icon name="info" size={15} />
-                        <span>Changes are previewed live and saved when you click "Apply".</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-semibold text-foreground-muted">
-                            <Icon name="rotate-ccw" size={14} /> Reset to Default
-                        </button>
-                        <button onClick={handleApply} className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold">
-                            <Icon name="check" size={15} /> Apply Changes
-                        </button>
-                    </div>
+            <div className="flex items-center justify-between rounded-xl border border-border bg-surface-2 px-6 py-4 sticky bottom-4 shadow-lg backdrop-blur-md">
+                <div className="flex items-center gap-2 text-xs text-foreground-muted">
+                    <Icon name="sparkles" size={15} className="text-primary" />
+                    <span>Every change takes effect in real-time across your workspace.</span>
+                </div>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleReset}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-surface text-xs font-semibold text-foreground-muted hover:text-foreground hover:bg-background-3 transition"
+                    >
+                        <Icon name="rotate-ccw" size={13} />
+                        <span>Reset Defaults</span>
+                    </button>
+                    <button
+                        onClick={handleApply}
+                        className="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold shadow-md transition"
+                        style={{ background: theme.primary, color: theme.primaryForeground }}
+                    >
+                        <Icon name="check" size={14} />
+                        <span>Save Preferences</span>
+                    </button>
                 </div>
             </div>
         </div>

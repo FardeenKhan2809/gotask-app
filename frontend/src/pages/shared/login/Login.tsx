@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import Icon from '../../../components/ui/Icon';
+import { useNavigate } from 'react-router-dom';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
+    const { success, warning } = useToast();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(true);
@@ -9,15 +13,26 @@ const Login: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Login attempt with: ${email} / ${password}`);
+        if (!email.trim() || !password.trim()) {
+            warning('Missing Credentials', 'Please enter your email and password.');
+            return;
+        }
+        success('Welcome Back!', 'Logging in to your workspace...');
+        setTimeout(() => navigate('/'), 600);
     };
 
-    const handleGoogleLogin = () => alert('Google login clicked');
-    const handleGithubLogin = () => alert('GitHub login clicked');
+    const handleGoogleLogin = () => {
+        success('Google Auth', 'Connecting account via Google...');
+        setTimeout(() => navigate('/'), 600);
+    };
+
+    const handleGithubLogin = () => {
+        success('GitHub Auth', 'Connecting account via GitHub...');
+        setTimeout(() => navigate('/'), 600);
+    };
 
     return (
         <div className="flex bg-background font-body min-h-screen">
-            {/* Left panel – Brand, features, testimonial */}
             <div className="relative flex flex-col justify-between p-12 overflow-hidden w-[520px] flex-shrink-0">
                 <div className="absolute inset-0">
                     <img
@@ -25,7 +40,7 @@ const Login: React.FC = () => {
                         className="w-full h-full object-cover"
                         alt="Background"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0f111790] via-[#0f1117e8] to-[#0f1117]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-background/70 via-background/90 to-background" />
                 </div>
 
                 <div className="relative flex items-center gap-3 z-10">
@@ -85,7 +100,6 @@ const Login: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right panel – Login Form */}
             <div className="flex flex-col flex-1 items-center justify-center px-16 py-12 bg-background-2">
                 <div className="w-full max-w-[420px]">
                     <div className="flex flex-col gap-2 mb-10">

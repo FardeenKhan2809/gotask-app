@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Icon from '../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
+import { useToast } from '@/context/ToastContext';
 
 type NotificationType = 'mention' | 'task' | 'comment' | 'system' | 'approval' | 'general';
 type FilterType = 'All' | 'Unread' | 'Mentions' | 'Tasks' | 'Comments' | 'System';
@@ -142,7 +143,6 @@ const Notifications: React.FC = () => {
     const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
     const [filter, setFilter] = useState<FilterType>('All');
 
-    // Channel toggles
     const [channels, setChannels] = useState({
         inApp: true,
         email: true,
@@ -151,8 +151,15 @@ const Notifications: React.FC = () => {
         dnd: false,
     });
 
+    const { success, info } = useToast();
+    const [activeNotification, setActiveNotification] = useState<Notification | null>(null);
+
     const toggleChannel = (key: keyof typeof channels) => {
-        setChannels(prev => ({ ...prev, [key]: !prev[key] }));
+        setChannels(prev => {
+            const next = { ...prev, [key]: !prev[key] };
+            info('Preference Saved', `${key} notifications ${next[key] ? 'enabled' : 'disabled'}.`);
+            return next;
+        });
     };
 
     const unreadCount = notifications.filter(n => !n.read).length;
@@ -172,20 +179,21 @@ const Notifications: React.FC = () => {
 
     const markAllRead = () => {
         setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        success('All Read', 'Marked all notifications as read.');
     };
 
     const dismissNotification = (id: string) => {
         setNotifications(prev => prev.filter(n => n.id !== id));
+        info('Dismissed', 'Notification dismissed.');
     };
 
     const markAsRead = (id: string) => {
         setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     };
 
-    // Group notifications by date
-    const today = notifications.filter(n => n.time.includes('AM') || n.time.includes('PM') || n.time === '6:42 PM' || n.time === '3:02 PM' || n.time === '11:07 AM' || n.time === '8:51 AM' || n.time === '9:24 AM');
-    const yesterday = notifications.filter(n => n.time.includes('Jul 17'));
-    const earlier = notifications.filter(n => n.time.includes('Jul 15') || n.time.includes('Jul 14'));
+    const today = filteredNotifications.filter(n => n.time.includes('AM') || n.time.includes('PM') || n.time === '6:42 PM' || n.time === '3:02 PM' || n.time === '11:07 AM' || n.time === '8:51 AM' || n.time === '9:24 AM');
+    const yesterday = filteredNotifications.filter(n => n.time.includes('Jul 17'));
+    const earlier = filteredNotifications.filter(n => n.time.includes('Jul 15') || n.time.includes('Jul 14'));
 
     const renderNotificationItem = (notification: Notification) => {
         const isRead = notification.read;
@@ -197,12 +205,10 @@ const Notifications: React.FC = () => {
                 className={`flex items-start gap-4 px-5 py-4 border-b border-border last:border-0 ${bgClass}`}
                 onClick={() => markAsRead(notification.id)}
             >
-                {/* Read indicator dot */}
                 <div className="flex-shrink-0 mt-2">
                     <div className={`w-2 h-2 rounded-full ${notification.read ? 'bg-transparent' : 'bg-primary'}`} />
                 </div>
 
-                {/* Avatar or icon */}
                 <div className="flex-shrink-0">
                     <div className="relative">
                         {notification.avatar ? (
@@ -220,7 +226,6 @@ const Notifications: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                         <span className={`text-sm font-semibold leading-snug ${isRead ? 'text-foreground-muted' : 'text-foreground'}`}>
@@ -233,11 +238,14 @@ const Notifications: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Action buttons */}
-                <div className="flex items-center gap-1.5 flex-shrink-0 mt-1">
+                <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
                         className="w-7 h-7 flex items-center justify-center rounded-lg border border-border text-foreground-muted hover:bg-surface-2 transition"
-                        onClick={(e) => { e.stopPropagation(); alert('Open detail'); }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            markAsRead(notification.id);
+                            setActiveNotification(notification);
+                        }}
                     >
                         <Icon name="external-link" size={12} />
                     </button>
@@ -254,9 +262,7 @@ const Notifications: React.FC = () => {
 
     return (
         <div className="flex flex-1 min-w-0">
-            {/* Main content */}
             <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-5">
-                {/* Filter bar */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 bg-surface rounded-lg p-1 border border-border">
                         {(['All', 'Unread', 'Mentions', 'Tasks', 'Comments', 'System'] as FilterType[]).map((f) => (
@@ -289,9 +295,7 @@ const Notifications: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Notification groups */}
                 <div className="flex flex-col gap-2">
-                    {/* Today */}
                     {today.length > 0 && (
                         <>
                             <div className="flex items-center gap-3">
@@ -304,7 +308,6 @@ const Notifications: React.FC = () => {
                         </>
                     )}
 
-                    {/* Yesterday */}
                     {yesterday.length > 0 && (
                         <>
                             <div className="flex items-center gap-3">
@@ -317,7 +320,6 @@ const Notifications: React.FC = () => {
                         </>
                     )}
 
-                    {/* Earlier */}
                     {earlier.length > 0 && (
                         <>
                             <div className="flex items-center gap-3">
@@ -332,9 +334,7 @@ const Notifications: React.FC = () => {
                 </div>
             </div>
 
-            {/* Right sidebar: Summary & Channels */}
             <div className="flex flex-col gap-5 border-l border-border px-6 py-6 w-[280px] flex-shrink-0">
-                {/* Summary stats */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Summary</h3>
                     <div className="grid grid-cols-2 gap-3">
@@ -361,7 +361,6 @@ const Notifications: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Notification Channels */}
                 <div className="rounded-xl border border-border bg-surface p-5 flex flex-col gap-4">
                     <h3 className="text-sm font-bold text-foreground">Notification Channels</h3>
                     <div className="flex flex-col gap-3">
@@ -392,7 +391,6 @@ const Notifications: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Do Not Disturb */}
                 <div className="rounded-xl border border-dashed border-border p-4 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -409,6 +407,46 @@ const Notifications: React.FC = () => {
                     </p>
                 </div>
             </div>
+
+            {activeNotification && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+                    <div className="w-full max-w-md bg-surface border border-border rounded-2xl shadow-2xl p-6 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-base font-bold text-foreground">Notification Details</h3>
+                            <button
+                                onClick={() => setActiveNotification(null)}
+                                className="w-8 h-8 rounded-lg border border-border flex items-center justify-center text-foreground-muted hover:bg-surface-2 transition"
+                            >
+                                <Icon name="x" size={16} />
+                            </button>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h4 className="text-sm font-bold text-foreground">{activeNotification.title}</h4>
+                            <span className="text-xs text-foreground-muted">{activeNotification.time}</span>
+                            <p className="text-xs text-foreground leading-relaxed p-3 rounded-lg bg-background-2 border border-border mt-1">
+                                {activeNotification.description}
+                            </p>
+                        </div>
+                        <div className="flex items-center justify-end gap-2 pt-2">
+                            <button
+                                onClick={() => {
+                                    dismissNotification(activeNotification.id);
+                                    setActiveNotification(null);
+                                }}
+                                className="px-4 py-2 rounded-lg border border-danger-bg bg-danger-bg text-danger text-xs font-semibold hover:bg-danger-bg/80 transition"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={() => setActiveNotification(null)}
+                                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

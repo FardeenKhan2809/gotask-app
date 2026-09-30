@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import Icon from './Icon';
+import Icon, { type IconName } from '@/components/ui/Icon';
 import { motion } from 'framer-motion';
 
 interface NavItemProps {
     to: string;
-    icon: any;
+    icon: IconName | (string & {});
     label: string;
     badge?: string;
     dot?: boolean;
@@ -22,27 +22,25 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, badge, dot, badgeCol
             }`
         }
     >
-        {({ isActive }) => (
-            <motion.div
-                whileHover={{ x: 4 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-                className="flex items-center gap-3 w-full"
-            >
-                <Icon name={icon} size={16} />
-                <span className="flex-1 nav-label">{label}</span>
-                {badge && (
-                    <span
-                        className={`text-xs rounded-full px-1.5 py-0.5 font-bold ${badgeColor === 'danger'
-                                ? 'bg-danger text-foreground'
-                                : 'bg-muted text-muted-foreground'
-                            }`}
-                    >
-                        {badge}
-                    </span>
-                )}
-                {dot && <span className="w-2 h-2 rounded-full bg-success"></span>}
-            </motion.div>
-        )}
+        <motion.div
+            whileHover={{ x: 4 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+            className="flex items-center gap-3 w-full"
+        >
+            <Icon name={icon} size={16} />
+            <span className="flex-1 nav-label">{label}</span>
+            {badge && (
+                <span
+                    className={`text-xs rounded-full px-1.5 py-0.5 font-bold sidebar-hide-compact ${badgeColor === 'danger'
+                            ? 'bg-danger text-foreground'
+                            : 'bg-muted text-muted-foreground'
+                        }`}
+                >
+                    {badge}
+                </span>
+            )}
+            {dot && <span className="w-2 h-2 rounded-full bg-success sidebar-hide-compact"></span>}
+        </motion.div>
     </NavLink>
 );
 
@@ -50,19 +48,19 @@ const Sidebar: React.FC = () => {
     return (
         <div className="sidebar sticky top-0 flex flex-col bg-background-2 border-r border-border w-[220px] h-screen overflow-y-auto flex-shrink-0">
             <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
-                <div className="flex items-center justify-center rounded-lg bg-primary w-8 h-8 text-primary-foreground">
+                <div className="flex items-center justify-center rounded-lg bg-primary w-8 h-8 text-primary-foreground flex-shrink-0">
                     <Icon name="zap" size={16} />
                 </div>
-                <span className="font-headings font-bold text-base text-foreground tracking-tight">
+                <span className="font-headings font-bold text-base text-foreground tracking-tight sidebar-logo-text">
                     FlowWork
                 </span>
             </div>
 
-            <div className="mx-3 mt-4 mb-2 flex items-center gap-2 rounded-lg bg-surface px-3 py-2 border border-border">
-                <div className="rounded bg-secondary w-[18px] h-[18px] flex items-center justify-center text-white">
+            <div className="mx-3 mt-4 mb-2 flex items-center gap-2 rounded-lg bg-surface px-3 py-2 border border-border sidebar-hide-compact">
+                <div className="rounded bg-secondary w-[18px] h-[18px] flex items-center justify-center text-white flex-shrink-0">
                     <Icon name="building-2" size={11} />
                 </div>
-                <span className="text-xs text-foreground-muted font-body flex-1">Acme Corp</span>
+                <span className="text-xs text-foreground-muted font-body flex-1 truncate">Acme Corp</span>
                 <Icon name="chevrons-up-down" size={12} />
             </div>
 
@@ -85,17 +83,19 @@ const Sidebar: React.FC = () => {
             <div className="flex items-center gap-3 px-4 py-4 border-t border-border mt-auto">
                 <img
                     src="https://storage.googleapis.com/banani-avatars/avatar/male/25-35/South Asian/0"
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full flex-shrink-0"
                     alt="avatar"
                 />
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 sidebar-hide-compact">
                     <div className="text-sm font-medium text-foreground truncate">Aryan Mehta</div>
                     <div className="flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-success"></span>
                         <span className="text-xs text-foreground-muted">Online</span>
                     </div>
                 </div>
-                <Icon name="log-out" size={14} />
+                <div className="sidebar-hide-compact">
+                    <Icon name="log-out" size={14} />
+                </div>
             </div>
         </div>
     );

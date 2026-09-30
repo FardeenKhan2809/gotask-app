@@ -1,21 +1,10 @@
-// src/pages/admin/AdminDashboard.tsx
-import React, { useState } from 'react';
-import Icon from '../../../components/ui/Icon';
-import AdminSidebar from '../../../components/admin/AdminSidebar';
-import AdminTopbar from '../../../components/admin/AdminTopbar';
-import ActivitiesSidebar from '../../../components/ui/ActivitiesSidebar';
+import React from 'react';
+import Icon from '@/components/ui/Icon';
+import StatCard from '@/components/ui/StatCard';
 
 const AdminDashboard: React.FC = () => {
-    const [showActivity, setShowActivity] = useState(false); // true by default to match HTML, but can be toggled
-
     return (
-        <div className="flex bg-background font-body min-h-screen">
-            <AdminSidebar />
-            <div className="flex flex-col flex-1 min-w-0">
-                <AdminTopbar onToggleActivity={() => setShowActivity(!showActivity)} />
-                <div className="relative flex flex-1 min-w-0">
-                    <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6">
-                        {/* Stats Cards */}
+        <div className="flex flex-col flex-1 min-w-0 px-8 py-6 gap-6">
                         <div className="grid grid-cols-5 gap-4">
                             <StatCard
                                 icon="clock"
@@ -85,19 +74,18 @@ const AdminDashboard: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    {/* SVG chart */}
                                     <svg viewBox="0 0 520 120" style={{ width: '100%', height: '130px' }}>
                                         <defs>
                                             <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor="#00c9a7" stopOpacity="0.3" />
-                                                <stop offset="100%" stopColor="#00c9a7" stopOpacity="0.0" />
+                                                <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.3" />
+                                                <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.0" />
                                             </linearGradient>
                                         </defs>
-                                        <line x1="0" y1="110" x2="520" y2="110" stroke="#2a3347" strokeWidth="1" />
-                                        <line x1="0" y1="85" x2="520" y2="85" stroke="#2a3347" strokeWidth="1" />
-                                        <line x1="0" y1="60" x2="520" y2="60" stroke="#2a3347" strokeWidth="1" />
-                                        <line x1="0" y1="35" x2="520" y2="35" stroke="#2a3347" strokeWidth="1" />
-                                        <line x1="0" y1="10" x2="520" y2="10" stroke="#2a3347" strokeWidth="1" />
+                                        <line x1="0" y1="110" x2="520" y2="110" stroke="var(--color-border)" strokeWidth="1" />
+                                        <line x1="0" y1="85" x2="520" y2="85" stroke="var(--color-border)" strokeWidth="1" />
+                                        <line x1="0" y1="60" x2="520" y2="60" stroke="var(--color-border)" strokeWidth="1" />
+                                        <line x1="0" y1="35" x2="520" y2="35" stroke="var(--color-border)" strokeWidth="1" />
+                                        <line x1="0" y1="10" x2="520" y2="10" stroke="var(--color-border)" strokeWidth="1" />
                                         <path
                                             d="M0.0,60.0 L86.7,45.0 L173.3,32.0 L260.0,30.0 L346.7,18.0 L433.3,59.0 L520.0,82.0 L520.0,120 L0.0,120 Z"
                                             fill="url(#areaGrad)"
@@ -105,13 +93,13 @@ const AdminDashboard: React.FC = () => {
                                         <path
                                             d="M0.0,60.0 L86.7,45.0 L173.3,32.0 L260.0,30.0 L346.7,18.0 L433.3,59.0 L520.0,82.0"
                                             fill="none"
-                                            stroke="#00c9a7"
+                                            stroke="var(--color-primary)"
                                             strokeWidth="2.5"
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                         />
                                         {[0, 86.666, 173.333, 260, 346.666, 433.333, 520].map((cx, i) => (
-                                            <circle key={i} cx={cx} cy={[60, 45, 32, 30, 18, 59, 82][i]} r="4" fill="#00c9a7" stroke="#0f1117" strokeWidth="2" />
+                                            <circle key={i} cx={cx} cy={[60, 45, 32, 30, 18, 59, 82][i]} r="4" fill="var(--color-primary)" stroke="var(--color-background)" strokeWidth="2" />
                                         ))}
                                     </svg>
                                     <div className="flex justify-between">
@@ -166,7 +154,6 @@ const AdminDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Employee Overview & Pending Approvals */}
                         <div className="grid grid-cols-5 gap-5">
                             <div className="col-span-3 rounded-xl border border-border bg-surface overflow-hidden">
                                 <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-background-3">
@@ -235,7 +222,6 @@ const AdminDashboard: React.FC = () => {
                                 />
                             </div>
 
-                            {/* Pending Approvals */}
                             <div className="col-span-2 rounded-xl border border-border bg-surface overflow-hidden">
                                 <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-background-3">
                                     <div className="flex items-center gap-2">
@@ -279,7 +265,6 @@ const AdminDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Recent Task Activity */}
                         <div className="rounded-xl border border-border bg-surface overflow-hidden">
                             <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-background-3">
                                 <h3 className="text-base font-bold text-foreground">Recent Task Activity</h3>
@@ -342,42 +327,8 @@ const AdminDashboard: React.FC = () => {
                             />
                         </div>
                     </div>
-
-                    {showActivity && <ActivitiesSidebar />}
-                </div>
-            </div>
-        </div>
     );
 };
-
-// Helper components
-const StatCard: React.FC<{
-    icon: string;
-    iconBg: string;
-    iconColor: string;
-    value: string;
-    label: string;
-    sublabel: string;
-    trend: string;
-    trendUp?: boolean;
-}> = ({ icon, iconBg, iconColor, value, label, sublabel, trend, trendUp = true }) => (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
-        <div className="flex items-center justify-between">
-            <div className={`w-9 h-9 flex items-center justify-center rounded-lg ${iconBg} ${iconColor}`}>
-                <Icon name={icon} size={16} />
-            </div>
-            <span className={`flex items-center gap-1 text-xs font-bold rounded-full px-2 py-0.5 ${trendUp ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
-                <Icon name={trendUp ? 'trending-up' : 'trending-down'} size={10} />
-                {trend}
-            </span>
-        </div>
-        <div>
-            <div className="text-2xl font-bold text-foreground font-headings">{value}</div>
-            <div className="text-xs text-foreground-muted mt-0.5">{label}</div>
-            <div className="text-xs text-foreground-muted opacity-60">{sublabel}</div>
-        </div>
-    </div>
-);
 
 const EmployeeRow: React.FC<{
     name: string;

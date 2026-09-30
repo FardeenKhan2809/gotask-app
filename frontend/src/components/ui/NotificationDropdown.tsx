@@ -1,8 +1,11 @@
-// src/components/admin/NotificationDropdown.tsx
 import React from 'react';
-import Icon from '../ui/Icon';
+import Icon from '@/components/ui/Icon';
 
-const NotificationDropdown: React.FC = () => {
+interface NotificationDropdownProps {
+    onClose?: () => void;
+}
+
+const NotificationDropdown: React.FC<NotificationDropdownProps> = () => {
     return (
         <div className="flex flex-col bg-surface border border-border overflow-hidden w-[380px] rounded-2xl shadow-[0_20px_64px_rgba(0,0,0,0.56),0_0_0_1px_rgba(255,255,255,0.04)]">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">

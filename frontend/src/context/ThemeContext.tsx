@@ -4,7 +4,11 @@ export type LayoutDensity = 'compact' | 'default' | 'spacious';
 export type SidebarStyle = 'full-labels' | 'icon-only' | 'floating-rail';
 
 export interface Theme {
+    preset?: string;
+    accentPreset?: string;
     primary: string;
+    primaryForeground?: string;
+    primaryGlow?: string;
     background: string;
     background2: string;
     background3: string;
@@ -33,8 +37,24 @@ export interface Theme {
     sidebarStyle: SidebarStyle;
 }
 
+const getContrastForeground = (hex: string): string => {
+    const clean = hex.replace('#', '');
+    if (clean.length === 6) {
+        const r = parseInt(clean.substring(0, 2), 16);
+        const g = parseInt(clean.substring(2, 4), 16);
+        const b = parseInt(clean.substring(4, 6), 16);
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.6 ? '#000000' : '#ffffff';
+    }
+    return '#ffffff';
+};
+
 const defaultTheme: Theme = {
+    preset: 'dark',
+    accentPreset: 'emerald-teal',
     primary: '#00c9a7',
+    primaryForeground: '#09090b',
+    primaryGlow: '#00c9a733',
     background: '#0f1117',
     background2: '#161b25',
     background3: '#1e2535',
@@ -56,7 +76,7 @@ const defaultTheme: Theme = {
     purple: '#8b5cf6',
     purpleBg: '#8b5cf620',
     tealBg: '#00c9a715',
-    borderRadius: '0.5rem',
+    borderRadius: '10px',
     fontBody: 'Plus Jakarta Sans, sans-serif',
     fontHeadings: 'Plus Jakarta Sans, sans-serif',
     layoutDensity: 'default',
@@ -88,7 +108,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         localStorage.setItem('app-theme', JSON.stringify(theme));
         const root = document.documentElement;
 
+        const primaryFg = theme.primaryForeground || getContrastForeground(theme.primary);
+        const primaryGlow = theme.primaryGlow || `${theme.primary}33`;
+
         root.style.setProperty('--color-primary', theme.primary);
+        root.style.setProperty('--color-primary-foreground', primaryFg);
+        root.style.setProperty('--color-primary-glow', primaryGlow);
         root.style.setProperty('--color-background', theme.background);
         root.style.setProperty('--color-background-2', theme.background2);
         root.style.setProperty('--color-background-3', theme.background3);
@@ -123,6 +148,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const scale = densityScale[theme.layoutDensity] ?? 1;
         root.style.setProperty('--layout-density-scale', scale.toString());
 
+        root.setAttribute('data-theme', theme.preset || 'dark');
+        root.setAttribute('data-density', theme.layoutDensity);
         root.setAttribute('data-sidebar-style', theme.sidebarStyle);
     }, [theme]);
 

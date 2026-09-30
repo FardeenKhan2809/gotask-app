@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Sidebar from '../../components/ui/Sidebar';
-import Topbar from '../../components/ui/Topbar';
-import Icon from '../../components/ui/Icon';
-import SettingsPanel from '../shared/settings/SettingsPanel';
+import Icon from '@/components/ui/Icon';
+import StatCard from '@/components/ui/StatCard';
+import SettingsPanel from '@/pages/shared/settings/SettingsPanel';
+import { useToast } from '@/context/ToastContext';
 
 interface Task {
     id: string;
@@ -25,6 +25,9 @@ interface Task {
 interface RightSidebarProps {
     quickNote: string;
     setQuickNote: (value: string) => void;
+    onAddNote: () => void;
+    notesList: string[];
+    onDeleteNote: (index: number) => void;
 }
 
 const initialTasks: Task[] = [
@@ -95,18 +98,21 @@ const initialTasks: Task[] = [
 ];
 
 const Dashboard: React.FC = () => {
-    // Timer state
+    const { success, warning } = useToast();
     const [timerSeconds, setTimerSeconds] = useState(9237);
     const [timerRunning, setTimerRunning] = useState(true);
     const [activeTaskId, setActiveTaskId] = useState<string | null>('1');
     const [taskFilter, setTaskFilter] = useState<'All Tasks' | 'In Progress' | 'To Do' | 'Done'>('All Tasks');
-    const [tasks, setTasks] = useState<Task[]>(initialTasks);
+    const [tasks] = useState<Task[]>(initialTasks);
     const [showSettings, setShowSettings] = useState(false);
     const [quickNote, setQuickNote] = useState('');
-
+    const [notesList, setNotesList] = useState<string[]>([
+        'Deploy release v1.4 on staging',
+        'Review design sprint deliverables',
+    ]);
 
     useEffect(() => {
-        let interval: number;
+        let interval: any;
         if (timerRunning) {
             interval = setInterval(() => {
                 setTimerSeconds((prev) => prev + 1);
@@ -128,7 +134,28 @@ const Dashboard: React.FC = () => {
         setTimerSeconds(0);
     };
     const handleSave = () => {
-        alert(`Saved ${formatTime(timerSeconds)} to log`);
+        if (timerSeconds === 0) {
+            warning('No Time Logged', 'Timer is at 0:00:00.');
+            return;
+        }
+        success('Session Saved', `Saved ${formatTime(timerSeconds)} to session log.`);
+        setTimerSeconds(0);
+        setTimerRunning(false);
+    };
+
+    const handleAddNote = () => {
+        if (!quickNote.trim()) {
+            warning('Note Empty', 'Please write a note before adding.');
+            return;
+        }
+        setNotesList(prev => [quickNote.trim(), ...prev]);
+        success('Note Added', 'Quick note was saved.');
+        setQuickNote('');
+    };
+
+    const handleDeleteNote = (idx: number) => {
+        setNotesList(prev => prev.filter((_, i) => i !== idx));
+        success('Note Deleted', 'Note removed.');
     };
 
     const handlePlayTask = (taskId: string) => {
@@ -265,7 +292,13 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <RightSidebar quickNote={quickNote} setQuickNote={setQuickNote} />
+                <RightSidebar
+                    quickNote={quickNote}
+                    setQuickNote={setQuickNote}
+                    onAddNote={handleAddNote}
+                    notesList={notesList}
+                    onDeleteNote={handleDeleteNote}
+                />
             </div>
 
             <AnimatePresence>{showSettings && <SettingsPanel />}</AnimatePresence>
@@ -276,32 +309,7 @@ const Dashboard: React.FC = () => {
     );
 };
 
-// Helper components
-const StatCard: React.FC<{ icon: any; iconBg: string; iconColor: string; value: string; label: string; sublabel: string; trend: string }> = ({
-    icon,
-    iconBg,
-    iconColor,
-    value,
-    label,
-    sublabel,
-    trend,
-}) => (
-    <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300 }} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
-        <div className="flex items-start justify-between">
-            <div className={`flex items-center justify-center rounded-lg ${iconBg} ${iconColor} w-10 h-10`}>
-                <Icon name={icon} size={18} />
-            </div>
-            <span className="flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-1 bg-success-bg text-success">
-                <Icon name="trending-up" size={11} /> {trend}
-            </span>
-        </div>
-        <div>
-            <div className="text-2xl font-bold text-foreground font-headings">{value}</div>
-            <div className="text-sm text-foreground-muted mt-0.5">{label}</div>
-            <div className="text-xs text-foreground-muted mt-1 opacity-70">{sublabel}</div>
-        </div>
-    </motion.div>
-);
+
 
 const FilterButton: React.FC<{ label: string; count: number; active: boolean; onClick: () => void }> = ({ label, count, active, onClick }) => (
     <button
@@ -417,7 +425,7 @@ const TaskCard: React.FC<Task & { isActive: boolean; onPlay: () => void; onPause
     </motion.div>
 );
 
-const RightSidebar: React.FC<RightSidebarProps> = ({ quickNote, setQuickNote }) => (
+const RightSidebar: React.FC<RightSidebarProps> = ({ quickNote, setQuickNote, onAddNote, notesList, onDeleteNote }) => (
     <div className="flex flex-col gap-6 border-l border-border px-6 py-6 w-[300px] flex-shrink-0 overflow-y-auto">
         <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
             <div className="flex items-center justify-between">
@@ -442,8 +450,6 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ quickNote, setQuickNote }) 
                 })}
             </div>
         </div>
-
-        {/* Category breakdown - similar to original but simplified */}
 
         <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
             <div className="flex items-center justify-between">
@@ -487,15 +493,32 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ quickNote, setQuickNote }) 
                 value={quickNote}
                 onChange={(e) => setQuickNote(e.target.value)}
                 placeholder="Jot down something..."
-                className="rounded-lg bg-surface border border-border px-3 py-2 text-sm text-foreground-muted min-h-16 resize-none focus:outline-none focus:border-primary"
+                className="rounded-lg bg-surface border border-border px-3 py-2 text-sm text-foreground min-h-16 resize-none focus:outline-none focus:border-primary"
             />
             <button
-                onClick={() => alert(`Note saved: ${quickNote}`)}
-                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:opacity-90 transition"
+                type="button"
+                onClick={onAddNote}
+                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90 transition shadow-sm"
             >
                 <Icon name="plus" size={13} />
                 <span>Add Note</span>
             </button>
+            {notesList.length > 0 && (
+                <div className="flex flex-col gap-1.5 mt-2">
+                    {notesList.map((note, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-background-2 border border-border text-xs text-foreground">
+                            <span className="truncate flex-1 pr-2">{note}</span>
+                            <button
+                                type="button"
+                                onClick={() => onDeleteNote(idx)}
+                                className="text-foreground-muted hover:text-danger transition"
+                            >
+                                <Icon name="trash-2" size={11} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     </div>
 );

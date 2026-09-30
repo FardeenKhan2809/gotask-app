@@ -1,25 +1,93 @@
 import React, { useState } from 'react';
-import Icon from '../ui/Icon';
-import NotificationDropdown from '../ui/NotificationDropdown';
+import { useLocation } from 'react-router-dom';
+import Icon from '@/components/ui/Icon';
+import NotificationDropdown from '@/components/ui/NotificationDropdown';
 
 interface AdminTopbarProps {
-    onToggleActivity: () => void;
+    title?: string;
+    subtitle?: string;
+    tag?: string;
+    onToggleActivity?: () => void;
 }
 
-const AdminTopbar: React.FC<AdminTopbarProps> = ({ onToggleActivity }) => {
+const routeHeaders: Record<string, { title: string; subtitle: string; tag: string }> = {
+    '/admin': {
+        title: 'Good morning, Aiko 👋',
+        subtitle: "Here's your team overview for today",
+        tag: 'Admin',
+    },
+    '/admin/salary': {
+        title: 'Salary Management',
+        subtitle: 'Manage payroll, allowances, bonuses and payment status',
+        tag: 'Payroll',
+    },
+    '/salary': {
+        title: 'Salary Management',
+        subtitle: 'Manage payroll, allowances, bonuses and payment status',
+        tag: 'Payroll',
+    },
+    '/employee': {
+        title: 'Employee Directory',
+        subtitle: 'Manage team members, roles and access control',
+        tag: 'HR',
+    },
+    '/admin/employee': {
+        title: 'Employee Directory',
+        subtitle: 'Manage team members, roles and access control',
+        tag: 'HR',
+    },
+    '/add-employee': {
+        title: 'Add New Employee',
+        subtitle: 'Onboard a new team member with compensation and credentials',
+        tag: 'HR',
+    },
+    '/admin/add-employee': {
+        title: 'Add New Employee',
+        subtitle: 'Onboard a new team member with compensation and credentials',
+        tag: 'HR',
+    },
+    '/approvals': {
+        title: 'Approvals & Requests',
+        subtitle: 'Review and approve pending team requests',
+        tag: 'Approvals',
+    },
+    '/admin/approvals': {
+        title: 'Approvals & Requests',
+        subtitle: 'Review and approve pending team requests',
+        tag: 'Approvals',
+    },
+};
+
+const AdminTopbar: React.FC<AdminTopbarProps> = ({
+    title,
+    subtitle,
+    tag,
+    onToggleActivity,
+}) => {
     const [showNotifications, setShowNotifications] = useState(false);
+    const location = useLocation();
+
+    const activeHeader = routeHeaders[location.pathname] || {
+        title: title || 'Good morning, Aiko 👋',
+        subtitle: subtitle || "Here's your team overview for today",
+        tag: tag || 'Admin',
+    };
+
+    const displayTitle = title || activeHeader.title;
+    const displaySubtitle = subtitle || activeHeader.subtitle;
+    const displayTag = tag || activeHeader.tag;
 
     return (
         <div className="flex items-center gap-4 px-8 py-4 border-b border-border bg-background-2 min-h-[64px] relative">
             <div className="flex-1">
                 <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-foreground-muted uppercase tracking-widest">Admin</span>
+                    <span className="text-xs font-bold text-foreground-muted uppercase tracking-widest">{displayTag}</span>
                     <span className="w-1 h-1 rounded-full bg-border" />
                 </div>
-                <h1 className="font-headings font-bold text-xl text-foreground">Good morning, Aiko 👋</h1>
-                <p className="text-xs text-foreground-muted">Here's your team overview for today</p>
+                <h1 className="font-headings font-bold text-xl text-foreground">{displayTitle}</h1>
+                <p className="text-xs text-foreground-muted">{displaySubtitle}</p>
             </div>
-            <button className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground-muted font-body w-[220px]">
+            <button className="flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground-muted font-body">
                 <Icon name="search" size={14} />
                 <span className="flex-1 text-left">Search employees, tasks...</span>
                 <span className="flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground-muted">⌘K</span>
@@ -50,24 +118,9 @@ const AdminTopbar: React.FC<AdminTopbarProps> = ({ onToggleActivity }) => {
                 </button>
                 {showNotifications && (
                     <div className="absolute right-0 top-12 z-50">
-                        <NotificationDropdown />
+                        <NotificationDropdown onClose={() => setShowNotifications(false)} />
                     </div>
                 )}
-            </div>
-            <div className="flex items-center gap-2 pl-2 border-l border-border">
-                <div className="relative">
-                    <img
-                        src="https://storage.googleapis.com/banani-avatars/avatar/female/35-50/East Asian/3"
-                        className="w-8 h-8 rounded-full"
-                        alt="admin"
-                    />
-                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-success border border-background-2" />
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-xs font-bold text-foreground">Aiko Tanaka</span>
-                    <span className="text-xs text-foreground-muted">Admin</span>
-                </div>
-                <Icon name="chevron-down" size={13} />
             </div>
         </div>
     );

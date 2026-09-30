@@ -1,0 +1,2588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowWork — Chat</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --bg2: #161b25;
+            --bg3: #1e2535;
+            --surface: #1a2030;
+            --surface2: #222b3d;
+            --fg: #f0f4ff;
+            --fg-m: #8892a4;
+            --border: #2a3347;
+            --primary: #00c9a7;
+            --primary-glow: rgba(0, 201, 167, 0.18);
+            --purple: #8b5cf6;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --r: 6px;
+            --r-md: 10px;
+            --r-lg: 14px;
+            --r-xl: 20px;
+            --font: 'Inter', -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --dur: 160ms;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f6fa;
+            --bg2: #ffffff;
+            --bg3: #f0f2f7;
+            --surface: #ffffff;
+            --surface2: #f8fafc;
+            --fg: #0f172a;
+            --fg-m: #475569;
+            --border: rgba(0, 0, 0, 0.09);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            font-size: 14px
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--fg);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: background .3s, color .3s
+        }
+
+        button,
+        a {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: inherit;
+            text-decoration: none
+        }
+
+        input,
+        textarea {
+            font-family: inherit;
+            color: inherit
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 99px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--fg-m)
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 var(--primary-glow)
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px transparent
+            }
+        }
+
+        @keyframes tdpulse {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: .4
+            }
+
+            50% {
+                transform: translateY(-3px);
+                opacity: 1
+            }
+        }
+
+        @keyframes timerTick {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .75
+            }
+        }
+
+        @keyframes ping {
+
+            75%,
+            100% {
+                transform: scale(2);
+                opacity: 0
+            }
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateX(20px)
+            }
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* ── SHELL ── */
+        .shell {
+            display: flex;
+            height: 100vh;
+            overflow: hidden
+        }
+
+        /* ── NAV SIDEBAR ── */
+        .nav-sidebar {
+            width: 58px;
+            flex-shrink: 0;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 0;
+            gap: 3px;
+        }
+
+        .ns-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 0 18px var(--primary-glow);
+            transition: transform var(--dur) var(--ease);
+        }
+
+        .ns-logo:hover {
+            transform: scale(1.08) rotate(-3deg)
+        }
+
+        .ns-ic {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--r-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fg-m);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all var(--dur) var(--ease);
+            position: relative;
+        }
+
+        .ns-ic:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--fg)
+        }
+
+        .ns-ic.active {
+            background: rgba(0, 201, 167, 0.12);
+            color: var(--primary)
+        }
+
+        .ns-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--danger);
+            border: 1.5px solid var(--bg2);
+        }
+
+        .ns-dot.ping::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: var(--danger);
+            animation: ping 1.5s ease infinite;
+        }
+
+        .ns-sep {
+            width: 24px;
+            height: 1px;
+            background: var(--border);
+            margin: 6px 0
+        }
+
+        .ns-av {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            margin-top: auto;
+            cursor: pointer;
+            position: relative;
+            transition: transform var(--dur) var(--ease);
+        }
+
+        .ns-av:hover {
+            transform: scale(1.08)
+        }
+
+        .ns-av-online {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 2px solid var(--bg2);
+        }
+
+        /* ── CHANNELS PANEL ── */
+        .channels-panel {
+            width: 248px;
+            flex-shrink: 0;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cp-header {
+            padding: 16px 14px 12px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .cp-workspace {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            padding: 6px 8px;
+            border-radius: var(--r-md);
+            transition: background var(--dur);
+        }
+
+        .cp-workspace:hover {
+            background: rgba(255, 255, 255, 0.04)
+        }
+
+        .ws-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .ws-name {
+            font-size: 13px;
+            font-weight: 700;
+            flex: 1
+        }
+
+        .cp-search {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            padding: 7px 10px;
+            transition: border-color var(--dur);
+        }
+
+        .cp-search:focus-within {
+            border-color: var(--primary)
+        }
+
+        .cp-search input {
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 12px;
+            color: var(--fg);
+            flex: 1;
+        }
+
+        .cp-search input::placeholder {
+            color: var(--fg-m)
+        }
+
+        .cp-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px
+        }
+
+        .cp-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--fg-m);
+            padding: 10px 8px 5px;
+            cursor: pointer;
+            transition: color var(--dur);
+        }
+
+        .cp-section:hover {
+            color: var(--fg)
+        }
+
+        .cp-section .add-ic {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: background var(--dur);
+        }
+
+        .cp-section .add-ic:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--fg)
+        }
+
+        .ch-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: var(--r-lg);
+            cursor: pointer;
+            transition: background var(--dur);
+            position: relative;
+            user-select: none;
+        }
+
+        .ch-item:hover {
+            background: rgba(255, 255, 255, 0.04)
+        }
+
+        .ch-item.active {
+            background: rgba(0, 201, 167, 0.1)
+        }
+
+        .ch-item.active .ch-name {
+            color: var(--primary);
+            font-weight: 600
+        }
+
+        .ch-item.active .ch-hash {
+            color: var(--primary)
+        }
+
+        .ch-hash {
+            font-size: 15px;
+            color: var(--fg-m);
+            width: 16px;
+            text-align: center;
+            flex-shrink: 0
+        }
+
+        .ch-name {
+            font-size: 13px;
+            font-weight: 500;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .ch-badge {
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: var(--primary);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideIn .2s var(--ease);
+        }
+
+        .ch-badge.red {
+            background: var(--danger);
+            color: #fff
+        }
+
+        .ch-muted {
+            font-size: 10px;
+            color: var(--fg-m);
+            margin-left: auto;
+            opacity: .6
+        }
+
+        .dm-av {
+            width: 26px;
+            height: 26px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #000;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .dm-status {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1.5px solid var(--bg2);
+        }
+
+        .s-online {
+            background: var(--success)
+        }
+
+        .s-away {
+            background: var(--warning)
+        }
+
+        .s-off {
+            background: var(--fg-m)
+        }
+
+        /* Active timer widget in sidebar */
+        .timer-widget {
+            margin: 10px 8px 4px;
+            background: rgba(0, 201, 167, 0.07);
+            border: 1px solid rgba(0, 201, 167, 0.18);
+            border-radius: var(--r-xl);
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: border-color var(--dur);
+        }
+
+        .timer-widget:hover {
+            border-color: rgba(0, 201, 167, .35)
+        }
+
+        .tw-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 4px
+        }
+
+        .tw-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 2s infinite
+        }
+
+        .tw-task {
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px
+        }
+
+        .tw-time {
+            font-family: var(--mono);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            animation: timerTick 1s ease-in-out infinite
+        }
+
+        /* ── MAIN AREA ── */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            height: 54px;
+            flex-shrink: 0;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .tb-hash {
+            font-size: 18px;
+            color: var(--fg-m)
+        }
+
+        .tb-name {
+            font-size: 15px;
+            font-weight: 700;
+            white-space: nowrap
+        }
+
+        .tb-sep {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 4px;
+            flex-shrink: 0
+        }
+
+        .tb-desc {
+            font-size: 12px;
+            color: var(--fg-m);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .tb-members {
+            display: flex;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 4px 10px 4px 6px;
+            cursor: pointer;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--fg-m);
+            transition: all var(--dur);
+            white-space: nowrap;
+        }
+
+        .tb-members:hover {
+            border-color: var(--primary);
+            color: var(--primary)
+        }
+
+        .mb-stack {
+            display: flex;
+            align-items: center
+        }
+
+        .mb-av {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: #000;
+            border: 2px solid var(--bg2);
+            margin-left: -5px;
+        }
+
+        .mb-av:first-child {
+            margin-left: 0
+        }
+
+        .tb-ic {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fg-m);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all var(--dur);
+            flex-shrink: 0;
+        }
+
+        .tb-ic:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--fg)
+        }
+
+        .tb-ic.active {
+            color: var(--primary)
+        }
+
+        /* ── MESSAGES ── */
+        .messages-wrap {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px
+        }
+
+        .day-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 14px 0 10px;
+            color: var(--fg-m);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .day-divider::before,
+        .day-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .msg-group {
+            display: flex;
+            gap: 10px;
+            padding: 5px 8px;
+            border-radius: var(--r-lg);
+            transition: background var(--dur);
+            position: relative;
+            animation: msgIn .2s var(--ease);
+        }
+
+        .msg-group:hover {
+            background: rgba(255, 255, 255, 0.025)
+        }
+
+        .msg-group:hover .msg-actions {
+            opacity: 1;
+            pointer-events: all
+        }
+
+        .msg-av {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            flex-shrink: 0;
+            margin-top: 1px;
+            cursor: pointer;
+            transition: transform var(--dur) var(--ease);
+        }
+
+        .msg-av:hover {
+            transform: scale(1.08)
+        }
+
+        .msg-body {
+            flex: 1;
+            min-width: 0
+        }
+
+        .msg-header {
+            display: flex;
+            align-items: baseline;
+            gap: 7px;
+            margin-bottom: 3px;
+            flex-wrap: wrap
+        }
+
+        .msg-author {
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .msg-author:hover {
+            text-decoration: underline
+        }
+
+        .msg-role {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 99px;
+            background: rgba(0, 201, 167, 0.12);
+            color: var(--primary);
+        }
+
+        .msg-ts {
+            font-size: 11px;
+            color: var(--fg-m)
+        }
+
+        .msg-text {
+            font-size: 13px;
+            color: var(--fg);
+            line-height: 1.6;
+            word-break: break-word
+        }
+
+        .msg-text a {
+            color: var(--primary)
+        }
+
+        .msg-text code {
+            font-family: var(--mono);
+            font-size: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .msg-text pre {
+            font-family: var(--mono);
+            font-size: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 10px 13px;
+            border-radius: var(--r-lg);
+            margin-top: 6px;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        .msg-cont {
+            padding: 2px 8px 2px 52px;
+            animation: msgIn .2s var(--ease)
+        }
+
+        .msg-cont .msg-text {
+            font-size: 13px;
+            line-height: 1.6
+        }
+
+        .msg-actions {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            display: flex;
+            gap: 1px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 3px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--dur);
+            z-index: 10;
+        }
+
+        .ma-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: var(--r);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--fg-m);
+            transition: all var(--dur);
+        }
+
+        .ma-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--fg)
+        }
+
+        /* File attachment card */
+        .msg-file {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xl);
+            padding: 10px 14px;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: border-color var(--dur);
+            max-width: 300px;
+        }
+
+        .msg-file:hover {
+            border-color: rgba(0, 201, 167, 0.35)
+        }
+
+        .mf-ic {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .mf-name {
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .mf-size {
+            font-size: 11px;
+            color: var(--fg-m);
+            margin-top: 1px
+        }
+
+        .mf-dl {
+            margin-left: auto;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--r-md);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: var(--fg-m);
+            flex-shrink: 0;
+            transition: all var(--dur);
+        }
+
+        .msg-file:hover .mf-dl {
+            border-color: var(--primary);
+            color: var(--primary)
+        }
+
+        /* Task link card */
+        .msg-task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 var(--r-xl) var(--r-xl) 0;
+            padding: 10px 14px;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: all var(--dur);
+            max-width: 340px;
+        }
+
+        .msg-task:hover {
+            border-color: rgba(0, 201, 167, .4);
+            background: var(--surface2)
+        }
+
+        .mt-ic {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-md);
+            background: rgba(0, 201, 167, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .mt-title {
+            font-size: 12px;
+            font-weight: 600
+        }
+
+        .mt-meta {
+            font-size: 11px;
+            color: var(--fg-m);
+            margin-top: 2px
+        }
+
+        .mt-badge {
+            margin-left: auto;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Reactions */
+        .reactions {
+            display: flex;
+            gap: 4px;
+            margin-top: 5px;
+            flex-wrap: wrap
+        }
+
+        .react {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--dur);
+            user-select: none;
+        }
+
+        .react:hover {
+            border-color: var(--primary);
+            background: rgba(0, 201, 167, 0.07)
+        }
+
+        .react.mine {
+            background: rgba(0, 201, 167, 0.1);
+            border-color: rgba(0, 201, 167, .3)
+        }
+
+        .react .rc {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--fg-m)
+        }
+
+        .react.mine .rc {
+            color: var(--primary)
+        }
+
+        /* Thread preview */
+        .thread-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            margin-top: 5px;
+            padding: 3px 0;
+            transition: opacity var(--dur);
+        }
+
+        .thread-link:hover {
+            opacity: .75
+        }
+
+        .thread-avs {
+            display: flex;
+            margin-right: 2px
+        }
+
+        .ta {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 8px;
+            font-weight: 700;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--surface);
+            margin-left: -4px
+        }
+
+        .ta:first-child {
+            margin-left: 0
+        }
+
+        /* System message */
+        .sys-msg {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            color: var(--fg-m);
+            font-style: italic;
+            padding: 6px 8px;
+            margin: 4px 0;
+        }
+
+        .sys-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .sys-ic {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        /* Typing indicator */
+        .typing-bar {
+            height: 28px;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--fg-m);
+            flex-shrink: 0;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+            align-items: center
+        }
+
+        .td {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--fg-m)
+        }
+
+        .td:nth-child(1) {
+            animation: tdpulse 1.2s .0s ease-in-out infinite
+        }
+
+        .td:nth-child(2) {
+            animation: tdpulse 1.2s .2s ease-in-out infinite
+        }
+
+        .td:nth-child(3) {
+            animation: tdpulse 1.2s .4s ease-in-out infinite
+        }
+
+        /* ── COMPOSER ── */
+        .composer {
+            padding: 10px 20px 16px;
+            flex-shrink: 0
+        }
+
+        .composer-box {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            transition: border-color var(--dur);
+        }
+
+        .composer-box:focus-within {
+            border-color: rgba(0, 201, 167, .4)
+        }
+
+        .composer-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            padding: 8px 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ct-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--r);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--fg-m);
+            cursor: pointer;
+            transition: all var(--dur);
+        }
+
+        .ct-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--fg)
+        }
+
+        .ct-sep {
+            width: 1px;
+            height: 18px;
+            background: var(--border);
+            margin: 0 4px
+        }
+
+        .composer-input {
+            width: 100%;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: var(--fg);
+            padding: 10px 14px 4px;
+            resize: none;
+            min-height: 40px;
+            font-family: var(--font);
+            line-height: 1.55;
+        }
+
+        .composer-input::placeholder {
+            color: var(--fg-m);
+            opacity: .6
+        }
+
+        .composer-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px 8px;
+        }
+
+        .cf-left {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex: 1
+        }
+
+        .cf-ic {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--r);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--fg-m);
+            cursor: pointer;
+            transition: all var(--dur);
+        }
+
+        .cf-ic:hover {
+            color: var(--fg);
+            background: rgba(255, 255, 255, 0.06)
+        }
+
+        .send-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r-lg);
+            background: var(--primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: #000;
+            cursor: pointer;
+            transition: all var(--dur) var(--ease);
+            box-shadow: 0 2px 10px var(--primary-glow);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px var(--primary-glow)
+        }
+
+        .send-btn:active {
+            transform: scale(.95)
+        }
+
+        .send-btn:disabled {
+            background: var(--border);
+            color: var(--fg-m);
+            box-shadow: none;
+            transform: none;
+            cursor: default
+        }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            width: 268px;
+            flex-shrink: 0;
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rp-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .rp-tab {
+            flex: 1;
+            padding: 13px 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--fg-m);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all var(--dur);
+            margin-bottom: -1px;
+        }
+
+        .rp-tab:hover {
+            color: var(--fg)
+        }
+
+        .rp-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary)
+        }
+
+        .rp-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px
+        }
+
+        .rp-sec-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--fg-m);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .rp-add {
+            font-size: 14px;
+            cursor: pointer;
+            transition: color var(--dur)
+        }
+
+        .rp-add:hover {
+            color: var(--primary)
+        }
+
+        .member-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 4px;
+            border-radius: var(--r-lg);
+            cursor: pointer;
+            transition: all var(--dur);
+        }
+
+        .member-row:hover {
+            background: rgba(255, 255, 255, .04);
+            padding-left: 8px
+        }
+
+        .mr-av {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .mr-st {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            border: 1.5px solid var(--bg2);
+        }
+
+        .mr-name {
+            font-size: 13px;
+            font-weight: 600;
+            flex: 1
+        }
+
+        .mr-role {
+            font-size: 11px;
+            color: var(--fg-m)
+        }
+
+        .pin-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xl);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: border-color var(--dur);
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .pin-card:hover {
+            border-color: rgba(0, 201, 167, .3)
+        }
+
+        .pin-bar {
+            width: 3px;
+            border-radius: 99px;
+            align-self: stretch;
+            flex-shrink: 0
+        }
+
+        .pin-text {
+            font-size: 12px;
+            line-height: 1.5;
+            flex: 1
+        }
+
+        .pin-meta {
+            font-size: 10px;
+            color: var(--fg-m);
+            margin-top: 3px
+        }
+
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            margin-bottom: 7px;
+            cursor: pointer;
+            transition: border-color var(--dur);
+        }
+
+        .file-row:hover {
+            border-color: rgba(0, 201, 167, .3)
+        }
+
+        .fr-ic {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .fr-name {
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .fr-meta {
+            font-size: 10px;
+            color: var(--fg-m);
+            margin-top: 1px
+        }
+
+        /* ── TOASTS ── */
+        #toast-wrap {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xl);
+            padding: 11px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+            font-size: 13px;
+            font-weight: 500;
+            pointer-events: all;
+            min-width: 260px;
+            animation: toastIn .3s var(--ease);
+        }
+
+        .toast.out {
+            animation: toastOut .22s ease forwards
+        }
+
+        .toast-dismiss {
+            margin-left: auto;
+            cursor: pointer;
+            color: var(--fg-m);
+            font-size: 14px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--dur);
+        }
+
+        .toast-dismiss:hover {
+            background: rgba(255, 255, 255, .08);
+            color: var(--fg)
+        }
+
+        /* ── EMOJI PICKER MINI ── */
+        .emoji-pick {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xl);
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+            z-index: 20;
+            width: 200px;
+        }
+
+        .ep-em {
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--r-md);
+            transition: background var(--dur);
+            line-height: 1;
+        }
+
+        .ep-em:hover {
+            background: rgba(255, 255, 255, .07)
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast-wrap"></div>
+
+    <div class="shell">
+
+        <!-- ── NAV SIDEBAR ── -->
+        <div class="nav-sidebar">
+            <div class="ns-logo" title="FlowWork">⚡</div>
+
+            <div class="ns-ic active" title="Chat" onclick="showToast('Chat','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+            </div>
+            <div class="ns-ic" title="Tasks" onclick="showToast('Tasks page','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+            </div>
+            <div class="ns-ic" title="Time Tracker" onclick="showToast('Time Tracker','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+            </div>
+            <div class="ns-ic" title="Calendar" onclick="showToast('Calendar','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+            </div>
+            <div class="ns-ic" title="Reports" onclick="showToast('Reports','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+            </div>
+
+            <div class="ns-sep"></div>
+
+            <div class="ns-ic" title="Notifications" onclick="showToast('3 unread notifications','warning')"
+                style="position:relative">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <div class="ns-dot ping"></div>
+            </div>
+            <div class="ns-ic" title="Toggle theme" onclick="toggleTheme()">
+                <svg id="theme-ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </div>
+            <div class="ns-ic" title="Settings" onclick="showToast('Settings','info')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </div>
+
+            <div class="ns-av" title="Aryan Mehta — Admin" onclick="showToast('Profile','info')">
+                AM
+                <div class="ns-av-online"></div>
+            </div>
+        </div>
+
+        <!-- ── CHANNELS PANEL ── -->
+        <div class="channels-panel">
+            <div class="cp-header">
+                <div class="cp-workspace">
+                    <div class="ws-dot">A</div>
+                    <div class="ws-name">Acme Corp</div>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round" style="color:var(--fg-m)">
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </div>
+                <div class="cp-search">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="color:var(--fg-m);flex-shrink:0">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input placeholder="Search…" oninput="filterChannels(this.value)">
+                </div>
+            </div>
+
+            <div class="cp-body" id="cp-body">
+                <div class="cp-section">
+                    Channels
+                    <span class="add-ic" onclick="showToast('Create channel','info')" title="Add channel">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="ch-item" data-ch="general" onclick="switchChannel('general',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">general</span>
+                </div>
+                <div class="ch-item active" data-ch="product" onclick="switchChannel('product',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">product</span>
+                    <span class="ch-badge" id="badge-product">3</span>
+                </div>
+                <div class="ch-item" data-ch="design" onclick="switchChannel('design',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">design</span>
+                </div>
+                <div class="ch-item" data-ch="engineering" onclick="switchChannel('engineering',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">engineering</span>
+                    <span class="ch-badge" id="badge-eng">7</span>
+                </div>
+                <div class="ch-item" data-ch="standup" onclick="switchChannel('standup',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">standup</span>
+                </div>
+                <div class="ch-item" data-ch="random" onclick="switchChannel('random',this)">
+                    <span class="ch-hash">#</span><span class="ch-name">random</span>
+                </div>
+
+                <div class="cp-section" style="margin-top:8px">
+                    Direct Messages
+                    <span class="add-ic" onclick="showToast('New DM','info')" title="New DM">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="ch-item" data-ch="sarah" onclick="switchChannel('sarah',this)">
+                    <div class="dm-av" style="background:#8b5cf6">SC<div class="dm-status s-online"></div>
+                    </div>
+                    <span class="ch-name">Sarah Chen</span>
+                </div>
+                <div class="ch-item" data-ch="marcus" onclick="switchChannel('marcus',this)">
+                    <div class="dm-av" style="background:#3b82f6">MW<div class="dm-status s-away"></div>
+                    </div>
+                    <span class="ch-name">Marcus Williams</span>
+                    <span class="ch-badge red">2</span>
+                </div>
+                <div class="ch-item" data-ch="priya" onclick="switchChannel('priya',this)">
+                    <div class="dm-av" style="background:#10b981">PS<div class="dm-status s-online"></div>
+                    </div>
+                    <span class="ch-name">Priya Sharma</span>
+                </div>
+                <div class="ch-item" data-ch="jordan" onclick="switchChannel('jordan',this)">
+                    <div class="dm-av" style="background:#ef4444">JL<div class="dm-status s-off"></div>
+                    </div>
+                    <span class="ch-name">Jordan Lee</span>
+                    <span class="ch-muted">Yesterday</span>
+                </div>
+                <div class="ch-item" data-ch="emma" onclick="switchChannel('emma',this)">
+                    <div class="dm-av" style="background:#f59e0b">ED<div class="dm-status s-online"></div>
+                    </div>
+                    <span class="ch-name">Emma Davis</span>
+                </div>
+
+                <!-- Active timer widget -->
+                <div class="timer-widget" onclick="showToast('Timer: 02:34:58 on onboarding task','info')">
+                    <div class="tw-label">
+                        <div class="tw-dot"></div> Live timer
+                    </div>
+                    <div class="tw-task">Design new onboarding flow</div>
+                    <div class="tw-time" id="sidebar-timer">02:34:17</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CHAT MAIN ── -->
+        <div class="chat-main">
+
+            <!-- topbar -->
+            <div class="topbar">
+                <span class="tb-hash">#</span>
+                <span class="tb-name" id="ch-title">product</span>
+                <div class="tb-sep"></div>
+                <span class="tb-desc" id="ch-desc">Product team discussions, sprint planning and feature
+                    coordination</span>
+
+                <div class="tb-members" onclick="showToast('4 members in this channel','info')">
+                    <div class="mb-stack">
+                        <div class="mb-av" style="background:#00c9a7">AM</div>
+                        <div class="mb-av" style="background:#8b5cf6">SC</div>
+                        <div class="mb-av" style="background:#3b82f6">MW</div>
+                        <div class="mb-av" style="background:#10b981">PS</div>
+                    </div>
+                    &nbsp;4
+                </div>
+
+                <div class="tb-ic" title="Search in channel" onclick="showToast('Search in #product','info')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                </div>
+                <div class="tb-ic active" title="Members panel">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </div>
+                <div class="tb-ic" title="Pinned messages" onclick="switchRpTab('pins')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                </div>
+                <div class="tb-ic" title="Files" onclick="switchRpTab('files')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                        <polyline points="13 2 13 9 20 9" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- messages -->
+            <div class="messages-wrap" id="messages-wrap">
+
+                <div class="day-divider">2 days ago</div>
+
+                <!-- Sarah: Figma -->
+                <div class="msg-group">
+                    <div class="msg-av" style="background:#8b5cf6" onclick="showToast('Sarah Chen · Designer','info')">
+                        SC</div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#8b5cf6">Sarah Chen</span>
+                            <span class="msg-role">Design</span>
+                            <span class="msg-ts">10:14 AM</span>
+                        </div>
+                        <div class="msg-text">Hey team! I've pushed the updated Figma frames for the onboarding
+                            redesign. Please drop feedback before EOD — I want to lock the final direction before sprint
+                            review.</div>
+                        <div class="msg-file" onclick="showToast('Opening Figma file…','info')">
+                            <div class="mf-ic" style="background:rgba(99,102,241,0.14);color:#6366f1">
+                                <svg width="17" height="17" viewBox="0 0 38 57" fill="currentColor">
+                                    <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.51 9.51 0 0 1 19 28.5z" />
+                                    <path d="M9.5 57A9.5 9.5 0 0 1 9.5 38H19v9.5A9.5 9.5 0 0 1 9.5 57z" />
+                                    <path d="M19 0h9.5a9.5 9.5 0 0 1 0 19H19z" />
+                                    <path d="M0 9.5A9.5 9.5 0 0 1 9.5 0H19v19H9.5A9.5 9.5 0 0 1 0 9.5z" />
+                                    <path d="M0 28.5A9.5 9.5 0 0 1 9.5 19H19v19H9.5A9.5 9.5 0 0 1 0 28.5z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="mf-name">onboarding-redesign-v4.fig</div>
+                                <div class="mf-size">Figma · 2.3 MB · Updated 2h ago</div>
+                            </div>
+                            <div class="mf-dl">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="reactions">
+                            <div class="react mine" onclick="toggleReact(this)">👍 <span class="rc">3</span></div>
+                            <div class="react" onclick="toggleReact(this)">🔥 <span class="rc">2</span></div>
+                            <div class="react" onclick="toggleReact(this)">👀 <span class="rc">1</span></div>
+                        </div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" title="React" onclick="showEmojiPick(event,this)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg>
+                        </div>
+                        <div class="ma-btn" title="Reply" onclick="replyTo('Sarah Chen')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg>
+                        </div>
+                        <div class="ma-btn" title="Forward" onclick="showToast('Message forwarded','success')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 17 20 12 15 7" />
+                                <path d="M4 18v-2a4 4 0 0 1 4-4h12" />
+                            </svg>
+                        </div>
+                        <div class="ma-btn" title="More">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marcus reply (continuation) -->
+                <div class="msg-cont">
+                    <div class="msg-header" style="margin-bottom:3px">
+                        <span class="msg-author" style="color:#3b82f6">Marcus Williams</span>
+                        <span class="msg-ts">10:22 AM</span>
+                    </div>
+                    <div class="msg-text">Looks super clean! One thing — the progress bar on step 3 might need a bit
+                        more contrast on dark backgrounds. Minor but worth a quick tweak before handoff.</div>
+                    <div class="thread-link" onclick="showToast('Opening thread…','info')">
+                        <div class="thread-avs">
+                            <div class="ta" style="background:#8b5cf6">SC</div>
+                            <div class="ta" style="background:#3b82f6">MW</div>
+                            <div class="ta" style="background:#00c9a7">AM</div>
+                        </div>
+                        3 replies · Last reply 11:05 AM
+                    </div>
+                </div>
+
+                <!-- Priya -->
+                <div class="msg-group" style="margin-top:6px">
+                    <div class="msg-av" style="background:#10b981" onclick="showToast('Priya Sharma · Manager','info')">
+                        PS</div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#10b981">Priya Sharma</span>
+                            <span class="msg-role">Manager</span>
+                            <span class="msg-ts">11:48 AM</span>
+                        </div>
+                        <div class="msg-text">Sprint review is <strong>tomorrow at 3 PM</strong>. Please update your
+                            task statuses in FlowWork before then — I'll be pulling the report at 2:45. Deck coming by
+                            noon.</div>
+                        <div class="msg-task" onclick="showToast('Opening task board…','info')">
+                            <div class="mt-ic">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 11 12 14 22 4" />
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="mt-title">Q3 Sprint 4 — Task Board</div>
+                                <div class="mt-meta">8 tasks · 2 in review · 3 done</div>
+                            </div>
+                            <div class="mt-badge" style="background:rgba(0,201,167,.12);color:var(--primary)">In
+                                Progress</div>
+                        </div>
+                        <div class="reactions">
+                            <div class="react mine" onclick="toggleReact(this)">✅ <span class="rc">4</span></div>
+                        </div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg></div>
+                        <div class="ma-btn" onclick="replyTo('Priya Sharma')"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg></div>
+                        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <!-- System -->
+                <div class="sys-msg">
+                    <div class="sys-line"></div>
+                    <div class="sys-ic" style="background:rgba(0,201,167,0.1);color:var(--primary)">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 11 12 14 22 4" />
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                        </svg>
+                    </div>
+                    Priya Sharma linked a task · Sprint Board
+                    <div class="sys-line"></div>
+                </div>
+
+                <div class="day-divider">Today</div>
+
+                <!-- Aryan morning -->
+                <div class="msg-group">
+                    <div class="msg-av" style="background:#00c9a7" onclick="showToast('Aryan Mehta · Admin','info')">AM
+                    </div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#00c9a7">Aryan Mehta</span>
+                            <span class="msg-role">Admin</span>
+                            <span class="msg-ts">9:02 AM</span>
+                        </div>
+                        <div class="msg-text">Morning team 👋 Timer's running on the onboarding redesign. Targeting a
+                            working prototype by end of sprint — should be ready for QA before review tomorrow.</div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg></div>
+                        <div class="ma-btn" onclick="replyTo('Aryan Mehta')"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg></div>
+                        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <!-- Sarah dark mode fix -->
+                <div class="msg-group">
+                    <div class="msg-av" style="background:#8b5cf6">SC</div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#8b5cf6">Sarah Chen</span>
+                            <span class="msg-role">Design</span>
+                            <span class="msg-ts">9:17 AM</span>
+                        </div>
+                        <div class="msg-text">The dark mode contrast fix Marcus flagged is done ✓ — also tightened
+                            spacing on mobile breakpoints. Specs are exported and linked in the task. Should be a clean
+                            handoff.</div>
+                        <div class="reactions">
+                            <div class="react" onclick="toggleReact(this)">🙌 <span class="rc">2</span></div>
+                        </div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg></div>
+                        <div class="ma-btn" onclick="replyTo('Sarah Chen')"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg></div>
+                        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <!-- Marcus PR -->
+                <div class="msg-group">
+                    <div class="msg-av" style="background:#3b82f6">MW</div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#3b82f6">Marcus Williams</span>
+                            <span class="msg-ts">10:03 AM</span>
+                        </div>
+                        <div class="msg-text">Payment gateway branch is merged. All 84 tests green ✅ Deployment to
+                            staging is queued for 2 PM — <a href="#">#engineering</a> heads up.</div>
+                        <div class="msg-file" onclick="showToast('Opening GitHub PR…','info')">
+                            <div class="mf-ic" style="background:rgba(0,201,167,0.1);color:var(--primary)">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="18" cy="18" r="3" />
+                                    <circle cx="6" cy="6" r="3" />
+                                    <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+                                    <line x1="6" y1="9" x2="6" y2="21" />
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="mf-name">PR #247 — Payment gateway integration</div>
+                                <div class="mf-size">GitHub · Merged · +842 −103 lines</div>
+                            </div>
+                            <div class="mf-dl">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="reactions">
+                            <div class="react mine" onclick="toggleReact(this)">🚀 <span class="rc">5</span></div>
+                            <div class="react" onclick="toggleReact(this)">👏 <span class="rc">3</span></div>
+                            <div class="react" onclick="toggleReact(this)">🔥 <span class="rc">2</span></div>
+                        </div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg></div>
+                        <div class="ma-btn" onclick="replyTo('Marcus Williams')"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg></div>
+                        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <!-- Latest Aryan -->
+                <div class="msg-group">
+                    <div class="msg-av" style="background:#00c9a7">AM</div>
+                    <div class="msg-body">
+                        <div class="msg-header">
+                            <span class="msg-author" style="color:#00c9a7">Aryan Mehta</span>
+                            <span class="msg-role">Admin</span>
+                            <span class="msg-ts">Just now</span>
+                        </div>
+                        <div class="msg-text">Solid work Marcus! Priya — still on for 3 PM? I'll wrap my task log and
+                            push the status update before then.</div>
+                    </div>
+                    <div class="msg-actions">
+                        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                            </svg></div>
+                        <div class="ma-btn" onclick="replyTo('Aryan Mehta')"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 17 4 12 9 7" />
+                                <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                            </svg></div>
+                        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="19" cy="12" r="1" />
+                                <circle cx="5" cy="12" r="1" />
+                            </svg></div>
+                    </div>
+                </div>
+
+                <div id="typing-area"></div>
+            </div>
+
+            <!-- typing indicator -->
+            <div class="typing-bar" id="typing-bar" style="display:none">
+                <div class="typing-dots">
+                    <div class="td"></div>
+                    <div class="td"></div>
+                    <div class="td"></div>
+                </div>
+                <span id="typing-text">Priya Sharma is typing…</span>
+            </div>
+
+            <!-- composer -->
+            <div class="composer">
+                <div id="reply-banner"
+                    style="display:none;align-items:center;gap:8px;padding:6px 10px;background:rgba(0,201,167,0.07);border:1px solid rgba(0,201,167,0.2);border-radius:var(--r-lg);margin-bottom:8px;font-size:12px;color:var(--fg-m)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 17 4 12 9 7" />
+                        <path d="M20 18v-2a4 4 0 0 0-4-4H4" />
+                    </svg>
+                    Replying to <strong id="reply-name" style="color:var(--fg);margin-left:3px"></strong>
+                    <div style="margin-left:auto;cursor:pointer;color:var(--fg-m)" onclick="cancelReply()">✕</div>
+                </div>
+                <div class="composer-box">
+                    <div class="composer-toolbar">
+                        <button class="ct-btn" title="Bold" onclick="showToast('Bold formatting','info')"><svg
+                                width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+                                <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+                            </svg></button>
+                        <button class="ct-btn" title="Italic"><svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="19" y1="4" x2="10" y2="4" />
+                                <line x1="14" y1="20" x2="5" y2="20" />
+                                <line x1="15" y1="4" x2="9" y2="20" />
+                            </svg></button>
+                        <button class="ct-btn" title="Strikethrough"><svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <path d="M16 6C16 6 14.5 4 12 4s-4 1.5-4 3.5c0 3 4 3.5 4 3.5" />
+                                <path d="M8 18c0 0 1.5 2 4 2s4-1.5 4-3.5" />
+                            </svg></button>
+                        <div class="ct-sep"></div>
+                        <button class="ct-btn" title="Bullet list"><svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="9" y1="6" x2="20" y2="6" />
+                                <line x1="9" y1="12" x2="20" y2="12" />
+                                <line x1="9" y1="18" x2="20" y2="18" />
+                                <circle cx="4" cy="6" r="1" fill="currentColor" />
+                                <circle cx="4" cy="12" r="1" fill="currentColor" />
+                                <circle cx="4" cy="18" r="1" fill="currentColor" />
+                            </svg></button>
+                        <button class="ct-btn" title="Numbered list"><svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="10" y1="6" x2="21" y2="6" />
+                                <line x1="10" y1="12" x2="21" y2="12" />
+                                <line x1="10" y1="18" x2="21" y2="18" />
+                                <path d="M4 6h1v4" />
+                                <path d="M4 10h2" />
+                                <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
+                            </svg></button>
+                        <button class="ct-btn" title="Inline code"><svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg></button>
+                        <button class="ct-btn" title="Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                            </svg></button>
+                        <div class="ct-sep"></div>
+                        <button class="ct-btn" title="Mention someone" onclick="insertMention()">@</button>
+                    </div>
+                    <textarea class="composer-input" id="msg-input" placeholder="Message #product…" rows="1"
+                        oninput="handleInput(this)" onkeydown="handleKey(event)"></textarea>
+                    <div class="composer-footer">
+                        <div class="cf-left">
+                            <div class="cf-ic" title="Attach file" onclick="showToast('File picker opened','info')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </div>
+                            <div class="cf-ic" title="Emoji" onclick="showToast('Emoji picker opened','info')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                </svg>
+                            </div>
+                            <div class="cf-ic" title="Link task" onclick="showToast('Task picker opened','info')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 11 12 14 22 4" />
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                                </svg>
+                            </div>
+                            <div class="cf-ic" title="GIF" onclick="showToast('GIF picker opened','info')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                            </div>
+                        </div>
+                        <span style="font-size:11px;color:var(--fg-m);margin-right:6px">Shift+Enter for new line</span>
+                        <button class="send-btn" id="send-btn" disabled onclick="sendMsg()" title="Send message">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="right-panel">
+            <div class="rp-tabs">
+                <div class="rp-tab active" id="rp-tab-members" onclick="switchRpTab('members')">Members</div>
+                <div class="rp-tab" id="rp-tab-pins" onclick="switchRpTab('pins')">Pinned</div>
+                <div class="rp-tab" id="rp-tab-files" onclick="switchRpTab('files')">Files</div>
+            </div>
+            <div class="rp-body" id="rp-body"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const CHANNEL_DATA = {
+            general: { title: 'general', desc: 'Company-wide announcements and conversations', ph: 'Message #general…', dm: false },
+            product: { title: 'product', desc: 'Product team discussions, sprint planning and features', ph: 'Message #product…', dm: false },
+            design: { title: 'design', desc: 'Design assets, Figma files and UI feedback', ph: 'Message #design…', dm: false },
+            engineering: { title: 'engineering', desc: 'Engineering tasks, PRs and technical discussions', ph: 'Message #engineering…', dm: false },
+            standup: { title: 'standup', desc: 'Daily async standups', ph: 'Message #standup…', dm: false },
+            random: { title: 'random', desc: 'Off-topic fun and team banter', ph: 'Message #random…', dm: false },
+            sarah: { title: 'Sarah Chen', desc: 'Direct message · Designer · Online', ph: 'Message Sarah…', dm: true },
+            marcus: { title: 'Marcus Williams', desc: 'Direct message · Engineer · Away', ph: 'Message Marcus…', dm: true },
+            priya: { title: 'Priya Sharma', desc: 'Direct message · Manager · Online', ph: 'Message Priya…', dm: true },
+            jordan: { title: 'Jordan Lee', desc: 'Direct message · QA Engineer · Offline', ph: 'Message Jordan…', dm: true },
+            emma: { title: 'Emma Davis', desc: 'Direct message · HR Specialist · Online', ph: 'Message Emma…', dm: true },
+        };
+
+        const TYPING_REPLIES = [
+            { name: 'Priya Sharma', color: '#10b981', role: 'Manager', text: "Yes, 3 PM is locked! I'll share the agenda 10 min before.Great work everyone this sprint 🎉" },
+            { name: 'Sarah Chen', color: '#8b5cf6', role: 'Design', text: 'On it! Final Figma exports and redline specs will be in the task by 1 PM, ready for your prototype pass.' },
+            { name: 'Marcus Williams', color: '#3b82f6', role: null, text: 'Staging deploy done — all smoke tests pass. QA can start any time after 2 PM today.' },
+            { name: 'Priya Sharma', color: '#10b981', role: 'Manager', text: 'Just added the agenda doc to the sprint task. See you all at 3 PM 👋' },
+        ];
+
+        const RP_CONTENT = {
+            members: `
+    <div style="margin-bottom:14px">
+      <div class="rp-sec-label">Online — 3 <span class="rp-add" onclick="showToast('Add member','info')">＋</span></div>
+      <div class="member-row"><div class="mr-av" style="background:#00c9a7">AM<div class="mr-st s-online"></div></div><div><div class="mr-name">Aryan Mehta</div><div class="mr-role">Admin · Online</div></div></div>
+      <div class="member-row"><div class="mr-av" style="background:#8b5cf6">SC<div class="mr-st s-online"></div></div><div><div class="mr-name">Sarah Chen</div><div class="mr-role">Designer · Online</div></div></div>
+      <div class="member-row"><div class="mr-av" style="background:#10b981">PS<div class="mr-st s-online"></div></div><div><div class="mr-name">Priya Sharma</div><div class="mr-role">Manager · Online</div></div></div>
+    </div>
+    <div>
+      <div class="rp-sec-label">Away / Offline — 1</div>
+      <div class="member-row" style="opacity:.65"><div class="mr-av" style="background:#3b82f6">MW<div class="mr-st s-away"></div></div><div><div class="mr-name">Marcus Williams</div><div class="mr-role">Engineer · Away</div></div></div>
+    </div>`,
+            pins: `
+    <div class="rp-sec-label">Pinned messages — 2</div>
+    <div class="pin-card"><div class="pin-bar" style="background:var(--primary)"></div><div><div class="pin-text">Sprint review is tomorrow at 3 PM. Update your tasks before then.</div><div class="pin-meta">Priya Sharma · Yesterday · 11:48 AM</div></div></div>
+    <div class="pin-card"><div class="pin-bar" style="background:#8b5cf6"></div><div><div class="pin-text">Figma frames for onboarding v4 ready for review — check the link above</div><div class="pin-meta">Sarah Chen · 2 days ago · 10:14 AM</div></div></div>`,
+            files: `
+    <div class="rp-sec-label">Recent files — 2</div>
+    <div class="file-row" onclick="showToast('Opening Figma file…','info')"><div class="fr-ic" style="background:rgba(99,102,241,0.12);color:#6366f1"><svg width="15" height="15" viewBox="0 0 38 57" fill="currentColor"><path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.51 9.51 0 0 1 19 28.5z"/><path d="M9.5 57A9.5 9.5 0 0 1 9.5 38H19v9.5A9.5 9.5 0 0 1 9.5 57z"/><path d="M19 0h9.5a9.5 9.5 0 0 1 0 19H19z"/><path d="M0 9.5A9.5 9.5 0 0 1 9.5 0H19v19H9.5A9.5 9.5 0 0 1 0 9.5z"/><path d="M0 28.5A9.5 9.5 0 0 1 9.5 19H19v19H9.5A9.5 9.5 0 0 1 0 28.5z"/></svg></div><div style="flex:1;min-width:0"><div class="fr-name">onboarding-redesign-v4.fig</div><div class="fr-meta">Sarah Chen · 2 days ago · 2.3 MB</div></div></div>
+    <div class="file-row" onclick="showToast('Opening GitHub PR…','info')"><div class="fr-ic" style="background:rgba(0,201,167,0.1);color:var(--primary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></div><div style="flex:1;min-width:0"><div class="fr-name">PR #247 — Payment gateway</div><div class="fr-meta">Marcus Williams · Today · GitHub</div></div></div>`,
+        };
+
+        let msgCount = 0;
+        let replyTarget = null;
+        let sTimerSec = 9257;
+        let currentRpTab = 'members';
+
+        function switchRpTab(tab) {
+            currentRpTab = tab;
+            document.querySelectorAll('.rp-tab').forEach(t => t.classList.remove('active'));
+            const el = document.getElementById('rp-tab-' + tab);
+            if (el) el.classList.add('active');
+            document.getElementById('rp-body').innerHTML = RP_CONTENT[tab] || '';
+        }
+        switchRpTab('members');
+
+        function switchChannel(id, el) {
+            document.querySelectorAll('.ch-item').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            const ch = CHANNEL_DATA[id];
+            if (!ch) return;
+            document.getElementById('ch-title').textContent = ch.dm ? '' : '#';
+            document.getElementById('ch-title').textContent = ch.title;
+            document.getElementById('ch-desc').textContent = ch.desc;
+            document.getElementById('msg-input').placeholder = ch.ph;
+            const badge = el.querySelector('.ch-badge');
+            if (badge) badge.remove();
+        }
+
+        function filterChannels(v) {
+            document.querySelectorAll('.ch-item').forEach(el => {
+                const name = el.querySelector('.ch-name')?.textContent || '';
+                el.style.display = name.toLowerCase().includes(v.toLowerCase()) ? '' : 'none';
+            });
+        }
+
+        function handleInput(el) {
+            document.getElementById('send-btn').disabled = !el.value.trim();
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+        }
+
+        function handleKey(e) {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+        }
+
+        function insertMention() {
+            const inp = document.getElementById('msg-input');
+            inp.value += '@';
+            inp.focus();
+            handleInput(inp);
+        }
+
+        function replyTo(name) {
+            replyTarget = name;
+            document.getElementById('reply-name').textContent = name;
+            document.getElementById('reply-banner').style.display = 'flex';
+            document.getElementById('msg-input').focus();
+        }
+
+        function cancelReply() {
+            replyTarget = null;
+            document.getElementById('reply-banner').style.display = 'none';
+        }
+
+        function sendMsg() {
+            const inp = document.getElementById('msg-input');
+            const txt = inp.value.trim();
+            if (!txt) return;
+            const wrap = document.getElementById('messages-wrap');
+            const now = new Date();
+            const ts = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            const el = document.createElement('div');
+            el.className = 'msg-group';
+            el.style.marginTop = '4px';
+            const replyHtml = replyTarget ? `<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--fg-m);margin-bottom:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg> Replying to <strong style="color:var(--fg);margin-left:2px">${replyTarget}</strong></div>` : '';
+            el.innerHTML = `
+    <div class="msg-av" style="background:#00c9a7">AM</div>
+    <div class="msg-body">
+      <div class="msg-header">
+        <span class="msg-author" style="color:#00c9a7">Aryan Mehta</span>
+        <span class="msg-role">Admin</span>
+        <span class="msg-ts">${ts}</span>
+      </div>
+      ${replyHtml}
+      <div class="msg-text">${txt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+    </div>
+    <div class="msg-actions">
+      <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+      <div class="ma-btn" onclick="replyTo('Aryan Mehta')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg></div>
+      <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+    </div>`;
+            const tyArea = document.getElementById('typing-area');
+            wrap.insertBefore(el, tyArea);
+            inp.value = '';
+            inp.style.height = 'auto';
+            document.getElementById('send-btn').disabled = true;
+            wrap.scrollTop = wrap.scrollHeight;
+            cancelReply();
+            msgCount++;
+            if (msgCount % 2 === 0) scheduleReply();
+        }
+
+        function scheduleReply() {
+            const r = TYPING_REPLIES[Math.floor(Math.random() * TYPING_REPLIES.length)];
+            const tb = document.getElementById('typing-bar');
+            document.getElementById('typing-text').textContent = r.name + ' is typing…';
+            tb.style.display = 'flex';
+            setTimeout(() => {
+                tb.style.display = 'none';
+                const wrap = document.getElementById('messages-wrap');
+                const now = new Date();
+                const ts = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                const initials = r.name.split(' ').map(w => w[0]).join('');
+                const el = document.createElement('div');
+                el.className = 'msg-group';
+                el.style.marginTop = '4px';
+                el.innerHTML = `
+      <div class="msg-av" style="background:${r.color}">${initials}</div>
+      <div class="msg-body">
+        <div class="msg-header">
+          <span class="msg-author" style="color:${r.color}">${r.name}</span>
+          ${r.role ? `<span class="msg-role">${r.role}</span>` : ''}
+          <span class="msg-ts">${ts}</span>
+        </div>
+        <div class="msg-text">${r.text}</div>
+      </div>
+      <div class="msg-actions">
+        <div class="ma-btn" onclick="showEmojiPick(event,this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg></div>
+        <div class="ma-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+      </div>`;
+                const tyArea = document.getElementById('typing-area');
+                wrap.insertBefore(el, tyArea);
+                wrap.scrollTop = wrap.scrollHeight;
+            }, 2000 + Math.random() * 800);
+        }
+
+        function toggleReact(el) {
+            el.classList.toggle('mine');
+            const rc = el.querySelector('.rc');
+            const cur = parseInt(rc.textContent);
+            rc.textContent = el.classList.contains('mine') ? cur + 1 : Math.max(0, cur - 1);
+        }
+
+        const EMOJIS = ['👍', '❤️', '🔥', '🚀', '😂', '👏', '🎉', '🤔', '😮', '✅', '💯', '⭐'];
+        let activeEmojiPick = null;
+
+        function showEmojiPick(e, btn) {
+            e.stopPropagation();
+            if (activeEmojiPick) { activeEmojiPick.remove(); activeEmojiPick = null; return; }
+            const pick = document.createElement('div');
+            pick.className = 'emoji-pick';
+            EMOJIS.forEach(em => {
+                const span = document.createElement('span');
+                span.className = 'ep-em';
+                span.textContent = em;
+                span.onclick = (ev) => {
+                    ev.stopPropagation();
+                    const msgBody = btn.closest('.msg-group').querySelector('.msg-body');
+                    let reactions = msgBody.querySelector('.reactions');
+                    if (!reactions) { reactions = document.createElement('div'); reactions.className = 'reactions'; msgBody.appendChild(reactions); }
+                    const existing = Array.from(reactions.querySelectorAll('.react')).find(r => r.textContent.trim().startsWith(em));
+                    if (existing) { toggleReact(existing); }
+                    else {
+                        const newR = document.createElement('div');
+                        newR.className = 'react mine';
+                        newR.innerHTML = `${em} <span class="rc">1</span>`;
+                        newR.onclick = () => toggleReact(newR);
+                        reactions.appendChild(newR);
+                    }
+                    pick.remove(); activeEmojiPick = null;
+                };
+                pick.appendChild(span);
+            });
+            btn.closest('.msg-actions').style.position = 'relative';
+            btn.closest('.msg-actions').appendChild(pick);
+            activeEmojiPick = pick;
+            setTimeout(() => document.addEventListener('click', () => { if (activeEmojiPick) { activeEmojiPick.remove(); activeEmojiPick = null; } }, { once: true }), 0);
+        }
+
+        function toggleTheme() {
+            const dark = document.documentElement.dataset.theme === 'dark';
+            document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+            const ic = document.getElementById('theme-ic');
+            if (dark) {
+                ic.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+            } else {
+                ic.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+            }
+            showToast(dark ? 'Light mode on' : 'Dark mode on', 'info');
+        }
+
+        function showToast(msg, type = 'info') {
+            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = `<span style="font-size:16px">${icons[type] || 'ℹ️'}</span><span style="flex:1">${msg}</span><div class="toast-dismiss" onclick="this.parentElement.remove()">✕</div>`;
+            document.getElementById('toast-wrap').appendChild(el);
+            setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 250); }, 3200);
+        }
+
+        // Live timer
+        setInterval(() => {
+            sTimerSec++;
+            const h = String(Math.floor(sTimerSec / 3600)).padStart(2, '0');
+            const m = String(Math.floor((sTimerSec % 3600) / 60)).padStart(2, '0');
+            const s = String(sTimerSec % 60).padStart(2, '0');
+            const el = document.getElementById('sidebar-timer');
+            if (el) el.textContent = `${h}:${m}:${s}`;
+        }, 1000);
+
+        // Scroll to bottom on load
+        window.addEventListener('load', () => {
+            const w = document.getElementById('messages-wrap');
+            if (w) w.scrollTop = w.scrollHeight;
+        });
+    </script>
+</body>
+
+</html>

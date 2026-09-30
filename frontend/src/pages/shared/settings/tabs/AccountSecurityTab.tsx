@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icon from '../../../../components/ui/Icon';
+import Icon from '@/components/ui/Icon';
 
 const AccountSecurityTab: React.FC = () => {
     const [showCurrentPwd, setShowCurrentPwd] = useState(false);
@@ -13,7 +13,6 @@ const AccountSecurityTab: React.FC = () => {
                 <p className="text-sm text-foreground-muted">Manage your login credentials and security settings</p>
             </div>
 
-            {/* Login Information */}
             <div className="rounded-xl border border-border bg-surface overflow-hidden">
                 <div className="px-6 py-4 border-b border-border bg-background-3">
                     <h3 className="text-sm font-bold text-foreground">Login Information</h3>
@@ -43,7 +42,6 @@ const AccountSecurityTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Password */}
             <div className="rounded-xl border border-border bg-surface overflow-hidden">
                 <div className="px-6 py-4 border-b border-border bg-background-3">
                     <h3 className="text-sm font-bold text-foreground">Password</h3>
@@ -94,7 +92,6 @@ const AccountSecurityTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Two-Factor Authentication */}
             <div className="rounded-xl border border-border bg-surface overflow-hidden">
                 <div className="px-6 py-4 border-b border-border bg-background-3 flex items-center justify-between">
                     <h3 className="text-sm font-bold text-foreground">Two-Factor Authentication</h3>
@@ -116,7 +113,6 @@ const AccountSecurityTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Active Sessions */}
             <div className="rounded-xl border border-border bg-surface overflow-hidden">
                 <div className="px-6 py-4 border-b border-border bg-background-3">
                     <h3 className="text-sm font-bold text-foreground">Active Sessions</h3>
@@ -157,7 +153,6 @@ const AccountSecurityTab: React.FC = () => {
                 </div>
             </div>
 
-            {/* Danger Zone */}
             <div className="rounded-xl border border-danger-bg bg-surface overflow-hidden">
                 <div className="px-6 py-4 border-b border-danger-bg bg-background-3">
                     <h3 className="text-sm font-bold text-danger">Danger Zone</h3>
